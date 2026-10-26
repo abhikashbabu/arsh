@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patients | Arsh Super Speciality Hospital</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b3c7d;
+    --navy-dark: #072a58;
+    --red: #dc1c34;
+    --red-dark: #b8142a;
+    --sky: #eaf4fd;
+    --sky-2: #d5e8f9;
+    --ink: #1c2b44;
+    --muted: #5d6e87;
+    --line: #e1eaf4;
+    --green: #1f9d6b;
+    --amber: #e59a14;
+    --sidebar-w: 260px;
+
+    --bs-body-font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --bs-body-color: var(--ink);
+    --bs-body-bg: var(--sky);
+  }
+
+  body { background: var(--sky); font-size: 15px; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: fixed; inset: 0 auto 0 0; width: var(--sidebar-w);
+    background: #fff; border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; z-index: 1040;
+    transition: transform .25s ease;
+  }
+  .sidebar-brand { padding: 18px 22px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+  .brand-mark { width: 42px; height: 42px; border-radius: 12px; background: var(--red); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 20px; }
+  .brand-text strong { display: block; color: var(--red); font-size: 20px; line-height: 1; letter-spacing: 1px; }
+  .brand-text small { color: var(--navy); font-weight: 600; font-size: 11px; }
+  .sidebar-nav { padding: 16px 14px; overflow-y: auto; flex: 1; }
+  .nav-group { font-size: 12px; color: var(--muted); font-weight: 600; padding: 14px 12px 6px; }
+  .sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 11px 12px; margin-bottom: 2px; border-radius: 10px; color: var(--ink); text-decoration: none; font-weight: 500; position: relative; }
+  .sidebar-nav a svg { width: 20px; height: 20px; flex: none; color: var(--muted); }
+  .sidebar-nav a:hover, .sidebar-nav a.active { background: var(--sky); color: var(--navy); }
+  .sidebar-nav a:hover svg, .sidebar-nav a.active svg { color: var(--navy); }
+  .sidebar-nav a.active { font-weight: 700; }
+  .sidebar-nav a.active::before { content: ""; position: absolute; left: -14px; top: 8px; bottom: 8px; width: 4px; border-radius: 0 4px 4px 0; background: var(--red); }
+  .nav-badge { margin-left: auto; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+  .sidebar-foot { padding: 14px; border-top: 1px solid var(--line); }
+  .emergency-box { background: var(--navy); color: #fff; border-radius: 14px; padding: 14px 16px; }
+  .emergency-box small { opacity: .75; display: block; }
+  .emergency-box strong { font-size: 18px; }
+  .backdrop { position: fixed; inset: 0; background: rgba(7,42,88,.45); z-index: 1030; display: none; }
+
+  /* ---------- Main / Topbar ---------- */
+  .main { margin-left: var(--sidebar-w); min-height: 100vh; }
+  .topbar { position: sticky; top: 0; z-index: 1020; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); padding: 12px 28px; display: flex; align-items: center; gap: 16px; }
+  .menu-btn { display: none; border: 0; background: var(--sky); border-radius: 10px; width: 42px; height: 42px; color: var(--navy); }
+  .icon-btn { position: relative; width: 42px; height: 42px; border-radius: 12px; background: #fff; border: 1px solid var(--line); color: var(--navy); display: grid; place-items: center; }
+  .icon-btn .dot { position: absolute; top: 9px; right: 10px; width: 9px; height: 9px; border-radius: 50%; background: var(--red); border: 2px solid #fff; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--navy); color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .content { padding: 28px; }
+
+  .btn-brand { background: var(--red); color: #fff; border: 0; font-weight: 700; padding: 10px 20px; border-radius: 12px; box-shadow: 0 6px 16px rgba(220,28,52,.25); }
+  .btn-brand:hover { background: var(--red-dark); color: #fff; }
+  .btn-outline-brand { background: #fff; color: var(--navy); border: 1px solid var(--line); font-weight: 600; padding: 9px 16px; border-radius: 12px; }
+  .btn-outline-brand:hover { background: var(--sky); color: var(--navy); }
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+
+  .page-title { font-size: 32px; font-weight: 700; line-height: 1.1; color: var(--navy); margin: 0; }
+  .page-sub { color: var(--muted); margin: 6px 0 0; }
+
+  /* ---------- Cards ---------- */
+  .panel { background: #fff; border-radius: 18px; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(11,60,125,.06); }
+  .stat { padding: 18px 20px; display: flex; align-items: center; gap: 14px; height: 100%; }
+  .stat-icon { width: 46px; height: 46px; border-radius: 13px; background: var(--sky); color: var(--navy); display: grid; place-items: center; flex: none; }
+  .stat-icon svg { width: 22px; height: 22px; }
+  .stat-icon.red { background: #fde8eb; color: var(--red); }
+  .stat-icon.green { background: #e1f5ec; color: var(--green); }
+  .stat-icon.amber { background: #fdf1da; color: #a86d00; }
+  .stat-value { font-size: 26px; font-weight: 700; line-height: 1; color: var(--navy); }
+  .stat-label { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  /* ---------- Tabs / filters ---------- */
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 16px 20px 0; border-bottom: 1px solid var(--line); }
+  .tab { border: 0; background: transparent; padding: 10px 14px 14px; font-weight: 600; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .tab:hover { color: var(--navy); }
+  .tab.active { color: var(--navy); border-bottom-color: var(--red); }
+  .tab .count { background: var(--sky); color: var(--navy); font-size: 12px; padding: 1px 8px; border-radius: 20px; margin-left: 6px; }
+  .tab.active .count { background: var(--red); color: #fff; }
+
+  .filters { padding: 16px 20px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .search { position: relative; flex: 1 1 260px; }
+  .search svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+  .ctl { border: 1px solid var(--line); background: var(--sky); border-radius: 12px; padding: 10px 14px; font: inherit; color: var(--ink); }
+  .search .ctl { width: 100%; padding-left: 40px; }
+  select.ctl { min-width: 160px; }
+  .ctl:focus { background: #fff; border-color: var(--navy); }
+
+  /* ---------- Table ---------- */
+  .table { --bs-table-bg: transparent; margin: 0; min-width: 900px; }
+  .table thead th { font-size: 12px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); padding: 12px 16px; white-space: nowrap; background: #fafcff; }
+  .table td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .table tbody tr:hover { background: #f8fbff; }
+  .person { display: flex; align-items: center; gap: 12px; }
+  .ini { width: 40px; height: 40px; border-radius: 50%; background: var(--sky); color: var(--navy); font-weight: 700; display: grid; place-items: center; font-size: 13px; flex: none; }
+  .ini.f { background: #fde8eb; color: var(--red); }
+  .person strong { display: block; line-height: 1.2; }
+  .person small, .sub { color: var(--muted); font-size: 13px; }
+  .cell strong { display: block; line-height: 1.2; font-weight: 500; }
+
+  .pill { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .pill.admitted { background: #fde8eb; color: var(--red); }
+  .pill.opd { background: var(--sky); color: var(--navy); }
+  .pill.discharged { background: #e1f5ec; color: var(--green); }
+  .pill.critical { background: var(--red); color: #fff; }
+
+  .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+  .act { border: 1px solid var(--line); background: #fff; color: var(--navy); font-weight: 600; font-size: 12.5px; padding: 6px 12px; border-radius: 9px; white-space: nowrap; }
+  .act:hover { background: var(--sky); }
+
+  .empty { text-align: center; padding: 48px 20px; color: var(--muted); display: none; }
+  .empty.show { display: block; }
+  .empty strong { display: block; color: var(--navy); font-size: 17px; margin-bottom: 4px; }
+
+  .pager { padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+  .pager .btns { display: flex; gap: 6px; }
+  .pg { min-width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line); background: #fff; color: var(--navy); font-weight: 600; }
+  .pg:hover:not(:disabled) { background: var(--sky); }
+  .pg.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .pg:disabled { opacity: .45; }
+
+  /* ---------- Dialogs ---------- */
+  dialog { border: 0; border-radius: 20px; padding: 0; width: min(560px, calc(100% - 32px)); box-shadow: 0 24px 70px rgba(7,42,88,.35); color: var(--ink); }
+  dialog::backdrop { background: rgba(7,42,88,.5); }
+  .dlg-head { padding: 22px 26px 0; display: flex; justify-content: space-between; align-items: center; }
+  .dlg-head h2 { font-size: 22px; font-weight: 700; color: var(--navy); margin: 0; }
+  .dlg-x { border: 0; background: var(--sky); width: 36px; height: 36px; border-radius: 10px; color: var(--navy); font-size: 20px; line-height: 1; }
+  .dlg-body { padding: 18px 26px 6px; }
+  .dlg-foot { padding: 14px 26px 24px; display: flex; justify-content: flex-end; gap: 10px; }
+  .lbl { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  .dlg-body .ctl { width: 100%; }
+  .ctl.bad { border-color: var(--red); }
+  .err { color: var(--red); font-size: 13px; margin-top: 4px; display: none; }
+  .bad + .err { display: block; }
+
+  .profile-top { display: flex; align-items: center; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  .profile-top .ini { width: 62px; height: 62px; font-size: 20px; }
+  .profile-top h3 { margin: 0; font-size: 20px; font-weight: 700; color: var(--navy); }
+  .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+  .kv div { padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .kv dt { font-size: 12px; color: var(--muted); font-weight: 600; margin: 0 0 2px; }
+  .kv dd { margin: 0; font-weight: 500; }
+  .kv .full { grid-column: 1 / -1; }
+
+  .toast { position: fixed; right: 24px; bottom: 24px; background: var(--navy); color: #fff; padding: 12px 18px; border-radius: 12px; font-weight: 500; box-shadow: 0 10px 30px rgba(7,42,88,.35); opacity: 0; transform: translateY(10px); pointer-events: none; transition: .25s; z-index: 2000; }
+  .toast.show { opacity: 1; transform: none; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 991.98px) {
+    .sidebar { transform: translateX(-100%); }
+    body.nav-open .sidebar { transform: none; box-shadow: 0 0 40px rgba(0,0,0,.2); }
+    body.nav-open .backdrop { display: block; }
+    .main { margin-left: 0; }
+    .menu-btn { display: grid; place-items: center; }
+    .content { padding: 18px; }
+    .topbar { padding: 12px 18px; }
+    .page-title { font-size: 26px; }
+  }
+  @media (max-width: 575.98px) { .kv { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .sidebar, .toast { transition: none; } }
+</style>
+</head>
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar" id="sidebar" aria-label="Main navigation">
+  <div class="sidebar-brand">
+    <div class="brand-mark">A</div>
+    <div class="brand-text"><strong>ARSH</strong><small>Super Speciality Hospital</small></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group">Main</div>
+    <a href="dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Dashboard
+    </a>
+    <a href="appointments.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>
+      Appointments <span class="nav-badge">12</span>
+    </a>
+    <a href="patients.html" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 4.5a3.5 3.5 0 0 1 0 7M21.5 20c0-2.6-1.6-4.6-4-5.5"/></svg>
+      Patients
+    </a>
+    <a href="doctors.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2M12 14v4M10 16h4"/></svg>
+      Doctors
+    </a>
+    <a href="departments.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16M14 10h5a1 1 0 0 1 1 1v10M2 21h20M8 8h2M8 12h2M8 16h2"/></svg>
+      Departments
+    </a>
+    <div class="nav-group">Hospital</div>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 18h18M3 21v-3M21 21v-3M6 10V7a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3"/></svg>
+      Beds &amp; Wards
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
+      Emergency <span class="nav-badge">3</span>
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2.2h12.4a1.5 1.5 0 0 0 1.3-2.2L14 9V3M7.5 14h9"/></svg>
+      Lab &amp; Reports
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="4" transform="rotate(-35 12 12)"/><path d="M9.5 9.5l5 5"/></svg>
+      Pharmacy
+    </a>
+    <div class="nav-group">Account</div>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+      Billing
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      Settings
+    </a>
+  </nav>
+  <div class="sidebar-foot">
+    <div class="emergency-box"><small>24×7 trauma support</small><strong>Emergency desk</strong></div>
+  </div>
+</aside>
+<div class="backdrop" id="backdrop"></div>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-controls="sidebar">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <div class="ms-auto"></div>
+    <button class="icon-btn" aria-label="Notifications">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <div class="avatar" title="Admin">AD</div>
+  </header>
+
+  <main class="content">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <div>
+        <h1 class="page-title">Patients</h1>
+        <p class="page-sub">Patient records, admissions and visit history</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-brand" id="exportBtn">Export CSV</button>
+        <button class="btn btn-brand" id="newBtn">+ Add patient</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-xl-3"><div class="panel stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 4.5a3.5 3.5 0 0 1 0 7M21.5 20c0-2.6-1.6-4.6-4-5.5"/></svg></div><div><div class="stat-value" id="sTotal">0</div><div class="stat-label">Total patients</div></div></div></div>
+      <div class="col-6 col-xl-3"><div class="panel stat"><div class="stat-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 18h18M3 21v-3M21 21v-3M6 10V7a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3"/></svg></div><div><div class="stat-value" id="sAdm">0</div><div class="stat-label">Admitted now</div></div></div></div>
+      <div class="col-6 col-xl-3"><div class="panel stat"><div class="stat-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><div class="stat-value" id="sOpd">0</div><div class="stat-label">OPD patients</div></div></div></div>
+      <div class="col-6 col-xl-3"><div class="panel stat"><div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div><div class="stat-value" id="sDis">0</div><div class="stat-label">Discharged</div></div></div></div>
+    </div>
+
+    <!-- Table panel -->
+    <div class="panel overflow-hidden">
+      <div class="tabs" id="tabs" role="tablist">
+        <button class="tab active" data-tab="all" role="tab">All<span class="count" id="cAll">0</span></button>
+        <button class="tab" data-tab="Admitted" role="tab">Admitted<span class="count" id="cAdm">0</span></button>
+        <button class="tab" data-tab="OPD" role="tab">OPD<span class="count" id="cOpd">0</span></button>
+        <button class="tab" data-tab="Discharged" role="tab">Discharged<span class="count" id="cDis">0</span></button>
+      </div>
+
+      <div class="filters">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input type="search" class="ctl" id="q" placeholder="Search name, ID or phone" aria-label="Search patients">
+        </label>
+        <select class="ctl" id="fDept" aria-label="Filter by department"><option value="">All departments</option></select>
+        <select class="ctl" id="fGender" aria-label="Filter by gender">
+          <option value="">All genders</option><option>Male</option><option>Female</option><option>Other</option>
+        </select>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr><th>Patient</th><th>Age / Gender</th><th>Phone</th><th>Department</th><th>Last visit</th><th>Status</th><th class="text-end">Actions</th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="empty"><strong>No patients found</strong>Try changing the filters or search.</div>
+
+      <div class="pager">
+        <span id="info"></span>
+        <div class="btns" id="pages"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ================= ADD PATIENT DIALOG ================= -->
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <form id="form" method="dialog" novalidate>
+    <div class="dlg-head">
+      <h2 id="dlgTitle">Add patient</h2>
+      <button type="button" class="dlg-x" data-close aria-label="Close">&times;</button>
+    </div>
+    <div class="dlg-body">
+      <div class="mb-3">
+        <label class="lbl" for="nName">Full name</label>
+        <input class="ctl" id="nName" autocomplete="off" placeholder="Patient name">
+        <div class="err">Enter patient name.</div>
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-sm-4">
+          <label class="lbl" for="nAge">Age</label>
+          <input type="number" class="ctl" id="nAge" min="0" max="120" placeholder="Years">
+          <div class="err">Enter age.</div>
+        </div>
+        <div class="col-sm-4">
+          <label class="lbl" for="nGender">Gender</label>
+          <select class="ctl" id="nGender"><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+        <div class="col-sm-4">
+          <label class="lbl" for="nBlood">Blood group</label>
+          <select class="ctl" id="nBlood"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
+        </div>
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-sm-6">
+          <label class="lbl" for="nPhone">Phone</label>
+          <input type="tel" class="ctl" id="nPhone" placeholder="10-digit mobile" maxlength="15">
+          <div class="err">Enter a valid phone number.</div>
+        </div>
+        <div class="col-sm-6">
+          <label class="lbl" for="nDept">Department</label>
+          <select class="ctl" id="nDept"></select>
+        </div>
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-sm-6">
+          <label class="lbl" for="nStatus">Patient type</label>
+          <select class="ctl" id="nStatus"><option>OPD</option><option>Admitted</option></select>
+        </div>
+        <div class="col-sm-6">
+          <label class="lbl" for="nCity">City</label>
+          <input class="ctl" id="nCity" placeholder="City">
+        </div>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button type="button" class="btn btn-outline-brand" data-close>Cancel</button>
+      <button type="submit" class="btn btn-brand">Save patient</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ================= PATIENT DETAILS DIALOG ================= -->
+<dialog id="view" aria-labelledby="viewTitle">
+  <div class="dlg-head">
+    <h2 id="viewTitle">Patient details</h2>
+    <button type="button" class="dlg-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="dlg-body" id="viewBody"></div>
+  <div class="dlg-foot">
+    <button type="button" class="btn btn-outline-brand" data-close>Close</button>
+    <a href="appointments.html" class="btn btn-brand">Book appointment</a>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  /* ---------- Data (replace with your PHP/JSON feed) ---------- */
+  var DEPTS = ['Cardiology', 'Gynaecology', 'Orthopaedics', 'Neurology', 'General Surgery', 'Paediatrics'];
+  var DOC = { 'Cardiology': 'Dr. A. Verma', 'Gynaecology': 'Dr. R. Khan', 'Orthopaedics': 'Dr. S. Mishra', 'Neurology': 'Dr. P. Singh', 'General Surgery': 'Dr. N. Joshi', 'Paediatrics': 'Dr. T. Srivastava' };
+
+  function iso(offset) {
+    var d = new Date(); d.setDate(d.getDate() - offset);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  var nextId = 20120;
+  var data = [
+    ['Rahul Sharma',  45, 'Male',   'B+',  '9839012345', 'Cardiology',      'Admitted',   0,  'Varanasi'],
+    ['Sana Fatima',   29, 'Female', 'O+',  '9935123456', 'Gynaecology',     'OPD',        0,  'Varanasi'],
+    ['Mohan Gupta',   58, 'Male',   'A+',  '9415234567', 'Orthopaedics',    'OPD',        1,  'Mirzapur'],
+    ['Ayesha Yusuf',  36, 'Female', 'AB+', '9451345678', 'Neurology',       'Admitted',   1,  'Jaunpur'],
+    ['Vikram Kapoor', 52, 'Male',   'O-',  '9839456789', 'General Surgery', 'Admitted',   2,  'Varanasi'],
+    ['Neha Verma',     6, 'Female', 'A+',  '9918567890', 'Paediatrics',     'OPD',        2,  'Chandauli'],
+    ['Imran Ali',     61, 'Male',   'B-',  '9695678901', 'Cardiology',      'Discharged', 5,  'Ghazipur'],
+    ['Pooja Mishra',  33, 'Female', 'B+',  '9532789012', 'Gynaecology',     'Discharged', 7,  'Varanasi'],
+    ['Deepak Yadav',  41, 'Male',   'O+',  '9450890123', 'Orthopaedics',    'Admitted',   3,  'Azamgarh'],
+    ['Farah Naaz',    47, 'Female', 'A-',  '9838901234', 'Cardiology',      'OPD',        4,  'Varanasi'],
+    ['Suresh Pathak', 64, 'Male',   'AB-', '9415012345', 'General Surgery', 'Discharged', 9,  'Bhadohi'],
+    ['Kavita Rai',    39, 'Female', 'O+',  '9936123450', 'Neurology',       'OPD',        6,  'Ballia'],
+    ['Aman Jaiswal',   4, 'Male',   'B+',  '9721234509', 'Paediatrics',     'Discharged', 11, 'Varanasi'],
+    ['Rizwan Ahmad',  55, 'Male',   'A+',  '9889345098', 'Gynaecology',     'OPD',        12, 'Mau'],
+    ['Sunita Devi',   68, 'Female', 'B+',  '9455456987', 'General Surgery', 'Admitted',   1,  'Sonbhadra'],
+    ['Ritu Singh',    31, 'Female', 'O+',  '9795567876', 'Cardiology',      'OPD',        8,  'Varanasi'],
+    ['Anil Tripathi', 72, 'Male',   'A+',  '9935678765', 'Cardiology',      'Admitted',   0,  'Varanasi'],
+    ['Zoya Khan',     24, 'Female', 'B+',  '9670789654', 'Gynaecology',     'Discharged', 15, 'Lucknow']
+  ].map(function (r, i) {
+    return { id: 'PT-' + (10480 + i), name: r[0], age: r[1], gender: r[2], blood: r[3], phone: r[4], dept: r[5], status: r[6], last: iso(r[7]), city: r[8], doctor: DOC[r[5]] };
+  });
+
+  var PER = 8, page = 1, tab = 'all';
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- Helpers ---------- */
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function initials(n) { return n.split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase(); }
+  function fmtDate(d) { return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove('show'); }, 2400);
+  }
+
+  /* ---------- Filtering ---------- */
+  function filtered() {
+    var q = $('q').value.trim().toLowerCase(), dept = $('fDept').value, g = $('fGender').value;
+    return data.filter(function (p) {
+      if (tab !== 'all' && p.status !== tab) return false;
+      if (dept && p.dept !== dept) return false;
+      if (g && p.gender !== g) return false;
+      if (q && (p.name + ' ' + p.id + ' ' + p.phone).toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    }).sort(function (a, b) { return b.last.localeCompare(a.last); });
+  }
+
+  /* ---------- Render ---------- */
+  function counts() {
+    var a = 0, o = 0, d = 0;
+    data.forEach(function (p) { if (p.status === 'Admitted') a++; else if (p.status === 'OPD') o++; else d++; });
+    $('cAll').textContent = data.length; $('cAdm').textContent = a; $('cOpd').textContent = o; $('cDis').textContent = d;
+    $('sTotal').textContent = data.length; $('sAdm').textContent = a; $('sOpd').textContent = o; $('sDis').textContent = d;
+  }
+
+  function render() {
+    counts();
+    var list = filtered();
+    var pages = Math.max(1, Math.ceil(list.length / PER));
+    if (page > pages) page = pages;
+    var start = (page - 1) * PER, slice = list.slice(start, start + PER);
+
+    $('rows').innerHTML = slice.map(function (p) {
+      var acts = '<button class="act" data-do="view" data-id="' + p.id + '">View</button>';
+      if (p.status === 'Admitted') acts += '<button class="act" data-do="discharge" data-id="' + p.id + '">Discharge</button>';
+      return '<tr>' +
+        '<td><div class="person"><span class="ini' + (p.gender === 'Female' ? ' f' : '') + '">' + esc(initials(p.name)) + '</span><div><strong>' + esc(p.name) + '</strong><small>#' + esc(p.id) + '</small></div></div></td>' +
+        '<td class="cell"><strong>' + p.age + ' yrs</strong><span class="sub">' + esc(p.gender) + '</span></td>' +
+        '<td>' + esc(p.phone) + '</td>' +
+        '<td class="cell"><strong>' + esc(p.dept) + '</strong><span class="sub">' + esc(p.doctor) + '</span></td>' +
+        '<td>' + esc(fmtDate(p.last)) + '</td>' +
+        '<td><span class="pill ' + p.status.toLowerCase() + '">' + esc(p.status) + '</span></td>' +
+        '<td><div class="row-actions">' + acts + '</div></td></tr>';
+    }).join('');
+
+    $('empty').classList.toggle('show', list.length === 0);
+    $('info').textContent = list.length ? 'Showing ' + (start + 1) + '–' + (start + slice.length) + ' of ' + list.length : '0 results';
+
+    var html = '<button class="pg" data-p="' + (page - 1) + '"' + (page === 1 ? ' disabled' : '') + ' aria-label="Previous page">&lsaquo;</button>';
+    for (var i = 1; i <= pages; i++) {
+      html += '<button class="pg' + (i === page ? ' active' : '') + '" data-p="' + i + '"' + (i === page ? ' aria-current="page"' : '') + '>' + i + '</button>';
+    }
+    html += '<button class="pg" data-p="' + (page + 1) + '"' + (page === pages ? ' disabled' : '') + ' aria-label="Next page">&rsaquo;</button>';
+    $('pages').innerHTML = html;
+  }
+
+  /* ---------- Events ---------- */
+  $('tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('.tab'); if (!b) return;
+    tab = b.dataset.tab; page = 1;
+    document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t === b); t.setAttribute('aria-selected', t === b); });
+    render();
+  });
+  ['q', 'fDept', 'fGender'].forEach(function (id) { $(id).addEventListener('input', function () { page = 1; render(); }); });
+  $('pages').addEventListener('click', function (e) {
+    var b = e.target.closest('.pg'); if (!b || b.disabled) return;
+    page = +b.dataset.p; render();
+  });
+
+  var viewDlg = $('view');
+  $('rows').addEventListener('click', function (e) {
+    var b = e.target.closest('.act'); if (!b) return;
+    var p = data.filter(function (x) { return x.id === b.dataset.id; })[0]; if (!p) return;
+    if (b.dataset.do === 'view') {
+      $('viewBody').innerHTML =
+        '<div class="profile-top"><span class="ini' + (p.gender === 'Female' ? ' f' : '') + '">' + esc(initials(p.name)) + '</span>' +
+        '<div><h3>' + esc(p.name) + '</h3><span class="sub">#' + esc(p.id) + ' · <span class="pill ' + p.status.toLowerCase() + '">' + esc(p.status) + '</span></span></div></div>' +
+        '<dl class="kv">' +
+        '<div><dt>Age</dt><dd>' + p.age + ' years</dd></div>' +
+        '<div><dt>Gender</dt><dd>' + esc(p.gender) + '</dd></div>' +
+        '<div><dt>Blood group</dt><dd>' + esc(p.blood) + '</dd></div>' +
+        '<div><dt>Phone</dt><dd>' + esc(p.phone) + '</dd></div>' +
+        '<div><dt>Department</dt><dd>' + esc(p.dept) + '</dd></div>' +
+        '<div><dt>Consulting doctor</dt><dd>' + esc(p.doctor) + '</dd></div>' +
+        '<div><dt>City</dt><dd>' + esc(p.city || '-') + '</dd></div>' +
+        '<div><dt>Last visit</dt><dd>' + esc(fmtDate(p.last)) + '</dd></div>' +
+        '</dl>';
+      viewDlg.showModal();
+    }
+    if (b.dataset.do === 'discharge') {
+      if (!confirm('Discharge ' + p.name + '?')) return;
+      p.status = 'Discharged'; toast(p.name + ' discharged'); render();
+    }
+  });
+
+  /* ---------- Add patient dialog ---------- */
+  DEPTS.forEach(function (d) {
+    $('fDept').insertAdjacentHTML('beforeend', '<option>' + d + '</option>');
+    $('nDept').insertAdjacentHTML('beforeend', '<option>' + d + '</option>');
+  });
+
+  var dlg = $('dlg');
+  $('newBtn').addEventListener('click', function () {
+    $('form').reset();
+    document.querySelectorAll('.ctl.bad').forEach(function (c) { c.classList.remove('bad'); });
+    dlg.showModal(); $('nName').focus();
+  });
+  document.querySelectorAll('[data-close]').forEach(function (b) {
+    b.addEventListener('click', function () { b.closest('dialog').close(); });
+  });
+  [dlg, viewDlg].forEach(function (d) { d.addEventListener('click', function (e) { if (e.target === d) d.close(); }); });
+  ['nName', 'nAge', 'nPhone'].forEach(function (id) { $(id).addEventListener('input', function () { this.classList.remove('bad'); }); });
+
+  $('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var ok = true;
+    if (!$('nName').value.trim()) { $('nName').classList.add('bad'); ok = false; }
+    var age = parseInt($('nAge').value, 10);
+    if (isNaN(age) || age < 0 || age > 120) { $('nAge').classList.add('bad'); ok = false; }
+    if (!/^[0-9+\- ]{10,15}$/.test($('nPhone').value.trim())) { $('nPhone').classList.add('bad'); ok = false; }
+    if (!ok) return;
+    var t = new Date();
+    data.push({
+      id: 'PT-' + (nextId++),
+      name: $('nName').value.trim(), age: age, gender: $('nGender').value, blood: $('nBlood').value,
+      phone: $('nPhone').value.trim(), dept: $('nDept').value, status: $('nStatus').value,
+      last: t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0'),
+      city: $('nCity').value.trim(), doctor: DOC[$('nDept').value]
+    });
+    dlg.close(); tab = 'all'; page = 1;
+    document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('active', x.dataset.tab === 'all'); });
+    render(); toast('Patient saved');
+  });
+
+  /* ---------- Export CSV ---------- */
+  $('exportBtn').addEventListener('click', function () {
+    var rows = [['ID', 'Name', 'Age', 'Gender', 'Blood group', 'Phone', 'Department', 'Doctor', 'Status', 'Last visit', 'City']].concat(
+      filtered().map(function (p) { return [p.id, p.name, p.age, p.gender, p.blood, p.phone, p.dept, p.doctor, p.status, p.last, p.city]; })
+    );
+    var csv = rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(','); }).join('\n');
+    var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    var a = document.createElement('a'); a.href = url; a.download = 'patients.csv';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  /* ---------- Sidebar toggle ---------- */
+  $('menuBtn').addEventListener('click', function () { document.body.classList.toggle('nav-open'); });
+  $('backdrop').addEventListener('click', function () { document.body.classList.remove('nav-open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') document.body.classList.remove('nav-open'); });
+
+  render();
+})();
+</script>
+</body>
+</html>
