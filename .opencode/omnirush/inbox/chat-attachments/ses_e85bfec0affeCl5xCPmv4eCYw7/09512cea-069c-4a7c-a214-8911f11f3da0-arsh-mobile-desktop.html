@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARSH Super Speciality Hospital — Homepage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#073d78;--blue:#1267bd;--red:#d7192e;--pale:#eef7fd;--line:#dce9f4;--text:#173c63;--muted:#718398}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:"DM Sans",Arial,sans-serif;color:var(--text);background:#fff}a{text-decoration:none;color:inherit}button,select{font:inherit}
+.container{width:min(1180px,calc(100% - 64px));margin:auto}
+.header{height:76px;background:#fff;position:sticky;top:0;z-index:50;border-bottom:1px solid #e5edf4}
+.header .container{height:100%;display:flex;align-items:center;gap:38px}
+.logo img{width:142px;height:auto;display:block}
+.nav{display:flex;align-items:center;gap:25px;margin-left:auto;font-size:12px;font-weight:600;color:#244665}
+.nav a{height:76px;display:flex;align-items:center;position:relative}
+.nav a:first-child::after{content:"";position:absolute;bottom:16px;left:0;right:0;height:2px;background:var(--blue)}
+.header-right{display:flex;align-items:center;gap:16px}
+.search{font-size:25px;color:var(--navy)}
+.book{background:var(--red);color:#fff;border:0;border-radius:10px;padding:13px 22px;font-size:12px;font-weight:800;box-shadow:0 7px 18px rgba(215,25,46,.18)}
+.menu{font-size:25px;color:var(--navy);border:0;background:none;display:none}
+
+.hero{background:var(--pale)}
+.hero-inner{display:grid;grid-template-columns:47% 53%;height:390px}
+.hero-copy{display:flex;flex-direction:column;justify-content:center;padding-left:7%}
+.eyebrow{font-size:9px;letter-spacing:3.5px;color:#607890;font-weight:700;margin-bottom:14px}
+.hero h1{font-family:Manrope,sans-serif;font-size:48px;line-height:1.03;letter-spacing:-1.8px;color:var(--navy);margin:0}
+.hero h1 span{display:block;color:var(--red)}
+.hero-copy p{font-size:15px;line-height:1.35;color:#49647d;margin:15px 0 22px}
+.hero-actions{display:flex;gap:12px}
+.hero-btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 20px;border-radius:10px;font-size:11px;font-weight:800}
+.hero-btn.red{background:var(--red);color:#fff}
+.hero-btn.white{background:#fff;color:var(--blue);border:1px solid #d7e7f4}
+.hero-photo{position:relative;overflow:hidden}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--pale),transparent 28%)}
+.healing{position:absolute;right:28px;top:47px;z-index:2;color:var(--navy);font-family:cursive;font-size:25px;line-height:.9;transform:rotate(-7deg);text-align:center}
+.healing::after{content:"";display:block;width:90px;height:3px;background:var(--red);margin:9px 0 0 auto;transform:rotate(-4deg)}
+
+.quick{margin-top:-22px;position:relative;z-index:4}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-radius:16px;box-shadow:0 9px 30px rgba(7,61,120,.13);overflow:hidden}
+.quick-card{min-height:90px;padding:16px 18px;display:flex;align-items:center;gap:12px;border-right:1px solid #e4edf4}
+.quick-card:last-child{border:0}
+.q-icon{width:46px;height:46px;flex:0 0 auto;border-radius:50%;background:#edf6ff;color:var(--blue);display:grid;place-items:center;font-size:22px}
+.q-title{font-size:12px;font-weight:800;color:var(--blue);line-height:1.15}
+.q-sub{font-size:9px;color:var(--muted);margin-top:5px}
+.q-arrow{margin-left:auto;width:30px;height:30px;border:1px solid #d9e8f5;border-radius:50%;display:grid;place-items:center;color:var(--blue);font-weight:800}
+
+.find{padding:24px 0 17px}
+.find-box{background:linear-gradient(110deg,#eaf5fd,#f4f9fd);border-radius:15px;padding:16px 18px;display:grid;grid-template-columns:270px 1fr;gap:20px;align-items:center}
+.find-intro{display:flex;gap:11px;align-items:flex-start}
+.find-icon{width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-items:center;color:var(--navy);font-size:21px;box-shadow:0 3px 10px rgba(7,61,120,.08);flex:0 0 auto}
+.find-intro h2{font-family:Manrope,sans-serif;font-size:17px;margin:0;color:var(--navy)}
+.find-intro p{font-size:10px;margin:4px 0 0;color:#5d7186}
+.find-form{display:grid;grid-template-columns:1fr 1fr 1fr 105px;gap:10px}
+.field label{display:block;font-size:9px;font-weight:700;margin-bottom:5px;color:#274968}
+.field select,.field input{width:100%;height:36px;border:1px solid #cbddea;border-radius:7px;background:#fff;padding:0 10px;color:#72859a;font-size:10px;outline:none}
+.find-search{border:0;border-radius:7px;background:var(--red);color:#fff;font-weight:800;font-size:10px;cursor:pointer}
+
+.section{padding:27px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:15px}
+.kicker{font-size:9px;color:var(--red);font-weight:800;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:4px}
+.title{font-family:Manrope,sans-serif;font-size:24px;line-height:1.12;color:var(--navy);margin:0}
+.view{font-size:10px;color:var(--blue);font-weight:800}
+
+.spec-wrap{display:grid;grid-template-columns:300px 1fr;gap:25px;align-items:center}
+.spec-intro .title{font-size:24px}
+.spec-intro .view-btn{display:inline-block;margin-top:16px;border:1px solid #a9cde9;border-radius:8px;padding:9px 13px;font-size:10px;color:var(--blue);font-weight:800}
+.specs{display:grid;grid-template-columns:repeat(8,1fr);gap:12px}
+.spec{text-align:center}
+.spec-icon{width:66px;height:66px;margin:auto;border-radius:50%;background:#edf6ff;color:var(--blue);display:grid;place-items:center;font-size:28px}
+.spec-icon svg{width:28px;height:28px}
+.spec-name{font-size:9px;font-weight:600;line-height:1.15;margin-top:7px;color:#20466c}
+
+.doctor-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.doctor{background:#fff;border:1px solid #e1ebf3;border-radius:11px;overflow:hidden;box-shadow:0 5px 18px rgba(7,61,120,.05)}
+.doctor img{width:100%;height:125px;object-fit:cover;object-position:center top;display:block;background:#eef5fa}
+.doctor-body{padding:9px 11px 11px}
+.doctor-name{font-size:11px;font-weight:800;color:var(--navy)}
+.doctor-exp{font-size:9px;color:var(--blue);margin-top:2px}
+.doctor-years{font-size:8px;color:var(--muted);margin-top:3px}
+.profile{display:inline-block;margin-top:7px;border:1px solid #acd1ef;border-radius:6px;padding:5px 8px;font-size:8px;color:var(--blue);font-weight:800}
+
+.facility-section{background:#f5faff}
+.facility-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.facility{background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e0eaf2;box-shadow:0 6px 18px rgba(7,61,120,.06)}
+.facility img{width:100%;height:128px;object-fit:cover;display:block}
+.facility-body{padding:9px 11px 11px}
+.facility-name{font-size:11px;font-weight:800;color:var(--navy)}
+.facility-desc{font-size:9px;color:var(--muted);margin-top:2px}
+.learn{display:inline-block;margin-top:6px;font-size:8px;color:var(--blue);font-weight:800}
+
+.patient-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.patient{height:175px;border-radius:11px;overflow:hidden;position:relative}
+.patient img{width:100%;height:100%;object-fit:cover;display:block}
+.patient::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(4,24,44,.8))}
+.play{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center;padding-left:3px;font-size:19px}
+.duration{position:absolute;z-index:2;right:9px;top:9px;background:#142535;color:#fff;padding:5px 7px;border-radius:5px;font-size:8px;font-weight:800}
+.patient-title{position:absolute;z-index:2;left:13px;right:13px;bottom:12px;color:#fff;font-size:11px;font-weight:700}
+
+.life{background:#fff}
+.life-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.life-card{border:1px solid #e1eaf2;border-radius:11px;overflow:hidden;background:#fff}
+.life-media{height:130px;position:relative;overflow:hidden}
+.life-media img{width:100%;height:100%;object-fit:cover}
+.life-badge{position:absolute;top:10px;left:10px;color:#fff;border-radius:5px;padding:5px 8px;font-size:8px;font-weight:800}
+.blue{background:#1473c8}.green{background:#16a06a}.orange{background:#ee633d}
+.life-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center;font-size:16px;padding-left:2px}
+.life-body{padding:11px 13px 14px}
+.life-body h3{font-family:Manrope,sans-serif;font-size:13px;line-height:1.25;color:var(--navy);margin:0 0 6px}
+.life-body p{font-size:9px;color:var(--muted);line-height:1.4;margin:0 0 7px}
+.life-body a{font-size:9px;color:var(--blue);font-weight:800}
+.car-arrow{display:none}
+
+@media screen and (max-width:900px){
+  body{overflow-x:hidden}
+  .container{width:calc(100% - 24px);max-width:none}
+
+  /* HEADER */
+  .header{height:68px}
+  .header .container{gap:8px}
+  .logo img{width:128px;height:42px;object-fit:contain;display:block;overflow:hidden}
+  .logo{overflow:hidden;max-height:42px;display:block}
+  .nav,.header-right .book{display:none}
+  .header-right{margin-left:auto;gap:10px}
+  .menu{display:block}
+
+  /* HERO */
+  .hero-inner{display:flex;flex-direction:column;height:auto}
+  .hero-photo{order:1;height:280px}
+  .hero-copy{order:2;padding:25px 4px 28px}
+  .hero h1{font-size:38px;line-height:1.02}
+  .hero-copy p{font-size:13px;line-height:1.45;margin:10px 0 16px}
+  .hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .hero-btn{min-height:50px;padding:12px 8px;font-size:11px}
+  .healing{font-size:20px;right:12px;top:18px}
+
+  /* QUICK ACTIONS — one large card per row */
+  .quick{margin-top:0;padding:14px 0 4px}
+  .quick-grid{display:grid;grid-template-columns:1fr;gap:12px;background:none;box-shadow:none;overflow:visible}
+  .quick-card{width:100%;min-height:112px;border:1px solid #dce8f2;border-radius:18px;background:#fff;padding:18px;box-shadow:0 8px 24px rgba(7,61,120,.09)}
+  .q-icon{width:56px;height:56px;font-size:25px}
+  .q-title{font-size:15px;line-height:1.2}
+  .q-sub{font-size:10px;margin-top:6px}
+  .q-arrow{display:grid;width:36px;height:36px;font-size:17px}
+
+  /* FIND DOCTOR */
+  .find{padding:26px 0 12px}
+  .find-box{display:block;padding:21px;border-radius:18px}
+  .find-intro{gap:13px;margin-bottom:18px}
+  .find-icon{width:48px;height:48px;font-size:24px}
+  .find-intro h2{font-size:20px}
+  .find-intro p{font-size:11px;line-height:1.4;margin:4px 0 0}
+  .find-form{display:grid;grid-template-columns:1fr;gap:12px}
+  .field label{font-size:10px;margin-bottom:6px}
+  .field select,.field input,.find-search{width:100%;height:50px;font-size:12px;border-radius:9px}
+  .find-search{min-height:50px}
+
+  /* SECTION HEADINGS */
+  .section{padding:38px 0}
+  .section-head{display:flex;align-items:flex-end;gap:12px;margin-bottom:20px}
+  .kicker{font-size:9px;letter-spacing:2px}
+  .title{font-size:28px;line-height:1.12}
+  .view{font-size:10px;white-space:nowrap}
+
+  /* CAROUSEL ARROWS — shared by every large-card scroller */
+  .carousel{position:relative}
+  .car-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:38px;height:38px;border-radius:50%;border:0;background:rgba(7,61,120,.85);color:#fff;font-size:19px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(7,61,120,.25)}
+  .car-arrow.prev{left:-2px}
+  .car-arrow.next{right:-2px}
+  .car-arrow:disabled{opacity:.35}
+
+  /* SPECIALITIES — large horizontal scroll tiles */
+  .spec-wrap{display:block}
+  .spec-intro{margin-bottom:22px}
+  .spec-intro .title{font-size:28px}
+  .specs{display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding:3px 34px 17px;scrollbar-width:none}
+  .specs::-webkit-scrollbar{display:none}
+  .spec{flex:0 0 150px;min-width:150px;min-height:170px;padding:16px 10px;border:1px solid #e0eaf3;border-radius:18px;background:#fff;box-shadow:0 7px 20px rgba(7,61,120,.07);scroll-snap-align:start}
+  .spec-icon{width:90px;height:90px;font-size:36px}
+  .spec-icon svg{width:38px;height:38px}
+  .spec-name{font-size:12px;line-height:1.3;margin-top:11px}
+
+  /* DOCTORS — large sliding cards, one main card per view */
+  .doctor-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:16px;padding:2px 30px 6px;scrollbar-width:none}
+  .doctor-grid::-webkit-scrollbar{display:none}
+  .doctor{flex:0 0 84%;min-width:0;border-radius:20px;box-shadow:0 9px 28px rgba(7,61,120,.10);scroll-snap-align:center}
+  .doctor img{width:100%;height:280px;object-fit:cover;object-position:center top}
+  .doctor-body{padding:20px 21px 23px}
+  .doctor-name{font-size:19px}
+  .doctor-exp{font-size:12px;margin-top:5px}
+  .doctor-years{font-size:10px;margin-top:6px}
+  .profile{font-size:11px;padding:9px 14px;margin-top:12px;border-radius:8px}
+
+  /* FACILITIES — large sliding cards */
+  .facility-section{padding-top:38px}
+  .facility-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:16px;padding:2px 30px 6px;scrollbar-width:none}
+  .facility-grid::-webkit-scrollbar{display:none}
+  .facility{flex:0 0 84%;min-width:0;border-radius:20px;box-shadow:0 9px 28px rgba(7,61,120,.10);scroll-snap-align:center}
+  .facility img{width:100%;height:240px;object-fit:cover}
+  .facility-body{padding:19px 21px 22px}
+  .facility-name{font-size:18px}
+  .facility-desc{font-size:11px;margin-top:5px}
+  .learn{font-size:11px;margin-top:11px}
+
+  /* HAPPY PATIENTS — large sliding video cards */
+  .patient-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:16px;padding:2px 30px 6px;scrollbar-width:none}
+  .patient-grid::-webkit-scrollbar{display:none}
+  .patient{flex:0 0 84%;min-width:0;height:280px;border-radius:20px;box-shadow:0 9px 28px rgba(7,61,120,.12);scroll-snap-align:center}
+  .patient-title{left:19px;right:19px;bottom:19px;font-size:17px;line-height:1.25}
+  .play{width:62px;height:62px;font-size:24px}
+  .duration{right:13px;top:13px;font-size:10px;padding:7px 9px}
+
+  /* LIFE AT ARSH — large sliding cards */
+  #life{padding-top:38px}
+  .life-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:16px;padding:2px 30px 6px;scrollbar-width:none}
+  .life-grid::-webkit-scrollbar{display:none}
+  .life-card{flex:0 0 84%;min-width:0;border-radius:20px;box-shadow:0 9px 28px rgba(7,61,120,.09);scroll-snap-align:center}
+  .life-media{height:240px}
+  .life-body{padding:19px 21px 23px}
+  .life-body h3{font-size:19px;line-height:1.25;margin-bottom:9px}
+  .life-body p{font-size:11px;line-height:1.55}
+  .life-body a{font-size:11px}
+  .life-badge{font-size:9px;padding:7px 10px}
+  .life-play{width:58px;height:58px;font-size:21px}
+
+  /* EMERGENCY */
+  #emergency .container{display:flex;flex-direction:column;align-items:flex-start;gap:13px}
+
+  /* FOOTER */
+  footer .container{grid-template-columns:1fr!important;gap:15px!important}
+}
+
+@media screen and (max-width:380px){
+  .hero-photo{height:245px}
+  .hero h1{font-size:34px}
+  .doctor img{height:245px}
+  .facility img{height:205px}
+  .patient{height:245px}
+  .life-media{height:205px}
+}
+
+.mobile-drawer{display:none}
+@media(max-width:900px){
+ .mobile-drawer{position:fixed;inset:68px 0 0 0;background:#fff;z-index:100;padding:25px 22px;box-shadow:0 12px 35px rgba(7,61,120,.16);overflow-y:auto}
+ .mobile-drawer a{display:block;padding:16px 4px;border-bottom:1px solid #e7eef4;font-weight:700;color:#173c63}
+ .mobile-drawer.open{display:block}
+}
+
+
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <a class="logo" href="#home"><img src="https://arshhospitals.com/wp-content/uploads/2021/12/Arsh-Logo-png-2-e1639235875839.png" alt="ARSH Super Speciality Hospital"></a>
+    <nav class="nav">
+      <a href="#home">Home</a><a href="#about">About</a><a href="#specialities">Specialities</a><a href="#doctors">Doctors</a><a href="#facilities">Facilities</a><a href="#guide">Patient Guide</a><a href="#contact">Contact</a>
+    </nav>
+    <div class="header-right"><span class="search">⌕</span><a class="book" href="#find-doctor">Book Appointment</a><button class="menu" aria-label="Menu">☰</button></div>
+  </div>
+</header>
+<div class="mobile-drawer" id="mobileDrawer">
+  <a href="#home">Home</a><a href="#about">About</a><a href="#specialities">Specialities</a>
+  <a href="#doctors">Doctors</a><a href="#facilities">Facilities</a><a href="#patients">Patient Stories</a>
+  <a href="#life">Life at ARSH</a><a href="#contact">Contact</a>
+</div>
+
+
+<main id="home">
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <div class="eyebrow">CARE TODAY FOR A BRIGHTER TOMORROW</div>
+      <h1>Expert Care <span>Closer to You</span></h1>
+      <p>Advanced technology. Experienced specialists.<br>A healthier tomorrow for you and your family.</p>
+      <div class="hero-actions"><a class="hero-btn red" href="#find-doctor">▣ &nbsp; Book an Appointment&nbsp; →</a><a class="hero-btn white" href="#find-doctor">♙ &nbsp; Find a Doctor&nbsp; →</a></div>
+    </div>
+    <div class="hero-photo"><img src="https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=1500&q=88" alt="Doctor and child"><div class="healing">Healing<br>Lives<br>Together</div></div>
+  </div>
+</section>
+
+<section class="quick">
+  <div class="container quick-grid">
+    <a class="quick-card" href="#find-doctor"><div class="q-icon">▣</div><div><div class="q-title">Book an<br>Appointment</div><div class="q-sub">Schedule your visit easily</div></div><span class="q-arrow">→</span></a>
+    <a class="quick-card" href="#find-doctor"><div class="q-icon">♙</div><div><div class="q-title">Find a<br>Doctor</div><div class="q-sub">Expert care for you</div></div><span class="q-arrow">→</span></a>
+    <a class="quick-card" href="#emergency"><div class="q-icon">✚</div><div><div class="q-title">Emergency<br>Care</div><div class="q-sub">24×7 trauma support</div></div><span class="q-arrow">→</span></a>
+    <a class="quick-card" href="#facilities"><div class="q-icon">⌂</div><div><div class="q-title">Our<br>Facilities</div><div class="q-sub">Cath Lab, ICU, OT & more</div></div><span class="q-arrow">→</span></a>
+  </div>
+</section>
+
+<section class="find" id="find-doctor">
+  <div class="container">
+    <div class="find-box">
+      <div class="find-intro"><div class="find-icon">⌕</div><div><h2>Find the Right Care for You</h2><p>Choose a speciality and doctor to book an appointment.</p></div></div>
+      <form class="find-form" id="doctorForm">
+        <div class="field"><label>Choose Speciality</label><select id="speciality"><option value="">Select Speciality</option><option>Orthopaedics & Spine</option><option>Cardiology</option><option>Neurology & Neurosurgery</option><option>Gastroenterology</option><option>Obstetrics & Gynaecology</option><option>Paediatrics</option><option>General Medicine</option><option>ENT</option></select></div>
+        <div class="field"><label>Choose Doctor</label><select id="doctor"><option value="">Select Doctor</option></select></div>
+        <div class="field"><label>Search Doctor (Optional)</label><input id="doctorSearch" placeholder="⌕ &nbsp; Search by name"></div>
+        <button class="find-search" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="specialities">
+  <div class="container spec-wrap">
+    <div class="spec-intro"><div class="kicker">Our Specialities</div><h2 class="title">Comprehensive Care<br>for Every Need</h2><a class="spec-intro view-btn" href="#">View All Specialities&nbsp; →</a></div>
+    <div class="carousel">
+    <button class="car-arrow prev" aria-label="Previous">‹</button>
+    <div class="specs">
+      <div class="spec"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6.5 17.5 17.5 6.5"/><circle cx="4.5" cy="19.5" r="2.5"/><circle cx="19.5" cy="4.5" r="2.5"/></svg></div><div class="spec-name">Orthopaedics<br>& Spine</div></div>
+      <div class="spec"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.8 8.6c0 5.6-8.8 10.4-8.8 10.4S3.2 14.2 3.2 8.6a4.8 4.8 0 0 1 8.8-2.6 4.8 4.8 0 0 1 8.8 2.6Z"/><path d="M6 11h2.2l1.3-2.6L11 13l1.5-3.6L13.8 11H18"/></svg></div><div class="spec-name">Cardiology</div></div>
+      <div class="spec"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4a4 4 0 0 0-4 4 4 4 0 0 0-1 7.9V17a3 3 0 0 0 3 3h1"/><path d="M15 4a4 4 0 0 1 4 4 4 4 0 0 1 1 7.9V17a3 3 0 0 1-3 3h-1"/><path d="M9 4a3 3 0 0 1 6 0v13a3 3 0 0 1-6 0"/></svg></div><div class="spec-name">Neurology &<br>Neurosurgery</div></div>
+      <div class="spec"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 3c-1.5 2-2.5 4-2.5 6.5C5.5 13.5 8 15 10 15c1 0 1.6-.5 1.6-1.4 0-1.6-2.1-1.3-2.1-3.3 0-1.2 1-1.8 2.2-1.8 2.8 0 5.3 2.3 5.3 5.8 0 3.6-2.8 6.2-6.6 6.2C6 20.5 3 17 3 12.4 3 8.7 5 5.3 8 3Z"/></svg></div><div class="spec-name">Gastroenterology</div></div>
+      <div class="spec"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4.2"/><path d="M12 12.2v6M9 18.2h6"/></svg></div><div class="spec-name">Obstetrics &<br>Gynaecology</div></div>
+      <div class="spec"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="7" r="3.2"/><path d="M7 20c0-3.3 2.2-5.5 5-5.5s5 2.2 5 5.5"/></svg></div><div class="spec-name">Paediatrics</div></div>
+      <div class="spec"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 2v5.2L4.6 15A3 3 0 0 0 7.2 19.5h9.6A3 3 0 0 0 19.4 15L15 7.2V2M9 2h6M8 13h8"/></svg></div><div class="spec-name">General Medicine</div></div>
+      <div class="spec"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 4.5c-3 0-5 2.3-5 5.3 0 2.6 1.6 3.7 1.6 5.7v1.5a3.4 3.4 0 0 0 6.8 0v-1.5c0-2 1.6-3.1 1.6-5.7 0-3-2-5.3-5-5.3Z"/><path d="M9 19.5h6"/></svg></div><div class="spec-name">ENT</div></div>
+    </div>
+    <button class="car-arrow next" aria-label="Next">›</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="doctors">
+  <div class="container">
+    <div class="section-head"><div><div class="kicker">Our Doctors</div><h2 class="title">Meet the Experts Behind Your Care</h2></div><a class="view" href="#find-doctor">Find a Doctor&nbsp; →</a></div>
+    <div class="carousel">
+    <button class="car-arrow prev" aria-label="Previous">‹</button>
+    <div class="doctor-grid">
+      <article class="doctor"><img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=700&q=85" alt="Dummy doctor profile"><div class="doctor-body"><div class="doctor-name">Dr. Navneet Nishchal</div><div class="doctor-exp">Orthopaedics & Joint Replacement</div><div class="doctor-years">15+ Years Experience</div><a class="profile" href="#find-doctor">View Profile →</a></div></article>
+      <article class="doctor"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=700&q=85" alt="Dummy doctor profile"><div class="doctor-body"><div class="doctor-name">Dr. Priya Sharma</div><div class="doctor-exp">Cardiology</div><div class="doctor-years">12+ Years Experience</div><a class="profile" href="#find-doctor">View Profile →</a></div></article>
+      <article class="doctor"><img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=700&q=85" alt="Dummy doctor profile"><div class="doctor-body"><div class="doctor-name">Dr. Amit Kumar</div><div class="doctor-exp">Neurology</div><div class="doctor-years">10+ Years Experience</div><a class="profile" href="#find-doctor">View Profile →</a></div></article>
+      <article class="doctor"><img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=700&q=85" alt="Dummy doctor profile"><div class="doctor-body"><div class="doctor-name">Dr. Ritu Singh</div><div class="doctor-exp">Obstetrics & Gynaecology</div><div class="doctor-years">14+ Years Experience</div><a class="profile" href="#find-doctor">View Profile →</a></div></article>
+    </div>
+    <button class="car-arrow next" aria-label="Next">›</button>
+    </div>
+  </div>
+</section>
+
+<section class="section facility-section" id="facilities">
+  <div class="container">
+    <div class="section-head"><div><div class="kicker">Advanced Infrastructure</div><h2 class="title">World-Class Facilities</h2></div><a class="view" href="#">Explore Our Facilities&nbsp; →</a></div>
+    <div class="carousel">
+    <button class="car-arrow prev" aria-label="Previous">‹</button>
+    <div class="facility-grid">
+      <article class="facility"><img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=700&q=85" alt="Cath Lab"><div class="facility-body"><div class="facility-name">Cath Lab</div><div class="facility-desc">Advanced cardiac care</div><a class="learn" href="#">Learn More&nbsp; →</a></div></article>
+      <article class="facility"><img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=700&q=85" alt="Modular OT"><div class="facility-body"><div class="facility-name">Modular OT</div><div class="facility-desc">State-of-the-art theatres</div><a class="learn" href="#">Learn More&nbsp; →</a></div></article>
+      <article class="facility"><img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=700&q=85" alt="ICU and HDU"><div class="facility-body"><div class="facility-name">ICU & HDU</div><div class="facility-desc">24×7 critical care</div><a class="learn" href="#">Learn More&nbsp; →</a></div></article>
+      <article class="facility"><img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=700&q=85" alt="Advanced Radiology"><div class="facility-body"><div class="facility-name">Advanced Radiology</div><div class="facility-desc">MRI, CT, X-Ray & more</div><a class="learn" href="#">Learn More&nbsp; →</a></div></article>
+    </div>
+    <button class="car-arrow next" aria-label="Next">›</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="patients">
+  <div class="container">
+    <div class="section-head"><div><div class="kicker">Happy Patients</div></div><a class="view" href="#">View All Videos&nbsp; →</a></div>
+    <div class="carousel">
+    <button class="car-arrow prev" aria-label="Previous">‹</button>
+    <div class="patient-grid">
+      <article class="patient"><img src="https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=900&q=85" alt="Patient video"><span class="duration">02:14</span><span class="play">▶</span><div class="patient-title">Knee Replacement Gave Me a New Life</div></article>
+      <article class="patient"><img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&w=900&q=85" alt="Patient video"><span class="duration">03:30</span><span class="play">▶</span><div class="patient-title">A Second Chance After an Accident</div></article>
+      <article class="patient"><img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=900&q=85" alt="Patient video"><span class="duration">01:48</span><span class="play">▶</span><div class="patient-title">Timely Treatment Saved My Life</div></article>
+    </div>
+    <button class="car-arrow next" aria-label="Next">›</button>
+    </div>
+  </div>
+</section>
+
+<section class="section life" id="life">
+  <div class="container">
+    <div class="section-head"><div><div class="kicker">Recent Events · Hospital Videos · Updates</div><h2 class="title">Life at ARSH</h2></div><a class="view" href="#">View All Updates&nbsp; →</a></div>
+    <div class="carousel">
+    <button class="car-arrow prev" aria-label="Previous">‹</button>
+    <div class="life-grid">
+      <article class="life-card">
+        <div class="life-media"><img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=700&q=85" alt="Operation Theatre video"><span class="life-badge blue">HOSPITAL VIDEO</span><span class="life-play">▶</span></div>
+        <div class="life-body"><h3>Inside Our Modern Operation Theatre</h3><p>Explore the OT environment, surgical infrastructure and technology at ARSH.</p><a href="#">Watch Video →</a></div>
+      </article>
+      <article class="life-card">
+        <div class="life-media"><img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=700&q=85" alt="Cath Lab video"><span class="life-badge blue">HOSPITAL VIDEO</span><span class="life-play">▶</span></div>
+        <div class="life-body"><h3>Inside the Cath Lab at ARSH</h3><p>See the cardiac care infrastructure supporting advanced procedures.</p><a href="#">Watch Video →</a></div>
+      </article>
+      <article class="life-card">
+        <div class="life-media"><img src="https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=1500&q=88" alt="Recent ARSH event"><span class="life-badge orange">RECENT EVENT</span></div>
+        <div class="life-body"><h3>Health Camp & Community Outreach</h3><p>Latest health camps, awareness programmes and community initiatives.</p><a href="#">View Event →</a></div>
+      </article>
+    </div>
+    <button class="car-arrow next" aria-label="Next">›</button>
+    </div>
+  </div>
+</section>
+
+<section id="emergency" style="background:#073d78;color:#fff;padding:32px 0">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:20px">
+    <div><div style="font-family:Manrope;font-size:24px;font-weight:800">When every second counts</div><div style="font-size:10px;color:#cfe1f2;margin-top:4px">24×7 Emergency & Trauma Care</div></div>
+    <div style="font-size:21px;font-weight:800">+91 73218 31111</div>
+  </div>
+</section>
+</main>
+
+<footer id="contact" style="background:#052f5e;color:#c5d8ea;padding:28px 0 45px;font-size:10px">
+  <div class="container" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px">
+    <div><strong style="color:#fff;font-size:12px">ARSH Super Speciality Hospital</strong><p>165-bed tertiary care hospital serving Gaya, Bodhgaya and the Magadh region.</p></div>
+    <div><strong style="color:#fff">Explore</strong><p>About</p><p>Specialities</p><p>Doctors</p></div>
+    <div><strong style="color:#fff">Patient Care</strong><p>Appointments</p><p>Patient Videos</p><p>Life at ARSH</p></div>
+    <div><strong style="color:#fff">Contact</strong><p>Gaya, Bihar</p><p>+91 73218 31111</p><p>info@arshhospitals.com</p></div>
+  </div>
+</footer>
+
+<script>
+const doctorMap={
+  "Orthopaedics & Spine":["Dr. Navneet Nishchal"],
+  "Cardiology":["Dr. Priya Sharma"],
+  "Neurology & Neurosurgery":["Dr. Amit Kumar"],
+  "Gastroenterology":["Dr. Rohan Mehta"],
+  "Obstetrics & Gynaecology":["Dr. Ritu Singh"],
+  "Paediatrics":["Dr. Neha Verma"],
+  "General Medicine":["Dr. Anil Kumar"],
+  "ENT":["Dr. Pankaj Singh"]
+};
+const speciality=document.getElementById("speciality"), doctor=document.getElementById("doctor");
+speciality.addEventListener("change",()=>{
+  doctor.innerHTML='<option value="">Select Doctor</option>';
+  (doctorMap[speciality.value]||[]).forEach(n=>{
+    const o=document.createElement("option");o.value=n;o.textContent=n;doctor.appendChild(o);
+  });
+});
+document.getElementById("doctorForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  document.getElementById("doctors").scrollIntoView({behavior:"smooth"});
+});
+
+const menuBtn=document.querySelector(".menu"),drawer=document.getElementById("mobileDrawer");
+menuBtn.addEventListener("click",()=>{
+  const isOpen=drawer.classList.toggle("open");
+  document.body.style.overflow=isOpen?"hidden":"";
+  menuBtn.textContent=isOpen?"✕":"☰";
+});
+drawer.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{
+  drawer.classList.remove("open");
+  document.body.style.overflow="";
+  menuBtn.textContent="☰";
+}));
+
+document.querySelectorAll(".carousel").forEach(car=>{
+  const track=car.querySelector(".specs,.doctor-grid,.facility-grid,.patient-grid,.life-grid");
+  const prev=car.querySelector(".car-arrow.prev"), next=car.querySelector(".car-arrow.next");
+  if(!track||!prev||!next) return;
+  const step=()=>Math.round(track.clientWidth*0.86);
+  prev.addEventListener("click",()=>track.scrollBy({left:-step(),behavior:"smooth"}));
+  next.addEventListener("click",()=>track.scrollBy({left:step(),behavior:"smooth"}));
+});
+</script>
+</body>
+</html>
