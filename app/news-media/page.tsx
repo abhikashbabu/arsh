@@ -1,18 +1,11 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
-import { Carousel } from "../../components/Carousel";
+import { getBlogPost, getHomeData } from "../../lib/api";
+import { NewsMediaClient } from "./NewsMediaClient";
 
-const cards = {
-  press: { title: "[Press release headline — to be added]", text: "Placeholder for an official ARSH Hospital press release. Replace with real announcement text and details before publishing.", image: "https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=400&q=80", label: "ARSH Hospital: Gaya, Bihar" },
-  coverage: { title: "[Article headline — to be added]", text: "Placeholder for local or national media coverage featuring ARSH doctors or hospital initiatives. Replace with the real publication name and a short excerpt.", image: "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=400&q=80", label: "Publication: [Name to be added]" },
-  events: { title: "[Health camp or CSR event — to be added]", text: "Placeholder for a health camp, awareness drive or community initiative held by ARSH Hospital. Replace with real event details.", image: "https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=400&q=80", label: "ARSH Hospital: Gaya, Bihar" },
-};
+export default async function NewsMediaPage() {
+  const home = await getHomeData().catch(() => null);
+  const update = home?.updates?.[0] ?? null;
+  const blog = update ? await getBlogPost(update.key).catch(() => null) : null;
 
-export default function NewsMediaPage() {
-  const [tab, setTab] = useState<keyof typeof cards>("press");
-  const item = cards[tab];
-  return <main><div className="container breadcrumb"><Link href="/">Home</Link> / News & Media</div><section className="page-hero"><div className="container"><span className="eyebrow">● &nbsp; Newsroom</span><h1>News & Media</h1><p>Press releases, media coverage and updates on health camps and community initiatives from ARSH Super Speciality Hospital, Gaya.</p></div></section><section className="page-section" id="press"><div className="container"><div className="section-head"><div><div className="kicker">Latest updates</div><h2>Press Releases & Media Coverage</h2></div></div><div className="media-tabs">{(["press", "coverage", "events"] as const).map(key => <button className={`media-tab ${tab === key ? "active" : ""}`} key={key} onClick={() => setTab(key)}>{key === "press" ? "Press Releases" : key === "coverage" ? "Media Coverage" : "Events & CSR"}</button>)}</div><article className="media-card"><div className="media-card-content"><div><h3>{item.title}</h3><p>{item.text}</p>{tab === "coverage" && <Link className="doctor-link" href="#">Read article →</Link>}</div><img src={item.image} alt="Media placeholder" /></div><div className="media-meta"><span><b>Date:</b> [Date to be added]</span><span><b>{item.label.split(":")[0]}:</b> {item.label.split(":").slice(1).join(":")}</span></div></article><p style={{ color: "var(--muted)", fontSize: 13, marginTop: 18 }}>This section is a working template — add real press releases, media coverage links and event write-ups before publishing.</p></div></section>
-    <section className="page-section gallery-section" id="gallery"><div className="container"><div className="section-head"><div><div className="kicker" style={{ color: "#77d8e6" }}>Photo Gallery</div><h2>Health Camps & Hospital Events</h2><p>A look at recent community health camps, awareness drives and hospital milestones.</p></div></div><Carousel>{[["World Heart Day screening camp", "https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=500&q=80"], ["Blood donation drive", "https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=500&q=80"], ["Hospital campus & facilities", "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=500&q=80"], ["Doctor's Day celebration", "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=500&q=80"]].map(([title, image]) => <article className="gallery-card" key={title}><img src={image} alt={title} /><div style={{ padding: 14 }}><strong>{title}</strong></div></article>)}</Carousel></div></section></main>;
+  return <main><div className="container breadcrumb"><Link href="/">Home</Link> / News & Media</div><NewsMediaClient update={update} blog={blog} facilities={home?.facilities ?? []} patients={home?.patient_stories ?? []} /></main>;
 }

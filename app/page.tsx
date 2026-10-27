@@ -1,31 +1,18 @@
-"use client";
+import { getDoctors, getHomeData, getSpecialities } from "../lib/api";
+import { HomePageClient } from "./HomePageClient";
 
-import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { Carousel } from "../components/Carousel";
-import { hospital, images } from "../lib/content";
+export default async function HomePage() {
+  const [home, specialities, doctors] = await Promise.all([
+    getHomeData().catch(() => null),
+    getSpecialities().catch(() => []),
+    getDoctors().catch(() => []),
+  ]);
 
-const specialities = ["Orthopaedics & Spine", "Cardiology", "Neurology & Neurosurgery", "Gastroenterology", "Obstetrics & Gynaecology", "Paediatrics", "General Medicine", "ENT"];
-const doctors = [
-  ["Dr. Navneet Nishchal", "Orthopaedics & Joint Replacement", "15+ Years Experience"], ["Dr. Priya Sharma", "Cardiology", "12+ Years Experience"], ["Dr. Amit Kumar", "Neurology", "10+ Years Experience"], ["Dr. Ritu Singh", "Obstetrics & Gynaecology", "14+ Years Experience"],
-];
-const patients = [
-  ["Knee Replacement Gave Me a New Life", "https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=900&q=85"], ["A Second Chance After an Accident", "https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&w=900&q=85"], ["Timely Treatment Saved My Life", "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=900&q=85"],
-];
+  const mergedHome = home ? {
+    ...home,
+    specialities: specialities.length ? specialities : home.specialities,
+    doctors: doctors.length ? doctors.slice(0, 4) : home.doctors,
+  } : null;
 
-export default function HomePage() {
-  const [speciality, setSpeciality] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setSubmitted(true); document.getElementById("doctors")?.scrollIntoView({ behavior: "smooth" }); };
-  return <main id="home">
-    <section className="hero"><div className="container hero-inner"><div className="hero-copy"><div className="eyebrow">CARE TODAY FOR A BRIGHTER TOMORROW</div><h1>Expert Care <span>Closer to You</span></h1><p>Advanced technology. Experienced specialists.<br />A healthier tomorrow for you and your family.</p><div className="hero-actions"><Link className="hero-button red" href="#find-doctor">▣ &nbsp; Book an Appointment →</Link><Link className="hero-button white" href="#find-doctor">♙ &nbsp; Find a Doctor →</Link></div></div><div className="hero-photo"><img src={images.hero} alt="Doctor providing care" /><div className="healing">Healing<br />Lives<br />Together</div></div></div></section>
-    <section className="quick"><div className="container quick-grid"><Link className="quick-card" href="#find-doctor"><div className="q-icon">▣</div><div><div className="q-title">Book an<br />Appointment</div><div className="q-sub">Schedule your visit easily</div></div><span className="q-arrow">→</span></Link><Link className="quick-card" href="#find-doctor"><div className="q-icon">♙</div><div><div className="q-title">Find a<br />Doctor</div><div className="q-sub">Expert care for you</div></div><span className="q-arrow">→</span></Link><Link className="quick-card" href="#emergency"><div className="q-icon">✚</div><div><div className="q-title">Emergency<br />Care</div><div className="q-sub">24×7 trauma support</div></div><span className="q-arrow">→</span></Link><Link className="quick-card" href="#facilities"><div className="q-icon">⌂</div><div><div className="q-title">Our<br />Facilities</div><div className="q-sub">Cath Lab, ICU, OT & more</div></div><span className="q-arrow">→</span></Link></div></section>
-    <section className="find" id="find-doctor"><div className="container"><div className="find-box"><div className="find-intro"><div className="find-icon">⌕</div><div><h2>Find the Right Care for You</h2><p>Choose a speciality and doctor to book an appointment.</p></div></div><form className="find-form" onSubmit={submit}><div className="field"><label>Choose Speciality</label><select value={speciality} onChange={e => setSpeciality(e.target.value)}><option value="">Select Speciality</option>{specialities.map(item => <option key={item}>{item}</option>)}</select></div><div className="field"><label>Choose Doctor</label><select><option>Select Doctor</option>{speciality && <option>{speciality === "Orthopaedics & Spine" ? "Dr. Navneet Nishchal" : "Available specialist"}</option>}</select></div><div className="field"><label>Search Doctor (Optional)</label><input placeholder="⌕  Search by name" /></div><button className="find-search" type="submit">Search</button></form>{submitted && <p className="success-message">Showing care options. Our team will confirm availability with you.</p>}</div></div></section>
-    <section className="section" id="about"><div className="container spec-wrap" id="specialities"><div className="spec-intro"><div className="kicker">Our Specialities</div><h2 className="title">Comprehensive Care<br />for Every Need</h2><Link className="view-btn" href="#specialities">View All Specialities →</Link></div><Carousel className="spec-carousel">{specialities.map((item, index) => <div className="spec" key={item}><div className="spec-icon">{["⌁", "♥", "◉", "◌", "♙", "●", "⚕", "◒"][index]}</div><div className="spec-name">{item}</div></div>)}</Carousel></div></section>
-    <section className="section" id="doctors"><div className="container"><div className="section-head"><div><div className="kicker">Our Doctors</div><h2 className="title">Meet the Experts Behind Your Care</h2></div><Link className="view" href="#find-doctor">Find a Doctor →</Link></div><Carousel>{doctors.map(([name, exp, years], index) => <article className="doctor" key={name}><img src={images.doctors[index]} alt={name} /><div className="doctor-body"><div className="doctor-name">{name}</div><div className="doctor-exp">{exp}</div><div className="doctor-years">{years}</div><Link className="profile" href="#find-doctor">View Profile →</Link></div></article>)}</Carousel></div></section>
-    <section className="section facility-section" id="facilities"><div className="container"><div className="section-head"><div><div className="kicker">Advanced Infrastructure</div><h2 className="title">World-Class Facilities</h2></div><Link className="view" href="/angiography">Explore Our Facilities →</Link></div><Carousel>{images.facilities.map(([name, desc, image]) => <article className="facility" key={name}><img src={image} alt={name} /><div className="facility-body"><div className="facility-name">{name}</div><div className="facility-desc">{desc}</div><Link className="learn" href="/angiography">Learn More →</Link></div></article>)}</Carousel></div></section>
-    <section className="section" id="patients"><div className="container"><div className="section-head"><div><div className="kicker">Happy Patients</div></div><Link className="view" href="/news-media">View All Videos →</Link></div><Carousel>{patients.map(([title, image]) => <article className="patient" key={title}><img src={image} alt={title} /><span className="duration">02:14</span><span className="play">▶</span><div className="patient-title">{title}</div></article>)}</Carousel></div></section>
-    <section className="section life" id="guide"><div className="container"><div className="section-head"><div><div className="kicker">Recent Events · Hospital Videos · Updates</div><h2 className="title">Life at ARSH</h2></div><Link className="view" href="/news-media">View All Updates →</Link></div><Carousel>{[["Inside Our Modern Operation Theatre", "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=700&q=85"], ["Inside the Cath Lab at ARSH", "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=700&q=85"], ["Health Camp & Community Outreach", images.hero]].map(([title, image]) => <article className="life-card" key={title}><div className="life-media"><img src={image} alt={title} /><span className="life-badge">HOSPITAL VIDEO</span><span className="life-play">▶</span></div><div className="life-body"><h3>{title}</h3><p>Explore hospital infrastructure, patient care and community initiatives at ARSH.</p><Link href="/news-media">View Update →</Link></div></article>)}</Carousel></div></section>
-    <section className="emergency" id="emergency"><div className="container emergency-inner"><div><h2>When every second counts</h2><p>24×7 Emergency & Trauma Care</p></div><a href={`tel:${hospital.phone}`}>{hospital.displayPhone}</a></div></section>
-  </main>;
+  return <HomePageClient home={mergedHome} />;
 }
