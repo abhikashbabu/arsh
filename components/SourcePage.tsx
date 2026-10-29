@@ -13,6 +13,10 @@ export function SourcePage({ data }: { data: SourcePageData }) {
   return (
     <>
       {data.css ? <style dangerouslySetInnerHTML={{ __html: data.css }} /> : null}
+      <link rel="preload" href={`/page-scripts/${data.slug}.js`} as="script" />
+      {data.needsBootstrap ? (
+        <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" as="script" />
+      ) : null}
       <div dangerouslySetInnerHTML={{ __html: data.body }} />
       {data.jsonLd.map((json, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
