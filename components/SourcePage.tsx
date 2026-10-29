@@ -1,4 +1,4 @@
-import Script from "next/script";
+import { PageBehavior } from "@/components/PageBehavior";
 
 type SourcePageData = {
   title: string;
@@ -17,13 +17,7 @@ export function SourcePage({ data }: { data: SourcePageData }) {
       {data.jsonLd.map((json, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
       ))}
-      {data.needsBootstrap ? (
-        <Script
-          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-          strategy="afterInteractive"
-        />
-      ) : null}
-      <Script src={`/page-scripts/${data.slug}.js`} strategy="afterInteractive" />
+      <PageBehavior slug={data.slug} />
     </>
   );
 }
