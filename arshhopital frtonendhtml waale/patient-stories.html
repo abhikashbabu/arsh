@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Patient Recovery Stories | ARSH Super Speciality Hospital, Gaya</title>
+<meta name="description" content="Watch real recovery stories from patients treated at ARSH Super Speciality Hospital, Gaya, across orthopaedics, cardiology, neurology and more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root{--navy:#073d78;--navy-dark:#052f5e;--blue:#1267bd;--red:#d7192e;--pale:#eef7fd;--line:#dce9f4;--muted:#5f7387;
+--bs-body-font-family:"DM Sans",Arial,sans-serif;--bs-body-color:#173c63;--bs-link-hover-color:var(--navy);
+--shadow:0 14px 40px rgba(7,61,120,.10);--radius:20px;--header-h:80px}
+html{scroll-behavior:smooth;scroll-padding-top:var(--header-h)}
+@media(min-width:1920px){html{font-size:18px}}
+@media(min-width:2560px){html{font-size:24px}}
+@media(min-width:3200px){html{font-size:28px}}
+body{overflow-x:hidden}
+a,a:hover,a:focus{text-decoration:none}
+h1,h2,h3,h4{font-family:Manrope,sans-serif;color:var(--navy);letter-spacing:-.02em}
+.wrap{width:100%;max-width:1320px;margin-inline:auto;padding-inline:1.25rem}
+@media(min-width:1920px){.wrap{max-width:1560px}}
+@media(min-width:2560px){.wrap{max-width:1900px}}
+@media(min-width:3200px){.wrap{max-width:2200px}}
+:focus-visible{outline:3px solid rgba(18,103,189,.45);outline-offset:2px}
+.btn-arsh{--bs-btn-bg:var(--red);--bs-btn-border-color:var(--red);--bs-btn-color:#fff;--bs-btn-hover-bg:#b9132a;--bs-btn-hover-border-color:#b9132a;--bs-btn-hover-color:#fff;--bs-btn-active-bg:#a31024;--bs-btn-active-border-color:#a31024;--bs-btn-active-color:#fff;font-weight:600;border-radius:10px;padding:.65rem 1.2rem;font-size:.92rem;box-shadow:0 8px 18px rgba(215,25,46,.2)}
+.btn-ghost{--bs-btn-bg:#fff;--bs-btn-color:var(--blue);--bs-btn-border-color:#cfe2f3;--bs-btn-hover-bg:var(--pale);--bs-btn-hover-color:var(--navy);--bs-btn-hover-border-color:#b6d3ec;font-weight:600;border-radius:10px;padding:.65rem 1.2rem;font-size:.92rem}
+
+/* Header (same as home) */
+.topbar{background:var(--navy-dark);color:#cfe1f2;font-size:.78rem}
+.topbar a{color:#fff;font-weight:600}
+.site-header{position:sticky;top:0;z-index:1030;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid #e5edf4;height:var(--header-h)}
+.site-header .wrap{height:100%;display:flex;align-items:center;gap:1rem}
+.logo img{height:46px;width:auto;display:block}
+.main-nav{display:flex;align-items:center;gap:.25rem;margin-left:auto}
+.main-nav a{padding:.5rem .85rem;border-radius:10px;font-size:.88rem;font-weight:600;color:#244665;transition:background .2s,color .2s}
+.main-nav a:hover,.main-nav a.active{background:var(--pale);color:var(--blue)}
+.menu-btn{width:44px;height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);font-size:1.5rem;display:none;align-items:center;justify-content:center;padding:0}
+.search-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--navy);font-size:1rem;display:flex;align-items:center;justify-content:center;padding:0;flex:none;transition:.2s}
+.search-btn:hover{background:var(--pale);color:var(--blue)}
+.sm{position:fixed;inset:0;z-index:1070;display:none;align-items:flex-start;justify-content:center;padding:12vh 1rem 1rem;background:rgba(5,30,60,.6);backdrop-filter:blur(4px)}
+.sm.open{display:flex}
+.sm-box{width:min(640px,100%);background:#fff;border-radius:20px;padding:1.25rem;box-shadow:0 30px 70px rgba(5,30,60,.35)}
+.sm-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.sm-head h2{font-size:1.05rem;font-weight:700;margin:0}
+.sm-close{width:36px;height:36px;border:0;border-radius:50%;background:var(--pale);color:var(--navy);display:flex;align-items:center;justify-content:center;padding:0}
+.sm-box .input-group-text{height:3rem;background:#f8fbfe;border:1px solid #d3e3f1;border-right:0;border-radius:12px 0 0 12px;color:var(--blue)}
+.sm-box .form-control{height:3rem;border:1px solid #d3e3f1;border-left:0;border-right:0;border-radius:0;background:#f8fbfe;font-size:.95rem}
+.sm-box .btn{height:3rem;border-radius:0 12px 12px 0;box-shadow:none}
+.sm-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.9rem}
+.sm-chips button{border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:999px;padding:.3rem .8rem;font-size:.8rem;font-weight:500}
+.sm-chips button:hover{background:var(--pale)}
+.scrim{position:fixed;inset:0;background:rgba(5,30,60,.55);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:.3s;z-index:1040}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(86vw,360px);background:#fff;z-index:1050;transform:translateX(100%);transition:transform .35s cubic-bezier(.22,.8,.3,1);display:flex;flex-direction:column;box-shadow:-20px 0 50px rgba(7,61,120,.2)}
+.drawer-open .scrim{opacity:1;visibility:visible}
+.drawer-open .drawer{transform:none}
+.drawer-open{overflow:hidden}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--line)}
+.drawer-top img{height:40px}
+.drawer-close{width:40px;height:40px;border:0;border-radius:50%;background:var(--pale);color:var(--navy);font-size:1.1rem;padding:0;display:flex;align-items:center;justify-content:center}
+.drawer-links{flex:1;overflow-y:auto;padding:.75rem 1rem}
+.drawer-links a{display:flex;align-items:center;gap:.9rem;padding:.8rem .7rem;border-radius:14px;font-weight:600;font-size:.95rem;color:var(--navy)}
+.drawer-links a i{width:38px;height:38px;border-radius:12px;background:var(--pale);color:var(--blue);display:grid;place-items:center;font-size:1.05rem}
+.drawer-links a:hover,.drawer-links a.active{background:var(--pale)}
+.drawer-links a::after{content:"\F285";font-family:"bootstrap-icons";margin-left:auto;color:#9bb3c9;font-size:.8rem}
+.drawer-foot{padding:1.1rem 1.25rem 1.5rem;border-top:1px solid var(--line);background:var(--pale)}
+.drawer-emerg{display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem;color:var(--navy);font-weight:700}
+.drawer-emerg i{width:40px;height:40px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center}
+.drawer-emerg small{display:block;font-weight:500;color:var(--muted)}
+@media(max-width:991.98px){.main-nav,.header-cta{display:none}.menu-btn{display:flex}.search-btn{margin-left:auto}:root{--header-h:66px}}
+
+/* Shared */
+.section{padding:clamp(2.6rem,5.5vw,5.5rem) 0}
+.kicker{display:inline-flex;align-items:center;gap:.5rem;color:var(--red);font-weight:600;font-size:.85rem;margin-bottom:.4rem}
+.kicker::before{content:"";width:22px;height:3px;border-radius:3px;background:var(--red)}
+.title{font-size:clamp(1.5rem,2.8vw,2.4rem);line-height:1.15;font-weight:700;margin:0}
+
+/* Page hero */
+.page-hero{background:radial-gradient(circle at 15% 20%,#fff 0,var(--pale) 55%,#e3f1fb 100%);padding:clamp(2rem,4.5vw,4rem) 0 clamp(2.2rem,4.5vw,3.6rem)}
+.page-hero h1{font-size:clamp(2rem,3.8vw,3.4rem);line-height:1.08;font-weight:800;margin:0 0 .9rem}
+.page-hero h1 span{color:var(--red)}
+.page-hero .lead{color:#49647d;font-size:clamp(.95rem,1.15vw,1.1rem);max-width:38rem;margin:0}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap}
+.hero-stats strong{display:block;font-family:Manrope;font-size:1.6rem;color:var(--navy)}
+.hero-stats span{font-size:.8rem;color:var(--muted)}
+
+/* Filters */
+.filters{display:flex;gap:.5rem;flex-wrap:wrap}
+.filters button{border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:999px;padding:.4rem 1rem;font-size:.84rem;font-weight:600;transition:.2s}
+.filters button:hover{background:var(--pale)}
+.filters button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.count{font-size:.84rem;color:var(--muted)}
+
+/* Video cards */
+.v-card{display:block;width:100%;border:0;padding:0;text-align:left;background:none;color:inherit}
+.v-thumb{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/10;background:#e3eef7;box-shadow:0 8px 26px rgba(7,61,120,.12)}
+.v-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.v-card:hover .v-thumb img{transform:scale(1.04)}
+.v-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(4,24,44,.55))}
+.v-play{position:absolute;z-index:2;inset:0;margin:auto;width:52px;height:52px;border-radius:50%;background:#fff;color:var(--red);display:grid;place-items:center;font-size:1.6rem;transition:transform .2s}
+.v-play::before{display:block;line-height:1}
+.v-card:hover .v-play{transform:scale(1.1)}
+.v-dur{position:absolute;z-index:2;top:10px;right:10px;background:rgba(20,37,53,.85);color:#fff;border-radius:8px;padding:.15rem .5rem;font-size:.72rem;font-weight:600}
+.v-tag{position:absolute;z-index:2;top:10px;left:10px;background:#fff;color:var(--blue);border-radius:8px;padding:.15rem .55rem;font-size:.72rem;font-weight:600}
+.v-body{padding:.8rem .2rem 0}
+.v-body h3{font-size:.98rem;font-weight:700;margin:0 0 .15rem;line-height:1.3}
+.v-body p{font-size:.8rem;color:var(--muted);margin:0}
+.v-item{animation:vin .45s ease both}
+@keyframes vin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.skel .v-thumb{background:linear-gradient(90deg,#e3eef7 25%,#f1f7fc 50%,#e3eef7 75%);background-size:200% 100%;animation:sh 1.2s infinite;box-shadow:none}
+.skel .v-thumb::after{display:none}
+.skel .l{height:12px;border-radius:6px;background:#e3eef7;margin-top:.8rem;width:80%}
+.skel .l.s{width:50%;margin-top:.5rem}
+@keyframes sh{to{background-position:-200% 0}}
+.end-note{text-align:center;color:var(--muted);font-size:.86rem;padding:1.5rem 0 0}
+
+/* Modal */
+.modal-content{border:0;border-radius:20px;overflow:hidden}
+.modal-header{border:0;padding:1rem 1.25rem .6rem}
+.modal-title{font-size:1.05rem;font-weight:700;color:var(--navy);font-family:Manrope}
+.v-empty{display:grid;place-items:center;text-align:center;padding:2rem;color:var(--muted);background:var(--pale);height:100%}
+
+/* CTA */
+.cta{background:#fff;border:1px solid var(--line);border-radius:24px;padding:clamp(1.4rem,3vw,2.4rem);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+.cta h2{font-size:clamp(1.25rem,2.2vw,1.8rem);font-weight:700;margin:0 0 .3rem}
+.cta p{margin:0;color:var(--muted);font-size:.92rem}
+
+/* Strip + footer (same as home) */
+.strip{background:linear-gradient(110deg,var(--navy-dark),var(--navy));color:#fff;padding:.9rem 0}
+.strip .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.strip .lft{display:flex;align-items:center;gap:.9rem}
+.strip-ic{width:38px;height:38px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 0 0 6px rgba(215,25,46,.22)}
+.strip b{font-family:Manrope;font-weight:700;font-size:1rem}
+.strip small{display:block;color:#b9d0e6;font-size:.78rem}
+.call{background:var(--red);color:#fff;border-radius:999px;padding:.4rem 1rem;font-size:.85rem;font-weight:600}
+.call:hover{color:#fff;background:#b9132a}
+footer{background:#041f3f;color:#9fb8ce;padding:2.2rem 0 1rem;font-size:.8rem;border-top:3px solid var(--red)}
+footer h6{color:#e6f0f9;font-weight:600;font-size:.82rem;margin-bottom:.8rem}
+footer a{color:#9fb8ce;display:block;margin-bottom:.4rem}
+footer a:hover{color:#fff}
+footer p{margin:0 0 .8rem;max-width:26rem;line-height:1.55}
+footer .fl a{transition:color .2s,padding-left .2s}
+footer .fl a:hover{padding-left:.25rem}
+.social{display:flex;gap:.5rem}
+.social a{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin:0;color:#cfe1f2}
+.social a:hover{background:var(--red)}
+.fi{display:flex;gap:.55rem;margin-bottom:.45rem;color:#9fb8ce}
+.copy{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem;border-top:1px solid rgba(255,255,255,.08);margin-top:1.5rem;padding-top:1rem;font-size:.74rem;color:#7f9bb3}
+.copy a{display:inline;margin:0;color:#cfe1f2;font-weight:600}
+.copy a:hover{color:#fff}
+
+.drawer-close .bi,.menu-btn .bi,.search-btn .bi,.sm-close .bi,.drawer-links a>i,.drawer-emerg .bi,.social .bi{display:flex;align-items:center;justify-content:center;line-height:1}
+.drawer-close .bi::before,.menu-btn .bi::before,.search-btn .bi::before,.sm-close .bi::before,.drawer-links a>i::before,.drawer-emerg .bi::before,.social .bi::before{display:block;vertical-align:0;line-height:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar d-none d-lg-block">
+  <div class="wrap d-flex justify-content-between py-2">
+    <span><i class="bi bi-geo-alt me-1"></i> Gaya, Bihar</span>
+    <span><i class="bi bi-clock me-1"></i> OPD 9 AM - 6 PM &nbsp;|&nbsp; <i class="bi bi-telephone me-1"></i> Emergency 24x7: <a href="tel:+917321831111">+91 73218 31111</a></span>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/"><img src="https://arshhospitals.com/wp-content/uploads/2021/12/Arsh-Logo-png-2-e1639235875839.png" alt="ARSH Super Speciality Hospital"></a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="/">Home</a><a href="#">About</a><a href="/specialities">Specialities</a><a href="/doctors">Doctors</a><a href="/facilities">Facilities</a><a class="active" href="/patient-stories" aria-current="page">Patient Stories</a><a href="#">Contact</a>
+    </nav>
+    <button class="search-btn" id="searchBtn" aria-label="Search" aria-expanded="false" aria-controls="searchModal"><i class="bi bi-search"></i></button>
+    <a class="btn btn-arsh header-cta" href="/#find-doctor"><i class="bi bi-calendar2-check me-1"></i> Book Appointment</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-controls="drawer" aria-expanded="false"><i class="bi bi-list"></i></button>
+  </div>
+</header>
+
+<div class="sm" id="searchModal" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="sm-box">
+    <div class="sm-head"><h2>Search ARSH</h2><button class="sm-close" id="searchClose" aria-label="Close search"><i class="bi bi-x-lg"></i></button></div>
+    <form role="search" action="/search" method="get">
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input class="form-control" id="searchInput" type="search" name="q" placeholder="Search doctors, specialities or services" autocomplete="off">
+        <button class="btn btn-arsh" type="submit">Search</button>
+      </div>
+    </form>
+    <div class="sm-chips"><button type="button">Cardiology</button><button type="button">Orthopaedics</button><button type="button">Neurology</button><button type="button">Emergency</button><button type="button">Book appointment</button></div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Mobile menu">
+  <div class="drawer-top">
+    <img src="https://arshhospitals.com/wp-content/uploads/2021/12/Arsh-Logo-png-2-e1639235875839.png" alt="ARSH">
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <nav class="drawer-links">
+    <a href="/"><i class="bi bi-house-door"></i>Home</a>
+    <a href="#"><i class="bi bi-info-circle"></i>About</a>
+    <a href="/specialities"><i class="bi bi-heart-pulse"></i>Specialities</a>
+    <a href="/doctors"><i class="bi bi-person-badge"></i>Doctors</a>
+    <a href="/facilities"><i class="bi bi-hospital"></i>Facilities</a>
+    <a class="active" href="/patient-stories"><i class="bi bi-chat-heart"></i>Patient Stories</a>
+    <a href="#"><i class="bi bi-play-circle"></i>Life at ARSH</a>
+    <a href="#"><i class="bi bi-telephone"></i>Contact</a>
+  </nav>
+  <div class="drawer-foot">
+    <a class="drawer-emerg" href="tel:+917321831111"><i class="bi bi-telephone-fill"></i><span><small>24x7 Emergency</small>+91 73218 31111</span></a>
+    <a class="btn btn-arsh w-100" href="/#find-doctor"><i class="bi bi-calendar2-check me-1"></i> Book Appointment</a>
+  </div>
+</aside>
+
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <div class="row g-4 align-items-end">
+      <div class="col-lg-7">
+        <h1>Patient <span>Recovery Stories</span></h1>
+        <p class="lead">Hear from patients and families about their treatment and recovery journey at ARSH Hospital, Gaya.</p>
+      </div>
+      <div class="col-lg-5"><div class="hero-stats justify-content-lg-end"><div><strong id="totalCount">0</strong><span>Patient stories</span></div><div><strong>8+</strong><span>Specialities</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-4 pt-lg-5">
+  <div class="wrap">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+      <div class="filters" id="filters" role="group" aria-label="Filter by speciality"></div>
+      <span class="count" id="countLabel" aria-live="polite"></span>
+    </div>
+
+    <div class="row g-3 g-lg-4" id="grid"></div>
+
+    <div id="sentinel" class="py-2"></div>
+    <div class="end-note d-none" id="endNote"><i class="bi bi-check-circle me-1"></i>You have seen all patient stories.</div>
+  </div>
+</section>
+
+<section class="section pt-0">
+  <div class="wrap">
+    <div class="cta">
+      <div><h2>Need care for yourself or a family member?</h2><p>Book an appointment or call us, and our team will guide you.</p></div>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-arsh" href="/#find-doctor"><i class="bi bi-calendar2-check me-2"></i>Book an Appointment</a>
+        <a class="btn btn-ghost" href="tel:+917321831111"><i class="bi bi-telephone me-2"></i>+91 73218 31111</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="strip" id="emergency">
+  <div class="wrap">
+    <div class="lft"><span class="strip-ic"><svg viewBox="0 0 24 24" width="1.25rem" height="1.25rem" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18v-5a5 5 0 0 1 10 0v5"/><path d="M4 18h16v3H4z"/><path d="M12 2v2M4.5 5.5 6 7M19.5 5.5 18 7M2 12h2M20 12h2"/></svg></span><div><b>When every second counts</b><small>24x7 Emergency Care</small></div></div>
+    <a class="call" href="tel:+917321831111"><i class="bi bi-telephone-fill me-1"></i> +91 73218 31111</a>
+  </div>
+</section>
+</main>
+
+<!-- Video modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"><h2 class="modal-title" id="videoTitle"></h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+      <div class="ratio ratio-16x9 bg-dark" id="videoBox"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <h6>ARSH Super Speciality Hospital</h6>
+        <p>165-bed tertiary care hospital serving Gaya, Bodhgaya and the Magadh region.</p>
+        <div class="social"><a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a><a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a><a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a></div>
+      </div>
+      <div class="col-6 col-lg-2 fl"><h6>Explore</h6><a href="#">About</a><a href="/specialities">Specialities</a><a href="/doctors">Doctors</a><a href="#">News &amp; Media</a></div>
+      <div class="col-6 col-lg-2 fl"><h6>Patient care</h6><a href="#">Appointments</a><a href="#">International Patients</a><a href="/patient-stories">Patient videos</a><a href="#">Life at ARSH</a></div>
+      <div class="col-lg-3"><h6>Contact</h6><div class="fi"><i class="bi bi-geo-alt"></i>Gaya, Bihar</div><div class="fi"><i class="bi bi-telephone"></i>+91 73218 31111</div><div class="fi"><i class="bi bi-envelope"></i>info@arshhospitals.com</div><div class="fi"><i class="bi bi-clock"></i>OPD 9 AM - 6 PM</div></div>
+    </div>
+    <div class="copy"><span>&copy; ARSH Super Speciality Hospital. All rights reserved.</span><span>Powered by <a href="https://thebsocial.in/" target="_blank" rel="noopener">TheBsocial</a></span></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ============================================================
+   PATIENT STORIES DATA
+   Replace the sample items below with your real videos.
+   - yt: YouTube video ID (e.g. "dQw4w9WgXcQ"). Thumbnail is picked up automatically.
+   - thumb: optional custom thumbnail (used if yt is empty)
+   - Only publish stories with the patient's written consent.
+   ============================================================ */
+const STORIES=[
+ {title:"Knee replacement gave me a new life",who:"Orthopaedics patient, Gaya",cat:"Orthopaedics",dur:"02:14",yt:"",thumb:"photo-1584982751601-97dcc096659c"},
+ {title:"A second chance after an accident",who:"Trauma care patient",cat:"Orthopaedics",dur:"03:30",yt:"",thumb:"photo-1551601651-2a8555f1a136"},
+ {title:"Timely treatment saved my life",who:"Emergency care patient",cat:"Emergency",dur:"01:48",yt:"",thumb:"photo-1576091160399-112ba8d25d1d"},
+ {title:"Walking again after hip surgery",who:"Orthopaedics patient",cat:"Orthopaedics",dur:"02:40",yt:"",thumb:"photo-1576091160550-2173dba999ef"},
+ {title:"Back to farm work after fracture care",who:"Trauma care patient",cat:"Orthopaedics",dur:"02:05",yt:"",thumb:"photo-1631217868264-e5b90bb7e133"},
+ {title:"Heart attack recovery and angioplasty",who:"Cardiology patient",cat:"Cardiology",dur:"03:12",yt:"",thumb:"photo-1516549655169-df83a0774514"},
+ {title:"Pain-free after years of back pain",who:"Spine care patient",cat:"Orthopaedics",dur:"01:56",yt:"",thumb:"photo-1551076805-e1869033e561"},
+ {title:"Stroke recovery step by step",who:"Neurology patient",cat:"Neurology",dur:"03:45",yt:"",thumb:"photo-1519494026892-80bbd2d6fd0d"},
+ {title:"Safe delivery and a healthy baby",who:"Maternity patient",cat:"Gynaecology",dur:"02:22",yt:"",thumb:"photo-1586773860418-d37222d8fce3"},
+ {title:"Relief from long-standing acidity",who:"Gastroenterology patient",cat:"Gastroenterology",dur:"01:38",yt:"",thumb:"photo-1559757175-0eb30cd8c063"},
+ {title:"Cleared to play again after ACL surgery",who:"Sports injury patient",cat:"Orthopaedics",dur:"02:50",yt:"",thumb:"photo-1584982751601-97dcc096659c"},
+ {title:"Our child recovered quickly",who:"Paediatrics parent",cat:"Paediatrics",dur:"01:44",yt:"",thumb:"photo-1551601651-2a8555f1a136"},
+ {title:"Angiography: what I experienced",who:"Cardiology patient",cat:"Cardiology",dur:"02:08",yt:"",thumb:"photo-1516549655169-df83a0774514"},
+ {title:"Shoulder pain gone after treatment",who:"Orthopaedics patient",cat:"Orthopaedics",dur:"01:52",yt:"",thumb:"photo-1576091160399-112ba8d25d1d"},
+ {title:"Epilepsy care that changed our lives",who:"Neurology patient family",cat:"Neurology",dur:"03:05",yt:"",thumb:"photo-1576091160550-2173dba999ef"},
+ {title:"Sinus surgery and a fresh start",who:"ENT patient",cat:"ENT",dur:"01:41",yt:"",thumb:"photo-1631217868264-e5b90bb7e133"},
+ {title:"ICU care that gave us hope",who:"Family of ICU patient",cat:"Emergency",dur:"02:33",yt:"",thumb:"photo-1586773860418-d37222d8fce3"},
+ {title:"Managing diabetes with the right guidance",who:"General Medicine patient",cat:"General Medicine",dur:"02:01",yt:"",thumb:"photo-1559757175-0eb30cd8c063"},
+ {title:"High-risk pregnancy, safe outcome",who:"Maternity patient",cat:"Gynaecology",dur:"02:47",yt:"",thumb:"photo-1551076805-e1869033e561"},
+ {title:"Gallbladder surgery, quick recovery",who:"Gastroenterology patient",cat:"Gastroenterology",dur:"01:59",yt:"",thumb:"photo-1519494026892-80bbd2d6fd0d"}
+];
+
+const BATCH=8; /* 2 rows of 4 per load */
+const grid=document.getElementById("grid"),sentinel=document.getElementById("sentinel"),endNote=document.getElementById("endNote"),countLabel=document.getElementById("countLabel");
+let list=STORIES,shown=0,loading=false,filter="All";
+
+document.getElementById("totalCount").textContent=STORIES.length;
+
+/* Filters */
+const cats=["All",...new Set(STORIES.map(s=>s.cat))];
+const fBox=document.getElementById("filters");
+cats.forEach(c=>{const b=document.createElement("button");b.type="button";b.textContent=c;b.className=c==="All"?"on":"";b.addEventListener("click",()=>{
+  fBox.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
+  filter=c;list=c==="All"?STORIES:STORIES.filter(s=>s.cat===c);
+  grid.innerHTML="";shown=0;endNote.classList.add("d-none");loadMore();
+});fBox.appendChild(b);});
+
+const thumbOf=s=>s.yt?`https://img.youtube.com/vi/${s.yt}/hqdefault.jpg`:`https://images.unsplash.com/${s.thumb}?auto=format&fit=crop&w=700&q=80`;
+const esc=t=>t.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+
+function card(s){
+  const col=document.createElement("div");col.className="col-12 col-sm-6 col-lg-3 v-item";
+  col.innerHTML=`<button class="v-card" type="button" aria-label="Play: ${esc(s.title)}">
+    <div class="v-thumb"><img src="${thumbOf(s)}" alt="${esc(s.title)}" loading="lazy"><span class="v-tag">${esc(s.cat)}</span><span class="v-dur">${s.dur}</span><span class="v-play"><i class="bi bi-play-fill"></i></span></div>
+    <div class="v-body"><h3>${esc(s.title)}</h3><p>${esc(s.who)}</p></div></button>`;
+  col.querySelector("button").addEventListener("click",()=>openVideo(s));
+  return col;
+}
+function skeletons(n){
+  const f=document.createDocumentFragment();
+  for(let i=0;i<n;i++){const c=document.createElement("div");c.className="col-12 col-sm-6 col-lg-3 skel";c.innerHTML='<div class="v-thumb"></div><div class="l"></div><div class="l s"></div>';f.appendChild(c);}
+  grid.appendChild(f);return [...grid.querySelectorAll(".skel")];
+}
+function updateCount(){countLabel.textContent=`Showing ${Math.min(shown,list.length)} of ${list.length} stories`;}
+
+/* Load next batch (simulated short delay so the loader is visible) */
+function loadMore(){
+  if(loading||shown>=list.length)return;
+  loading=true;
+  const next=list.slice(shown,shown+BATCH);
+  const sk=skeletons(next.length);
+  setTimeout(()=>{
+    sk.forEach(e=>e.remove());
+    const f=document.createDocumentFragment();next.forEach(s=>f.appendChild(card(s)));grid.appendChild(f);
+    shown+=next.length;loading=false;updateCount();
+    if(shown>=list.length){endNote.classList.remove("d-none");io.disconnect();}
+    else{io.disconnect();io.observe(sentinel);} /* re-check if sentinel is still visible */
+  },450);
+}
+
+/* Infinite scroll */
+const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting))loadMore();},{rootMargin:"300px 0px"});
+io.observe(sentinel);
+loadMore();
+
+/* Video modal */
+const modalEl=document.getElementById("videoModal"),modal=new bootstrap.Modal(modalEl),box=document.getElementById("videoBox"),vt=document.getElementById("videoTitle");
+function openVideo(s){
+  vt.textContent=s.title;
+  box.innerHTML=s.yt
+    ?`<iframe src="https://www.youtube-nocookie.com/embed/${s.yt}?autoplay=1&rel=0" title="${esc(s.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+    :`<div class="v-empty"><div><i class="bi bi-camera-video fs-1 d-block mb-2"></i>Video coming soon</div></div>`;
+  modal.show();
+}
+modalEl.addEventListener("hidden.bs.modal",()=>{box.innerHTML="";});
+
+/* Mobile drawer */
+const menuBtn=document.getElementById("menuBtn");
+const setDrawer=o=>{document.body.classList.toggle("drawer-open",o);menuBtn.setAttribute("aria-expanded",o)};
+menuBtn.addEventListener("click",()=>setDrawer(true));
+document.getElementById("drawerClose").addEventListener("click",()=>setDrawer(false));
+document.getElementById("scrim").addEventListener("click",()=>setDrawer(false));
+document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=>setDrawer(false)));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")setDrawer(false)});
+
+/* Search modal */
+(()=>{
+  const b=document.getElementById("searchBtn"),m=document.getElementById("searchModal"),i=document.getElementById("searchInput");
+  const set=o=>{m.classList.toggle("open",o);b.setAttribute("aria-expanded",o);document.body.style.overflow=o?"hidden":"";if(o)setTimeout(()=>i.focus(),30);};
+  b.addEventListener("click",()=>set(true));
+  document.getElementById("searchClose").addEventListener("click",()=>set(false));
+  m.addEventListener("click",e=>{if(e.target===m)set(false)});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false)});
+  m.querySelectorAll(".sm-chips button").forEach(c=>c.addEventListener("click",()=>{i.value=c.textContent;i.focus();}));
+})();
+</script>
+</body>
+</html>

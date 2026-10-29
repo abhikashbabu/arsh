@@ -1,18 +1,9 @@
-import { getDoctors, getHomeData, getSpecialities } from "../lib/api";
-import { HomePageClient } from "./HomePageClient";
+import type { Metadata } from "next";
+import home from "@/content/home.json";
+import { SourcePage } from "@/components/SourcePage";
 
-export default async function HomePage() {
-  const [home, specialities, doctors] = await Promise.all([
-    getHomeData().catch(() => null),
-    getSpecialities().catch(() => []),
-    getDoctors().catch(() => []),
-  ]);
+export const metadata: Metadata = { title: home.title };
 
-  const mergedHome = home ? {
-    ...home,
-    specialities: specialities.length ? specialities : home.specialities,
-    doctors: doctors.length ? doctors.slice(0, 4) : home.doctors,
-  } : null;
-
-  return <HomePageClient home={mergedHome} />;
+export default function HomePage() {
+  return <SourcePage data={home} />;
 }

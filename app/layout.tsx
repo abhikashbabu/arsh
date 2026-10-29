@@ -1,34 +1,22 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import { SiteHeader } from "../components/SiteHeader";
-import { SiteFooter } from "../components/SiteFooter";
-import { getHomeData } from "../lib/api";
-import { hospital, navLinks } from "../lib/content";
+import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "ARSH Super Speciality Hospital | Gaya, Bihar",
-  description: "Expert, patient-first healthcare at ARSH Super Speciality Hospital in Gaya and Bodhgaya, Bihar.",
+  title: "ARSH Super Speciality Hospital",
+  description: "ARSH Super Speciality Hospital, Gaya, Bihar",
 };
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const home = await getHomeData().catch(() => null);
-  const navItems = home?.navigation.items.map(item => ({
-    label: item.label,
-    href: item.target.startsWith("#") ? `/${item.target}` : item.target,
-  })) ?? navLinks.map(([label, href]) => ({ label, href }));
-  const phone = home?.contact.phone ?? hospital.displayPhone;
-  const phoneHref = home?.emergency.tel_url ?? `tel:${hospital.phone}`;
-  const email = home?.contact.email ?? hospital.email;
-  const address = home?.contact.address ?? hospital.address;
-  const name = home?.site.name ?? hospital.name;
-
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>
-        <SiteHeader logoUrl={home?.site.logo_url ?? hospital.logo} navItems={navItems} phone={phone} phoneHref={phoneHref} />
-        {children}
-        <SiteFooter name={name} tagline={home?.site.tagline} address={address} phone={phone} phoneHref={phoneHref} email={email} />
-      </body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet" />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }

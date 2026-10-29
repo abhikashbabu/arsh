@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book an Appointment | ARSH Super Speciality Hospital, Gaya</title>
+<meta name="description" content="Book an appointment online at ARSH Super Speciality Hospital, Gaya. Choose your speciality or doctor, pick a time slot and pay online to get your token number.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root{--navy:#073d78;--navy-dark:#052f5e;--blue:#1267bd;--red:#d7192e;--pale:#eef7fd;--line:#dce9f4;--muted:#5f7387;
+--bs-body-font-family:"DM Sans",Arial,sans-serif;--bs-body-color:#173c63;--bs-link-hover-color:var(--navy);
+--shadow:0 14px 40px rgba(7,61,120,.10);--radius:20px;--header-h:80px}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 1rem)}
+@media(min-width:1920px){html{font-size:18px}}
+@media(min-width:2560px){html{font-size:24px}}
+@media(min-width:3200px){html{font-size:28px}}
+body{overflow-x:hidden;background:#f5faff}
+a,a:hover,a:focus{text-decoration:none}
+h1,h2,h3,h4{font-family:Manrope,sans-serif;color:var(--navy);letter-spacing:-.02em}
+.wrap{width:100%;max-width:1320px;margin-inline:auto;padding-inline:1.25rem}
+@media(min-width:1920px){.wrap{max-width:1560px}}
+@media(min-width:2560px){.wrap{max-width:1900px}}
+@media(min-width:3200px){.wrap{max-width:2200px}}
+:focus-visible{outline:3px solid rgba(18,103,189,.45);outline-offset:2px}
+.btn-arsh{--bs-btn-bg:var(--red);--bs-btn-border-color:var(--red);--bs-btn-color:#fff;--bs-btn-hover-bg:#b9132a;--bs-btn-hover-border-color:#b9132a;--bs-btn-hover-color:#fff;--bs-btn-active-bg:#a31024;--bs-btn-active-border-color:#a31024;--bs-btn-active-color:#fff;--bs-btn-disabled-bg:var(--red);--bs-btn-disabled-border-color:var(--red);font-weight:600;border-radius:10px;padding:.65rem 1.2rem;font-size:.92rem;box-shadow:0 8px 18px rgba(215,25,46,.2)}
+.btn-ghost{--bs-btn-bg:#fff;--bs-btn-color:var(--blue);--bs-btn-border-color:#cfe2f3;--bs-btn-hover-bg:var(--pale);--bs-btn-hover-color:var(--navy);--bs-btn-hover-border-color:#b6d3ec;font-weight:600;border-radius:10px;padding:.65rem 1.2rem;font-size:.92rem}
+
+/* Header (same as home) */
+.topbar{background:var(--navy-dark);color:#cfe1f2;font-size:.78rem}
+.topbar a{color:#fff;font-weight:600}
+.site-header{position:sticky;top:0;z-index:1030;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid #e5edf4;height:var(--header-h)}
+.site-header .wrap{height:100%;display:flex;align-items:center;gap:1rem}
+.logo img{height:46px;width:auto;display:block}
+.main-nav{display:flex;align-items:center;gap:.25rem;margin-left:auto}
+.main-nav a{padding:.5rem .85rem;border-radius:10px;font-size:.88rem;font-weight:600;color:#244665;transition:background .2s,color .2s}
+.main-nav a:hover,.main-nav a.active{background:var(--pale);color:var(--blue)}
+.menu-btn{width:44px;height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);font-size:1.5rem;display:none;align-items:center;justify-content:center;padding:0}
+.search-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--navy);font-size:1rem;display:flex;align-items:center;justify-content:center;padding:0;flex:none;transition:.2s}
+.search-btn:hover{background:var(--pale);color:var(--blue)}
+.sm{position:fixed;inset:0;z-index:1070;display:none;align-items:flex-start;justify-content:center;padding:12vh 1rem 1rem;background:rgba(5,30,60,.6);backdrop-filter:blur(4px)}
+.sm.open{display:flex}
+.sm-box{width:min(640px,100%);background:#fff;border-radius:20px;padding:1.25rem;box-shadow:0 30px 70px rgba(5,30,60,.35)}
+.sm-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.sm-head h2{font-size:1.05rem;font-weight:700;margin:0}
+.sm-close{width:36px;height:36px;border:0;border-radius:50%;background:var(--pale);color:var(--navy);display:flex;align-items:center;justify-content:center;padding:0}
+.sm-box .input-group-text{height:3rem;background:#f8fbfe;border:1px solid #d3e3f1;border-right:0;border-radius:12px 0 0 12px;color:var(--blue)}
+.sm-box .form-control{height:3rem;border:1px solid #d3e3f1;border-left:0;border-right:0;border-radius:0;background:#f8fbfe;font-size:.95rem}
+.sm-box .btn{height:3rem;border-radius:0 12px 12px 0;box-shadow:none}
+.sm-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.9rem}
+.sm-chips button{border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:999px;padding:.3rem .8rem;font-size:.8rem;font-weight:500}
+.sm-chips button:hover{background:var(--pale)}
+.scrim{position:fixed;inset:0;background:rgba(5,30,60,.55);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:.3s;z-index:1040}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(86vw,360px);background:#fff;z-index:1050;transform:translateX(100%);transition:transform .35s cubic-bezier(.22,.8,.3,1);display:flex;flex-direction:column;box-shadow:-20px 0 50px rgba(7,61,120,.2)}
+.drawer-open .scrim{opacity:1;visibility:visible}
+.drawer-open .drawer{transform:none}
+.drawer-open{overflow:hidden}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--line)}
+.drawer-top img{height:40px}
+.drawer-close{width:40px;height:40px;border:0;border-radius:50%;background:var(--pale);color:var(--navy);font-size:1.1rem;padding:0;display:flex;align-items:center;justify-content:center}
+.drawer-links{flex:1;overflow-y:auto;padding:.75rem 1rem}
+.drawer-links a{display:flex;align-items:center;gap:.9rem;padding:.8rem .7rem;border-radius:14px;font-weight:600;font-size:.95rem;color:var(--navy)}
+.drawer-links a i{width:38px;height:38px;border-radius:12px;background:var(--pale);color:var(--blue);display:grid;place-items:center;font-size:1.05rem}
+.drawer-links a:hover,.drawer-links a.active{background:var(--pale)}
+.drawer-links a::after{content:"\F285";font-family:"bootstrap-icons";margin-left:auto;color:#9bb3c9;font-size:.8rem}
+.drawer-foot{padding:1.1rem 1.25rem 1.5rem;border-top:1px solid var(--line);background:var(--pale)}
+.drawer-emerg{display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem;color:var(--navy);font-weight:700}
+.drawer-emerg i{width:40px;height:40px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center}
+.drawer-emerg small{display:block;font-weight:500;color:var(--muted)}
+@media(max-width:991.98px){.main-nav,.header-cta{display:none}.menu-btn{display:flex}.search-btn{margin-left:auto}:root{--header-h:66px}}
+
+/* Shared */
+.kicker{display:inline-flex;align-items:center;gap:.5rem;color:var(--red);font-weight:600;font-size:.85rem;margin-bottom:.4rem}
+.kicker::before{content:"";width:22px;height:3px;border-radius:3px;background:var(--red)}
+.title{font-size:clamp(1.5rem,2.8vw,2.4rem);line-height:1.15;font-weight:700;margin:0}
+.page-hero{background:radial-gradient(circle at 15% 20%,#fff 0,var(--pale) 55%,#e3f1fb 100%);padding:clamp(1.8rem,4vw,3.2rem) 0 clamp(4rem,6vw,5rem)}
+.page-hero h1{font-size:clamp(1.9rem,3.6vw,3.1rem);line-height:1.08;font-weight:800;margin:0 0 .7rem}
+.page-hero h1 span{color:var(--red)}
+.page-hero p{color:#49647d;max-width:38rem;margin:0}
+.main-pull{margin-top:-2.6rem;position:relative;z-index:5;padding-bottom:clamp(2.6rem,5vw,4.5rem)}
+
+/* Form cards */
+.fcard{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:clamp(1.1rem,2.4vw,1.7rem);box-shadow:0 8px 28px rgba(7,61,120,.07);margin-bottom:1.1rem}
+.fhead{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem}
+.step-no{width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font:700 .95rem Manrope;flex:none}
+.fhead h2{font-size:1.1rem;font-weight:700;margin:0}
+.fhead small{display:block;color:var(--muted);font-size:.8rem;font-weight:400}
+.form-label{font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:.3rem}
+.form-label .opt{font-weight:400;color:#8aa0b3}
+.form-control,.form-select{border-radius:10px;border:1px solid #d3e3f1;background-color:#f8fbfe;font-size:.92rem;padding:.65rem .85rem;color:#173c63}
+.form-select{padding-right:2.2rem}
+.form-control:focus,.form-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(18,103,189,.15);background:#fff}
+
+/* Time slots */
+.slot-group{margin-bottom:1rem}
+.slot-group h3{font:600 .8rem DM Sans,sans-serif;color:var(--muted);margin:0 0 .5rem;display:flex;align-items:center;gap:.4rem}
+.slots{display:flex;flex-wrap:wrap;gap:.5rem}
+.slots .btn{--bs-btn-padding-y:.4rem;--bs-btn-padding-x:.85rem;--bs-btn-font-size:.84rem;font-weight:600;border-radius:10px;--bs-btn-color:var(--blue);--bs-btn-border-color:#cfe2f3;--bs-btn-bg:#fff;--bs-btn-hover-bg:var(--pale);--bs-btn-hover-color:var(--navy);--bs-btn-hover-border-color:#b6d3ec}
+.btn-check:checked+.btn{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn-check:disabled+.btn{opacity:.4;text-decoration:line-through;background:#f1f5f9}
+.slot-hint{color:var(--muted);font-size:.86rem;background:var(--pale);border-radius:12px;padding:.8rem 1rem}
+.invalid-slot{color:#dc3545;font-size:.8rem;display:none;margin-top:.4rem}
+
+/* Payment options */
+.pay-opt{display:block;cursor:pointer;height:100%}
+.pay-opt input{position:absolute;opacity:0}
+.pay-box{border:1.5px solid var(--line);border-radius:16px;padding:1rem 1.1rem;height:100%;transition:.2s;background:#fff;display:flex;gap:.8rem}
+.pay-opt:hover .pay-box{border-color:#a9cde9}
+.pay-opt input:checked+.pay-box{border-color:var(--blue);background:var(--pale);box-shadow:0 0 0 3px rgba(18,103,189,.12)}
+.pay-opt input:focus-visible+.pay-box{outline:3px solid rgba(18,103,189,.45);outline-offset:2px}
+.radio-dot{width:20px;height:20px;border-radius:50%;border:2px solid #b9d3ea;flex:none;margin-top:.15rem;display:grid;place-items:center}
+.pay-opt input:checked+.pay-box .radio-dot{border-color:var(--blue)}
+.pay-opt input:checked+.pay-box .radio-dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue)}
+.pay-box b{display:block;color:var(--navy);font-size:.98rem}
+.pay-box span.d{display:block;color:var(--muted);font-size:.82rem;margin-top:.1rem}
+.pay-box .amt{font:700 1.15rem Manrope;color:var(--navy);margin-top:.4rem;display:block}
+
+/* Summary */
+.summary{position:sticky;top:calc(var(--header-h) + 1rem)}
+.sum-card{background:#fff;border:1px solid var(--line);border-top:4px solid var(--red);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow)}
+.sum-card h2{font-size:1.1rem;font-weight:700;margin:0 0 .8rem}
+.sum-row{display:flex;justify-content:space-between;gap:1rem;padding:.6rem 0;border-bottom:1px dashed var(--line);font-size:.86rem}
+.sum-row span:first-child{color:var(--muted)}
+.sum-row span:last-child{font-weight:600;color:var(--navy);text-align:right}
+.sum-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:.9rem;padding:.9rem 1rem;background:var(--pale);border-radius:14px}
+.sum-total span{font-size:.84rem;font-weight:600;color:var(--navy)}
+.sum-total strong{font:800 1.5rem Manrope;color:var(--navy)}
+.sum-bal{font-size:.8rem;color:var(--muted);margin:.5rem 0 0}
+.secure{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--muted);margin-top:.9rem;justify-content:center}
+.test-note{background:#fff8e1;border:1px solid #ffe08a;color:#7a5b00;border-radius:12px;padding:.6rem .9rem;font-size:.8rem;margin-bottom:1rem}
+
+/* Thank you */
+.ty-card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.ty-head{background:linear-gradient(110deg,var(--navy-dark),var(--navy) 60%,var(--blue));color:#fff;text-align:center;padding:clamp(1.6rem,4vw,2.6rem) 1.2rem}
+.ty-check{width:64px;height:64px;border-radius:50%;background:#fff;color:#1a9d5b;display:grid;place-items:center;font-size:2rem;margin:0 auto 1rem;box-shadow:0 0 0 8px rgba(255,255,255,.18)}
+.ty-check::before{display:block;line-height:1}
+.ty-head h2{color:#fff;font-size:clamp(1.4rem,3vw,2rem);font-weight:800;margin:0 0 .4rem}
+.ty-head p{color:#cfe1f2;margin:0;font-size:.95rem}
+.token{display:inline-block;margin-top:1.3rem;background:#fff;border-radius:18px;padding:.8rem 2rem;color:var(--navy)}
+.token small{display:block;font-size:.75rem;font-weight:600;color:var(--muted)}
+.token strong{display:block;font:800 2.6rem/1.1 Manrope;color:var(--red);letter-spacing:.02em}
+.ty-body{padding:clamp(1.2rem,3vw,2rem)}
+.ty-body h3{font-size:1rem;font-weight:700;margin:0 0 .8rem}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:.2rem 2rem}
+@media(max-width:575.98px){.dl{grid-template-columns:1fr}}
+.dl .r{display:flex;justify-content:space-between;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.dl .r span:first-child{color:var(--muted)}
+.dl .r span:last-child{font-weight:600;color:var(--navy);text-align:right;word-break:break-word}
+.ty-note{background:var(--pale);border-radius:14px;padding:.9rem 1.1rem;font-size:.86rem;color:#2c4a68}
+.ty-note i{color:var(--blue);margin-right:.4rem}
+
+/* Payment processing modal */
+.modal-content{border:0;border-radius:20px}
+
+/* Strip + footer (same as home) */
+.strip{background:linear-gradient(110deg,var(--navy-dark),var(--navy));color:#fff;padding:.9rem 0}
+.strip .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.strip .lft{display:flex;align-items:center;gap:.9rem}
+.strip-ic{width:38px;height:38px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 0 0 6px rgba(215,25,46,.22)}
+.strip b{font-family:Manrope;font-weight:700;font-size:1rem}
+.strip small{display:block;color:#b9d0e6;font-size:.78rem}
+.call{background:var(--red);color:#fff;border-radius:999px;padding:.4rem 1rem;font-size:.85rem;font-weight:600}
+.call:hover{color:#fff;background:#b9132a}
+footer{background:#041f3f;color:#9fb8ce;padding:2.2rem 0 1rem;font-size:.8rem;border-top:3px solid var(--red)}
+footer h6{color:#e6f0f9;font-weight:600;font-size:.82rem;margin-bottom:.8rem}
+footer a{color:#9fb8ce;display:block;margin-bottom:.4rem}
+footer a:hover{color:#fff}
+footer p{margin:0 0 .8rem;max-width:26rem;line-height:1.55}
+footer .fl a{transition:color .2s,padding-left .2s}
+footer .fl a:hover{padding-left:.25rem}
+.social{display:flex;gap:.5rem}
+.social a{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin:0;color:#cfe1f2}
+.social a:hover{background:var(--red)}
+.fi{display:flex;gap:.55rem;margin-bottom:.45rem;color:#9fb8ce}
+.copy{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem;border-top:1px solid rgba(255,255,255,.08);margin-top:1.5rem;padding-top:1rem;font-size:.74rem;color:#7f9bb3}
+.copy a{display:inline;margin:0;color:#cfe1f2;font-weight:600}
+.copy a:hover{color:#fff}
+
+.drawer-close .bi,.menu-btn .bi,.search-btn .bi,.sm-close .bi,.drawer-links a>i,.drawer-emerg .bi,.social .bi{display:flex;align-items:center;justify-content:center;line-height:1}
+.drawer-close .bi::before,.menu-btn .bi::before,.search-btn .bi::before,.sm-close .bi::before,.drawer-links a>i::before,.drawer-emerg .bi::before,.social .bi::before{display:block;vertical-align:0;line-height:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media print{.topbar,.site-header,.strip,footer,.no-print,.page-hero{display:none!important}.main-pull{margin-top:0}body{background:#fff}.ty-card{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<div class="topbar d-none d-lg-block">
+  <div class="wrap d-flex justify-content-between py-2">
+    <span><i class="bi bi-geo-alt me-1"></i> Gaya, Bihar</span>
+    <span><i class="bi bi-clock me-1"></i> OPD 9 AM - 6 PM &nbsp;|&nbsp; <i class="bi bi-telephone me-1"></i> Emergency 24x7: <a href="tel:+917321831111">+91 73218 31111</a></span>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/"><img src="https://arshhospitals.com/wp-content/uploads/2021/12/Arsh-Logo-png-2-e1639235875839.png" alt="ARSH Super Speciality Hospital"></a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="/">Home</a><a href="#">About</a><a href="/specialities">Specialities</a><a href="/doctors">Doctors</a><a href="/facilities">Facilities</a><a href="/patient-stories">Patient Stories</a><a href="#">Contact</a>
+    </nav>
+    <button class="search-btn" id="searchBtn" aria-label="Search" aria-expanded="false" aria-controls="searchModal"><i class="bi bi-search"></i></button>
+    <a class="btn btn-arsh header-cta" href="/book-appointment" aria-current="page"><i class="bi bi-calendar2-check me-1"></i> Book Appointment</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-controls="drawer" aria-expanded="false"><i class="bi bi-list"></i></button>
+  </div>
+</header>
+
+<div class="sm" id="searchModal" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="sm-box">
+    <div class="sm-head"><h2>Search ARSH</h2><button class="sm-close" id="searchClose" aria-label="Close search"><i class="bi bi-x-lg"></i></button></div>
+    <form role="search" action="/search" method="get">
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input class="form-control" id="searchInput" type="search" name="q" placeholder="Search doctors, specialities or services" autocomplete="off">
+        <button class="btn btn-arsh" type="submit">Search</button>
+      </div>
+    </form>
+    <div class="sm-chips"><button type="button">Cardiology</button><button type="button">Orthopaedics</button><button type="button">Neurology</button><button type="button">Emergency</button><button type="button">Book appointment</button></div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Mobile menu">
+  <div class="drawer-top">
+    <img src="https://arshhospitals.com/wp-content/uploads/2021/12/Arsh-Logo-png-2-e1639235875839.png" alt="ARSH">
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <nav class="drawer-links">
+    <a href="/"><i class="bi bi-house-door"></i>Home</a>
+    <a href="#"><i class="bi bi-info-circle"></i>About</a>
+    <a href="/specialities"><i class="bi bi-heart-pulse"></i>Specialities</a>
+    <a href="/doctors"><i class="bi bi-person-badge"></i>Doctors</a>
+    <a href="/facilities"><i class="bi bi-hospital"></i>Facilities</a>
+    <a href="/patient-stories"><i class="bi bi-chat-heart"></i>Patient Stories</a>
+    <a href="#"><i class="bi bi-play-circle"></i>Life at ARSH</a>
+    <a href="#"><i class="bi bi-telephone"></i>Contact</a>
+  </nav>
+  <div class="drawer-foot">
+    <a class="drawer-emerg" href="tel:+917321831111"><i class="bi bi-telephone-fill"></i><span><small>24x7 Emergency</small>+91 73218 31111</span></a>
+    <a class="btn btn-arsh w-100" href="/book-appointment"><i class="bi bi-calendar2-check me-1"></i> Book Appointment</a>
+  </div>
+</aside>
+
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <h1>Book an <span>Appointment</span></h1>
+    <p>Choose your speciality or doctor, pick a time slot and pay online. You will get a token number right away.</p>
+  </div>
+</section>
+
+<div class="main-pull"><div class="wrap">
+
+<!-- ============ BOOKING VIEW ============ -->
+<div id="bookView">
+  <form id="bookForm" novalidate>
+    <div class="row g-4">
+      <div class="col-lg-8">
+
+        <div class="fcard">
+          <div class="fhead"><span class="step-no">1</span><div><h2>Patient details</h2><small>Tell us who the appointment is for</small></div></div>
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label" for="pName">Patient name</label><input class="form-control" id="pName" required minlength="2" autocomplete="name" placeholder="Full name of patient"><div class="invalid-feedback">Please enter the patient's name.</div></div>
+            <div class="col-md-6"><label class="form-label" for="pMobile">Mobile number</label>
+              <div class="input-group has-validation"><span class="input-group-text" style="border-radius:10px 0 0 10px;background:#f8fbfe;border-color:#d3e3f1;font-size:.9rem">+91</span><input class="form-control" id="pMobile" required type="tel" inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" autocomplete="tel-national" placeholder="10-digit mobile number" style="border-radius:0 10px 10px 0"><div class="invalid-feedback">Enter a valid 10-digit mobile number.</div></div></div>
+            <div class="col-md-6"><label class="form-label" for="pEmail">Email <span class="opt">(optional)</span></label><input class="form-control" id="pEmail" type="email" autocomplete="email" placeholder="name@example.com"><div class="invalid-feedback">Enter a valid email address.</div></div>
+            <div class="col-6 col-md-3"><label class="form-label" for="pGender">Gender</label><select class="form-select" id="pGender" required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select><div class="invalid-feedback">Select gender.</div></div>
+            <div class="col-6 col-md-3"><label class="form-label" for="pAge">Age (years)</label><input class="form-control" id="pAge" required type="number" min="0" max="120" inputmode="numeric" placeholder="Age"><div class="invalid-feedback">Enter age (0-120).</div></div>
+          </div>
+        </div>
+
+        <div class="fcard">
+          <div class="fhead"><span class="step-no">2</span><div><h2>Speciality, doctor &amp; time</h2><small>OPD runs 9 AM to 6 PM</small></div></div>
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label" for="pSpec">Speciality</label><select class="form-select" id="pSpec" required><option value="">Select speciality</option></select><div class="invalid-feedback">Select a speciality.</div></div>
+            <div class="col-md-6"><label class="form-label" for="pDoc">Doctor <span class="opt">(optional)</span></label><select class="form-select" id="pDoc" disabled><option value="">Any available doctor</option></select></div>
+            <div class="col-md-6"><label class="form-label" for="pDate">Appointment date</label><input class="form-control" id="pDate" type="date" required><div class="invalid-feedback">Choose a date.</div></div>
+          </div>
+          <div class="mt-4">
+            <div class="form-label mb-2">Time slot</div>
+            <div id="slotBox"><div class="slot-hint"><i class="bi bi-info-circle me-1"></i>Select a date to see available time slots.</div></div>
+            <div class="invalid-slot" id="slotErr">Please select a time slot.</div>
+          </div>
+        </div>
+
+        <div class="fcard">
+          <div class="fhead"><span class="step-no">3</span><div><h2>Payment option</h2><small>Choose how much you want to pay now</small></div></div>
+          <div class="row g-3">
+            <div class="col-md-6"><label class="pay-opt"><input type="radio" name="payType" value="full" checked><span class="pay-box"><span class="radio-dot"></span><span><b>Full payment</b><span class="d">Pay the full consultation fee now</span><span class="amt" id="amtFull">&#8377;0</span></span></span></label></div>
+            <div class="col-md-6"><label class="pay-opt"><input type="radio" name="payType" value="partial"><span class="pay-box"><span class="radio-dot"></span><span><b>Partial payment</b><span class="d">Pay <span id="pctLbl">50</span>% now, rest at the hospital</span><span class="amt" id="amtPart">&#8377;0</span></span></span></label></div>
+          </div>
+        </div>
+
+        <div class="form-check mb-3 mb-lg-0">
+          <input class="form-check-input" type="checkbox" id="consent" required>
+          <label class="form-check-label small text-secondary" for="consent">I confirm the details above are correct and agree to be contacted by ARSH Hospital about this appointment.</label>
+          <div class="invalid-feedback">Please confirm to continue.</div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="summary">
+          <div class="sum-card">
+            <h2>Booking summary</h2>
+            <div class="test-note d-none" id="testNote"><i class="bi bi-exclamation-triangle me-1"></i>Test mode: no real payment is taken.</div>
+            <div class="sum-row"><span>Patient</span><span id="sName">-</span></div>
+            <div class="sum-row"><span>Speciality</span><span id="sSpec">-</span></div>
+            <div class="sum-row"><span>Doctor</span><span id="sDoc">-</span></div>
+            <div class="sum-row"><span>Date</span><span id="sDate">-</span></div>
+            <div class="sum-row"><span>Time</span><span id="sTime">-</span></div>
+            <div class="sum-row"><span>Consultation fee</span><span id="sFee">&#8377;0</span></div>
+            <div class="sum-total"><span>Pay now</span><strong id="sPay">&#8377;0</strong></div>
+            <p class="sum-bal" id="sBal"></p>
+            <button class="btn btn-arsh w-100 mt-3 py-2" type="submit" id="payBtn"><i class="bi bi-lock-fill me-2"></i>Pay &amp; confirm appointment</button>
+            <div class="secure"><i class="bi bi-shield-check"></i>Secure online payment</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- ============ THANK YOU VIEW ============ -->
+<div id="thanksView" class="d-none">
+  <div class="ty-card">
+    <div class="ty-head">
+      <div class="ty-check bi bi-check-lg" aria-hidden="true"></div>
+      <h2>Thank you! Your appointment is confirmed</h2>
+      <p id="tyMsg"></p>
+      <div class="token"><small>Your token number</small><strong id="tyToken">-</strong></div>
+    </div>
+    <div class="ty-body">
+      <div class="row g-4">
+        <div class="col-12">
+          <h3>Patient details</h3>
+          <div class="dl" id="dlPatient"></div>
+        </div>
+        <div class="col-12">
+          <h3>Appointment details</h3>
+          <div class="dl" id="dlAppt"></div>
+        </div>
+        <div class="col-12">
+          <h3>Payment details</h3>
+          <div class="dl" id="dlPay"></div>
+        </div>
+        <div class="col-12"><div class="ty-note"><i class="bi bi-info-circle"></i>Please reach the hospital 15 minutes before your slot and show this token number at the reception. Carry previous reports and prescriptions, if any.</div></div>
+      </div>
+      <div class="d-flex flex-wrap gap-2 mt-4 no-print">
+        <button class="btn btn-arsh" type="button" onclick="window.print()"><i class="bi bi-printer me-2"></i>Print / Save as PDF</button>
+        <button class="btn btn-ghost" type="button" id="newBooking"><i class="bi bi-plus-circle me-2"></i>Book another appointment</button>
+        <a class="btn btn-ghost" href="/"><i class="bi bi-house-door me-2"></i>Back to home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div></div>
+
+<section class="strip no-print" id="emergency">
+  <div class="wrap">
+    <div class="lft"><span class="strip-ic"><svg viewBox="0 0 24 24" width="1.25rem" height="1.25rem" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18v-5a5 5 0 0 1 10 0v5"/><path d="M4 18h16v3H4z"/><path d="M12 2v2M4.5 5.5 6 7M19.5 5.5 18 7M2 12h2M20 12h2"/></svg></span><div><b>When every second counts</b><small>24x7 Emergency Care</small></div></div>
+    <a class="call" href="tel:+917321831111"><i class="bi bi-telephone-fill me-1"></i> +91 73218 31111</a>
+  </div>
+</section>
+</main>
+
+<!-- Payment processing modal -->
+<div class="modal fade" id="payModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="payTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content text-center p-4">
+      <div class="spinner-border text-primary mx-auto mb-3" role="status"><span class="visually-hidden">Loading</span></div>
+      <h2 class="h6 fw-bold mb-1" id="payTitle">Processing payment</h2>
+      <p class="small text-secondary mb-0">Please do not close or refresh this page.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <h6>ARSH Super Speciality Hospital</h6>
+        <p>165-bed tertiary care hospital serving Gaya, Bodhgaya and the Magadh region.</p>
+        <div class="social"><a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a><a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a><a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a></div>
+      </div>
+      <div class="col-6 col-lg-2 fl"><h6>Explore</h6><a href="#">About</a><a href="/specialities">Specialities</a><a href="/doctors">Doctors</a><a href="#">News &amp; Media</a></div>
+      <div class="col-6 col-lg-2 fl"><h6>Patient care</h6><a href="/book-appointment">Appointments</a><a href="#">International Patients</a><a href="/patient-stories">Patient videos</a><a href="#">Life at ARSH</a></div>
+      <div class="col-lg-3"><h6>Contact</h6><div class="fi"><i class="bi bi-geo-alt"></i>Gaya, Bihar</div><div class="fi"><i class="bi bi-telephone"></i>+91 73218 31111</div><div class="fi"><i class="bi bi-envelope"></i>info@arshhospitals.com</div><div class="fi"><i class="bi bi-clock"></i>OPD 9 AM - 6 PM</div></div>
+    </div>
+    <div class="copy"><span>&copy; ARSH Super Speciality Hospital. All rights reserved.</span><span>Powered by <a href="https://thebsocial.in/" target="_blank" rel="noopener">TheBsocial</a></span></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ============================================================
+   CONFIG (dev: update before going live)
+   - DEMO_MODE: true = payment is simulated, nothing is charged.
+     Set to false once the real payment gateway is connected.
+   - FEES: placeholder consultation fees per speciality. Replace with real fees.
+   - PARTIAL_PCT: percentage payable now for "Partial payment".
+   ============================================================ */
+const DEMO_MODE=true;
+const PARTIAL_PCT=50;
+const SPECS={
+ "Orthopaedics & Spine":{fee:600,doctors:["Dr. Navneet Nishchal"]},
+ "Cardiology":{fee:700,doctors:["Dr. Priya Sharma"]},
+ "Neurology & Neurosurgery":{fee:700,doctors:["Dr. Amit Kumar"]},
+ "Gastroenterology":{fee:600,doctors:["Dr. Rohan Mehta"]},
+ "Obstetrics & Gynaecology":{fee:600,doctors:["Dr. Ritu Singh"]},
+ "Paediatrics":{fee:500,doctors:["Dr. Neha Verma"]},
+ "General Medicine":{fee:400,doctors:["Dr. Anil Kumar"]},
+ "ENT":{fee:500,doctors:["Dr. Pankaj Singh"]}
+};
+/* OPD 9:00 AM to 6:00 PM, 30-minute slots (last slot 5:30 PM) */
+const SLOT_START=9*60,SLOT_END=18*60,SLOT_STEP=30;
+
+const $=id=>document.getElementById(id);
+const inr=n=>"\u20B9"+Number(n).toLocaleString("en-IN");
+const fmtDate=v=>v?new Date(v+"T00:00:00").toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",year:"numeric"}):"-";
+const fmtTime=m=>{const h=Math.floor(m/60),mi=m%60,ap=h>=12?"PM":"AM",h12=h%12||12;return h12+":"+String(mi).padStart(2,"0")+" "+ap;};
+const esc=t=>String(t).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const pad=n=>String(n).padStart(2,"0");
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());};
+
+$("pctLbl").textContent=PARTIAL_PCT;
+if(DEMO_MODE)$("testNote").classList.remove("d-none");
+
+/* Specialities */
+const specSel=$("pSpec"),docSel=$("pDoc"),dateIn=$("pDate");
+Object.keys(SPECS).forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;specSel.appendChild(o);});
+specSel.addEventListener("change",()=>{
+  docSel.innerHTML='<option value="">Any available doctor</option>';
+  const s=SPECS[specSel.value];
+  if(s){s.doctors.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;docSel.appendChild(o);});docSel.disabled=false;}else docSel.disabled=true;
+  update();
+});
+docSel.addEventListener("change",update);
+
+/* Date limits: today to +30 days */
+dateIn.min=today();
+const mx=new Date();mx.setDate(mx.getDate()+30);dateIn.max=mx.getFullYear()+"-"+pad(mx.getMonth()+1)+"-"+pad(mx.getDate());
+dateIn.addEventListener("change",()=>{renderSlots();update();});
+
+/* Time slots */
+function renderSlots(){
+  const box=$("slotBox"),d=dateIn.value;
+  if(!d){box.innerHTML='<div class="slot-hint"><i class="bi bi-info-circle me-1"></i>Select a date to see available time slots.</div>';return;}
+  const now=new Date(),isToday=d===today(),nowMin=now.getHours()*60+now.getMinutes();
+  const groups=[["Morning","bi-sunrise",SLOT_START,12*60],["Afternoon","bi-sun",12*60,16*60],["Evening","bi-sunset",16*60,SLOT_END]];
+  let html="",any=false;
+  groups.forEach(([name,ic,a,b])=>{
+    let btns="";
+    for(let m=a;m<b;m+=SLOT_STEP){
+      const dis=isToday&&m<=nowMin+30;
+      if(!dis)any=true;
+      btns+=`<input type="radio" class="btn-check" name="slot" id="sl${m}" value="${m}" ${dis?"disabled":""} autocomplete="off"><label class="btn" for="sl${m}">${fmtTime(m)}</label>`;
+    }
+    html+=`<div class="slot-group"><h3><i class="bi ${ic}"></i>${name}</h3><div class="slots">${btns}</div></div>`;
+  });
+  box.innerHTML=any?html:'<div class="slot-hint"><i class="bi bi-info-circle me-1"></i>No slots left for today. Please choose another date.</div>';
+  box.querySelectorAll("input[name=slot]").forEach(r=>r.addEventListener("change",()=>{$("slotErr").style.display="none";update();}));
+}
+
+/* Summary + amounts */
+const fee=()=>SPECS[specSel.value]?SPECS[specSel.value].fee:0;
+const payType=()=>document.querySelector("input[name=payType]:checked").value;
+const payNow=()=>payType()==="full"?fee():Math.round(fee()*PARTIAL_PCT/100);
+const slotVal=()=>{const r=document.querySelector("input[name=slot]:checked");return r?+r.value:null;};
+function update(){
+  const f=fee(),pn=payNow(),sl=slotVal();
+  $("amtFull").textContent=inr(f);$("amtPart").textContent=inr(Math.round(f*PARTIAL_PCT/100));
+  $("sName").textContent=$("pName").value.trim()||"-";
+  $("sSpec").textContent=specSel.value||"-";
+  $("sDoc").textContent=docSel.value||(specSel.value?"Any available doctor":"-");
+  $("sDate").textContent=fmtDate(dateIn.value);
+  $("sTime").textContent=sl!==null?fmtTime(sl):"-";
+  $("sFee").textContent=inr(f);$("sPay").textContent=inr(pn);
+  $("sBal").textContent=f&&payType()==="partial"?`Balance ${inr(f-pn)} to be paid at the hospital.`:"";
+  $("payBtn").innerHTML=`<i class="bi bi-lock-fill me-2"></i>Pay ${f?inr(pn)+" &amp; ":""}confirm appointment`;
+}
+["pName"].forEach(id=>$(id).addEventListener("input",update));
+document.querySelectorAll("input[name=payType]").forEach(r=>r.addEventListener("change",update));
+$("pMobile").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,10);});
+update();
+
+/* Submit */
+const form=$("bookForm"),payModal=new bootstrap.Modal($("payModal"));
+form.addEventListener("submit",e=>{
+  e.preventDefault();
+  const slotOk=slotVal()!==null;
+  $("slotErr").style.display=slotOk?"none":"block";
+  form.classList.add("was-validated");
+  if(!form.checkValidity()||!slotOk){
+    const bad=form.querySelector(":invalid")||$("slotBox");
+    bad.scrollIntoView({behavior:"smooth",block:"center"});if(bad.focus)bad.focus({preventScroll:true});
+    return;
+  }
+  const order={
+    name:$("pName").value.trim(),mobile:$("pMobile").value,email:$("pEmail").value.trim(),
+    gender:$("pGender").value,age:$("pAge").value,
+    speciality:specSel.value,doctor:docSel.value||"Any available doctor",
+    date:dateIn.value,slot:slotVal(),
+    payType:payType(),fee:fee(),paid:payNow()
+  };
+  order.balance=order.fee-order.paid;
+  startPayment(order).then(res=>{
+    payModal.hide();
+    const booking={...order,token:res.token,bookingId:res.bookingId,paymentId:res.paymentId,paidAt:res.paidAt};
+    try{sessionStorage.setItem("arshBooking",JSON.stringify(booking));}catch(_){}
+    showThanks(booking);
+  }).catch(()=>{
+    payModal.hide();
+    alert("Payment was not completed. No appointment has been booked. Please try again.");
+  });
+});
+
+/* ------------------------------------------------------------
+   PAYMENT HOOK (dev: replace this function)
+   Real flow:
+   1. POST the order to your server -> server creates the payment order
+      (Razorpay / PayU / etc.) and returns the order id.
+   2. Open the gateway checkout with that order id.
+   3. After payment, VERIFY the payment on the server, then save the booking
+      and let the SERVER generate the token number and booking id.
+   4. Resolve with { token, bookingId, paymentId, paidAt }.
+   Never trust a client-side success message or a client-side token.
+   The demo below only simulates this so the screens can be reviewed.
+   ------------------------------------------------------------ */
+function startPayment(order){
+  payModal.show();
+  return new Promise(resolve=>{
+    setTimeout(()=>{
+      const key="arshToken_"+order.date;let n=1;
+      try{n=(+localStorage.getItem(key)||0)+1;localStorage.setItem(key,n);}catch(_){n=Math.floor(Math.random()*40)+1;}
+      const d=order.date.replace(/-/g,"").slice(2);
+      resolve({token:"T-"+pad(n),bookingId:"ARSH-"+d+"-"+String(Math.floor(Math.random()*9000)+1000),paymentId:DEMO_MODE?"TEST-"+Date.now().toString(36).toUpperCase():"",paidAt:new Date().toISOString()});
+    },1800);
+  });
+}
+
+/* Thank-you view */
+function row(k,v){return `<div class="r"><span>${k}</span><span>${esc(v)}</span></div>`;}
+function showThanks(b){
+  $("tyToken").textContent=b.token;
+  $("tyMsg").textContent=`Booking ID: ${b.bookingId}`+(b.email?` \u00B7 A copy will be sent to ${b.email}`:"");
+  $("dlPatient").innerHTML=row("Patient name",b.name)+row("Mobile","+91 "+b.mobile)+row("Email",b.email||"Not provided")+row("Gender",b.gender)+row("Age",b.age+" years");
+  $("dlAppt").innerHTML=row("Speciality",b.speciality)+row("Doctor",b.doctor)+row("Date",fmtDate(b.date))+row("Time slot",fmtTime(b.slot))+row("Token number",b.token)+row("Booking ID",b.bookingId);
+  $("dlPay").innerHTML=row("Payment type",b.payType==="full"?"Full payment":`Partial payment (${PARTIAL_PCT}%)`)+row("Consultation fee",inr(b.fee))+row("Amount paid",inr(b.paid))+row("Balance at hospital",inr(b.balance))+row("Payment ID",b.paymentId||"-")+row("Paid on",new Date(b.paidAt).toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"}));
+  $("bookView").classList.add("d-none");$("thanksView").classList.remove("d-none");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$("newBooking").addEventListener("click",()=>{
+  try{sessionStorage.removeItem("arshBooking");}catch(_){}
+  form.reset();form.classList.remove("was-validated");docSel.disabled=true;docSel.innerHTML='<option value="">Any available doctor</option>';
+  renderSlots();update();
+  $("thanksView").classList.add("d-none");$("bookView").classList.remove("d-none");
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+/* Keep the thank-you page after refresh */
+try{const saved=sessionStorage.getItem("arshBooking");if(saved)showThanks(JSON.parse(saved));}catch(_){}
+
+/* Mobile drawer */
+const menuBtn=$("menuBtn");
+const setDrawer=o=>{document.body.classList.toggle("drawer-open",o);menuBtn.setAttribute("aria-expanded",o)};
+menuBtn.addEventListener("click",()=>setDrawer(true));
+$("drawerClose").addEventListener("click",()=>setDrawer(false));
+$("scrim").addEventListener("click",()=>setDrawer(false));
+document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=>setDrawer(false)));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")setDrawer(false)});
+
+/* Search modal */
+(()=>{
+  const b=$("searchBtn"),m=$("searchModal"),i=$("searchInput");
+  const set=o=>{m.classList.toggle("open",o);b.setAttribute("aria-expanded",o);document.body.style.overflow=o?"hidden":"";if(o)setTimeout(()=>i.focus(),30);};
+  b.addEventListener("click",()=>set(true));
+  $("searchClose").addEventListener("click",()=>set(false));
+  m.addEventListener("click",e=>{if(e.target===m)set(false)});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false)});
+  m.querySelectorAll(".sm-chips button").forEach(c=>c.addEventListener("click",()=>{i.value=c.textContent;i.focus();}));
+})();
+</script>
+</body>
+</html>
