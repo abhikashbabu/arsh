@@ -175,7 +175,7 @@
     $("drawerClose").addEventListener("click",()=>setDrawer(false));
     $("scrim").addEventListener("click",()=>setDrawer(false));
     document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=>setDrawer(false)));
-    document.addEventListener("keydown",e=>{if(e.key==="Escape")setDrawer(false)});
+    window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape")setDrawer(false)});
     
     /* Search modal */
     (()=>{
@@ -184,7 +184,7 @@
       b.addEventListener("click",()=>set(true));
       $("searchClose").addEventListener("click",()=>set(false));
       m.addEventListener("click",e=>{if(e.target===m)set(false)});
-      document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false)});
+      window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape")set(false)});
       m.querySelectorAll(".sm-chips button").forEach(c=>c.addEventListener("click",()=>{i.value=c.textContent;i.focus();}));
     })();
     })();

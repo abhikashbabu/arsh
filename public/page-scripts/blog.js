@@ -15,7 +15,7 @@ document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=
   document.getElementById("searchClose").addEventListener("click",()=>set(false));
   m.querySelectorAll(".sm-chips button").forEach(x=>x.addEventListener("click",()=>{i.value=x.textContent;i.focus();}));
   m.addEventListener("click",e=>{if(e.target===m)set(false)});
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"){set(false);setDrawer(false);}});
+  window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape"){set(false);setDrawer(false);}});
 })();
 
 
@@ -44,8 +44,8 @@ const CATS=[...new Set(POSTS.map(p=>p.c))];
   b.addEventListener("click",()=>{cat=b.dataset.c;render();});catsEl.appendChild(b);
 });
 const meta=p=>`<div class="bmeta"><span><i class="bi bi-calendar3"></i>${p.d}</span><span><i class="bi bi-clock"></i>${p.r} min read</span></div>`;
-const card=p=>`<div class="col"><article class="bcard in"><a class="ph" href="/blog/${p.slug}" tabindex="-1"><img src="${p.img}" alt="${p.t}" loading="lazy"><span class="cat">${p.c}</span></a><div class="body">${meta(p)}<h3><a href="/blog/${p.slug}">${p.t}</a></h3><p>${p.e}</p><a class="read" href="/blog/${p.slug}">Read more <i class="bi bi-arrow-right"></i></a></div></article></div>`;
-const feat=p=>`<article class="feat in"><div class="row g-0"><div class="col-lg-6"><a class="ph" href="/blog/${p.slug}" tabindex="-1"><img src="${p.img}" alt="${p.t}"><span class="cat">${p.c}</span></a></div><div class="col-lg-6"><div class="body"><div class="kicker">Featured article</div>${meta(p)}<h2><a href="/blog/${p.slug}">${p.t}</a></h2><p>${p.e}</p><a class="btn btn-arsh" href="/blog/${p.slug}">Read article</a></div></div></div></article>`;
+const card=p=>`<div class="col"><article class="bcard in"><a class="ph" href="/blog-detail" tabindex="-1"><img src="${p.img}" alt="${p.t}" loading="lazy"><span class="cat">${p.c}</span></a><div class="body">${meta(p)}<h3><a href="/blog-detail">${p.t}</a></h3><p>${p.e}</p><a class="read" href="/blog-detail">Read more <i class="bi bi-arrow-right"></i></a></div></article></div>`;
+const feat=p=>`<article class="feat in"><div class="row g-0"><div class="col-lg-6"><a class="ph" href="/blog-detail" tabindex="-1"><img src="${p.img}" alt="${p.t}"><span class="cat">${p.c}</span></a></div><div class="col-lg-6"><div class="body"><div class="kicker">Featured article</div>${meta(p)}<h2><a href="/blog-detail">${p.t}</a></h2><p>${p.e}</p><a class="btn btn-arsh" href="/blog-detail">Read article</a></div></div></div></article>`;
 function render(){
   [...catsEl.children].forEach(b=>b.classList.toggle("on",b.dataset.c===cat));
   const q=qEl.value.trim().toLowerCase();

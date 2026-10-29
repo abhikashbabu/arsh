@@ -15,13 +15,13 @@ document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=
   document.getElementById("searchClose").addEventListener("click",()=>set(false));
   m.querySelectorAll(".sm-chips button").forEach(x=>x.addEventListener("click",()=>{i.value=x.textContent;i.focus();}));
   m.addEventListener("click",e=>{if(e.target===m)set(false)});
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"){set(false);setDrawer(false);}});
+  window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape"){set(false);setDrawer(false);}});
 })();
 
 
 /* Reading progress */
 const prog=document.getElementById("prog");
-addEventListener("scroll",()=>{const h=document.documentElement;const m=h.scrollHeight-h.clientHeight;prog.style.width=(m>0?h.scrollTop/m*100:0)+"%";},{passive:true});
+window.__arshRegisterEvent(window, "scroll",()=>{const h=document.documentElement;const m=h.scrollHeight-h.clientHeight;prog.style.width=(m>0?h.scrollTop/m*100:0)+"%";},{passive:true});
 /* Share links */
 const u=encodeURIComponent(location.href),tt=encodeURIComponent(document.title);
 document.getElementById("shFb").href="https://www.facebook.com/sharer/sharer.php?u="+u;

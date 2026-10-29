@@ -57,26 +57,17 @@
       col.querySelector("button").addEventListener("click",()=>openVideo(s));
       return col;
     }
-    function skeletons(n){
-      const f=document.createDocumentFragment();
-      for(let i=0;i<n;i++){const c=document.createElement("div");c.className="col-12 col-sm-6 col-lg-3 skel";c.innerHTML='<div class="v-thumb"></div><div class="l"></div><div class="l s"></div>';f.appendChild(c);}
-      grid.appendChild(f);return [...grid.querySelectorAll(".skel")];
-    }
     function updateCount(){countLabel.textContent=`Showing ${Math.min(shown,list.length)} of ${list.length} stories`;}
     
-    /* Load next batch (simulated short delay so the loader is visible) */
+    /* Render each batch immediately; the cards already use lazy-loaded thumbnails. */
     function loadMore(){
       if(loading||shown>=list.length)return;
       loading=true;
       const next=list.slice(shown,shown+BATCH);
-      const sk=skeletons(next.length);
-      setTimeout(()=>{
-        sk.forEach(e=>e.remove());
-        const f=document.createDocumentFragment();next.forEach(s=>f.appendChild(card(s)));grid.appendChild(f);
-        shown+=next.length;loading=false;updateCount();
-        if(shown>=list.length){endNote.classList.remove("d-none");io.disconnect();}
-        else{io.disconnect();io.observe(sentinel);} /* re-check if sentinel is still visible */
-      },450);
+      const f=document.createDocumentFragment();next.forEach(s=>f.appendChild(card(s)));grid.appendChild(f);
+      shown+=next.length;loading=false;updateCount();
+      if(shown>=list.length){endNote.classList.remove("d-none");io.disconnect();}
+      else{io.disconnect();io.observe(sentinel);} /* re-check if sentinel is still visible */
     }
     
     /* Infinite scroll */
@@ -102,7 +93,7 @@
     document.getElementById("drawerClose").addEventListener("click",()=>setDrawer(false));
     document.getElementById("scrim").addEventListener("click",()=>setDrawer(false));
     document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=>setDrawer(false)));
-    document.addEventListener("keydown",e=>{if(e.key==="Escape")setDrawer(false)});
+    window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape")setDrawer(false)});
     
     /* Search modal */
     (()=>{
@@ -111,7 +102,7 @@
       b.addEventListener("click",()=>set(true));
       document.getElementById("searchClose").addEventListener("click",()=>set(false));
       m.addEventListener("click",e=>{if(e.target===m)set(false)});
-      document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false)});
+      window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape")set(false)});
       m.querySelectorAll(".sm-chips button").forEach(c=>c.addEventListener("click",()=>{i.value=c.textContent;i.focus();}));
     })();
     })();

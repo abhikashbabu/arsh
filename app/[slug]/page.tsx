@@ -11,6 +11,8 @@ import internationalPatients from "@/content/international-patients.json";
 import patientStories from "@/content/patient-stories.json";
 import specialities from "@/content/specialities.json";
 import orthopaedics from "@/content/orthopedic-doctor-in-gaya-bihar.json";
+import about from "@/content/about.json";
+import contact from "@/content/contact.json";
 import { SourcePage } from "@/components/SourcePage";
 
 const pages = {
@@ -25,6 +27,8 @@ const pages = {
   "patient-stories": patientStories,
   specialities,
   "orthopedic-doctor-in-gaya-bihar": orthopaedics,
+  about,
+  contact,
 };
 
 type PageSlug = keyof typeof pages;

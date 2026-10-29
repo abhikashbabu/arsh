@@ -62,7 +62,6 @@ const DOCTORS=RAW.map((d,i)=>({
 async function fetchDoctors({q,spec,offset,limit}){
   const tokens=q.toLowerCase().split(/\s+/).filter(Boolean);
   const all=DOCTORS.filter(d=>(!spec||d.spec===spec)&&tokens.every(t=>d.hay.includes(t)));
-  await new Promise(r=>setTimeout(r,350));
   return {items:all.slice(offset,offset+limit),total:all.length};
 }
 
@@ -88,7 +87,7 @@ const card=d=>`<div class="col"><article class="card-p dr-in">
     <div class="meta"><i class="bi bi-award me-1"></i>${d.years}+ years experience</div>
     <div class="dr-actions">
       <a class="btn btn-arsh" href="/book-appointment?doctor=${d.slug}">Appointment</a>
-      <a class="btn btn-ghost" href="/doctors/${d.slug}">View Profile</a>
+      <a class="btn btn-ghost" href="${d.spec.includes("Orthopaedics")?"/orthopedic-doctor-in-gaya-bihar":"/doctors"}">View Profile</a>
     </div>
   </div></article></div>`;
 
@@ -151,6 +150,6 @@ document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=
   b.addEventListener("click",()=>set(true));
   document.getElementById("searchClose").addEventListener("click",()=>set(false));
   m.addEventListener("click",e=>{if(e.target===m)set(false)});
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"){set(false);setDrawer(false);}});
+  window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape"){set(false);setDrawer(false);}});
 })();
 })();

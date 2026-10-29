@@ -15,7 +15,7 @@ document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=
   document.getElementById("searchClose").addEventListener("click",()=>set(false));
   m.querySelectorAll(".sm-chips button").forEach(x=>x.addEventListener("click",()=>{i.value=x.textContent;i.focus();}));
   m.addEventListener("click",e=>{if(e.target===m)set(false)});
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"){set(false);setDrawer(false);}});
+  window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape"){set(false);setDrawer(false);}});
 })();
 
 /* Media tabs */
@@ -31,6 +31,6 @@ document.querySelectorAll(".cx").forEach(cx=>{
   const upd=()=>{p.disabled=t.scrollLeft<=2;n.disabled=t.scrollLeft+t.clientWidth>=t.scrollWidth-2;};
   p.addEventListener("click",()=>t.scrollBy({left:-t.clientWidth,behavior:"smooth"}));
   n.addEventListener("click",()=>t.scrollBy({left:t.clientWidth,behavior:"smooth"}));
-  t.addEventListener("scroll",upd,{passive:true});window.addEventListener("resize",upd);upd();
+  t.addEventListener("scroll",upd,{passive:true});window.__arshRegisterEvent(window, "resize",upd);upd();
 });
 })();

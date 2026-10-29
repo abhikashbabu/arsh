@@ -15,7 +15,7 @@ menuBtn.addEventListener("click",()=>setDrawer(true));
 document.getElementById("drawerClose").addEventListener("click",()=>setDrawer(false));
 document.getElementById("scrim").addEventListener("click",()=>setDrawer(false));
 document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=>setDrawer(false)));
-document.addEventListener("keydown",e=>{if(e.key==="Escape")setDrawer(false)});
+window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape")setDrawer(false)});
 
 /* Search modal */
 (()=>{
@@ -24,7 +24,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")setDrawer(false)});
   b.addEventListener("click",()=>set(true));
   document.getElementById("searchClose").addEventListener("click",()=>set(false));
   m.addEventListener("click",e=>{if(e.target===m)set(false)});
-  document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false)});
+  window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape")set(false)});
   m.querySelectorAll(".sm-chips button").forEach(c=>c.addEventListener("click",()=>{i.value=c.textContent;i.focus();}));
 })();
 
@@ -47,6 +47,6 @@ document.querySelectorAll(".cx").forEach(cx=>{
   const upd=()=>{p.disabled=t.scrollLeft<=2;n.disabled=t.scrollLeft+t.clientWidth>=t.scrollWidth-2;};
   p.addEventListener("click",()=>t.scrollBy({left:-t.clientWidth,behavior:"smooth"}));
   n.addEventListener("click",()=>t.scrollBy({left:t.clientWidth,behavior:"smooth"}));
-  t.addEventListener("scroll",upd,{passive:true});window.addEventListener("resize",upd);upd();
+  t.addEventListener("scroll",upd,{passive:true});window.__arshRegisterEvent(window, "resize",upd);upd();
 });
 })();
