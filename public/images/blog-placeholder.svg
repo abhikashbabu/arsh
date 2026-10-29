@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" role="img" aria-label="Health article image placeholder">
+  <rect width="900" height="540" fill="#e8f3f9"/>
+  <circle cx="450" cy="240" r="100" fill="#b5d8e8"/>
+  <path d="M430 170h40v50h50v40h-50v50h-40v-50h-50v-40h50z" fill="#1682ad"/>
+  <path d="M230 455h440" stroke="#b5d8e8" stroke-width="20" stroke-linecap="round"/>
+</svg>

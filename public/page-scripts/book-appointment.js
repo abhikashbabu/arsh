@@ -1,200 +1,121 @@
 (function () {
-  const runPage = function () {
-    ;(function () {
-    /* ============================================================
-       CONFIG (dev: update before going live)
-       - DEMO_MODE: true = payment is simulated, nothing is charged.
-         Set to false once the real payment gateway is connected.
-       - FEES: placeholder consultation fees per speciality. Replace with real fees.
-       - PARTIAL_PCT: percentage payable now for "Partial payment".
-       ============================================================ */
-    const DEMO_MODE=true;
-    const PARTIAL_PCT=50;
-    const SPECS={
-     "Orthopaedics & Spine":{fee:600,doctors:["Dr. Navneet Nishchal"]},
-     "Cardiology":{fee:700,doctors:["Dr. Priya Sharma"]},
-     "Neurology & Neurosurgery":{fee:700,doctors:["Dr. Amit Kumar"]},
-     "Gastroenterology":{fee:600,doctors:["Dr. Rohan Mehta"]},
-     "Obstetrics & Gynaecology":{fee:600,doctors:["Dr. Ritu Singh"]},
-     "Paediatrics":{fee:500,doctors:["Dr. Neha Verma"]},
-     "General Medicine":{fee:400,doctors:["Dr. Anil Kumar"]},
-     "ENT":{fee:500,doctors:["Dr. Pankaj Singh"]}
-    };
-    /* OPD 9:00 AM to 6:00 PM, 30-minute slots (last slot 5:30 PM) */
-    const SLOT_START=9*60,SLOT_END=18*60,SLOT_STEP=30;
-    
-    const $=id=>document.getElementById(id);
-    const inr=n=>"\u20B9"+Number(n).toLocaleString("en-IN");
-    const fmtDate=v=>v?new Date(v+"T00:00:00").toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",year:"numeric"}):"-";
-    const fmtTime=m=>{const h=Math.floor(m/60),mi=m%60,ap=h>=12?"PM":"AM",h12=h%12||12;return h12+":"+String(mi).padStart(2,"0")+" "+ap;};
-    const esc=t=>String(t).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
-    const pad=n=>String(n).padStart(2,"0");
-    const today=()=>{const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());};
-    
-    $("pctLbl").textContent=PARTIAL_PCT;
-    if(DEMO_MODE)$("testNote").classList.remove("d-none");
-    
-    /* Specialities */
-    const specSel=$("pSpec"),docSel=$("pDoc"),dateIn=$("pDate");
-    Object.keys(SPECS).forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;specSel.appendChild(o);});
-    specSel.addEventListener("change",()=>{
-      docSel.innerHTML='<option value="">Any available doctor</option>';
-      const s=SPECS[specSel.value];
-      if(s){s.doctors.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;docSel.appendChild(o);});docSel.disabled=false;}else docSel.disabled=true;
-      update();
-    });
-    docSel.addEventListener("change",update);
-    
-    /* Date limits: today to +30 days */
-    dateIn.min=today();
-    const mx=new Date();mx.setDate(mx.getDate()+30);dateIn.max=mx.getFullYear()+"-"+pad(mx.getMonth()+1)+"-"+pad(mx.getDate());
-    dateIn.addEventListener("change",()=>{renderSlots();update();});
-    
-    /* Time slots */
-    function renderSlots(){
-      const box=$("slotBox"),d=dateIn.value;
-      if(!d){box.innerHTML='<div class="slot-hint"><i class="bi bi-info-circle me-1"></i>Select a date to see available time slots.</div>';return;}
-      const now=new Date(),isToday=d===today(),nowMin=now.getHours()*60+now.getMinutes();
-      const groups=[["Morning","bi-sunrise",SLOT_START,12*60],["Afternoon","bi-sun",12*60,16*60],["Evening","bi-sunset",16*60,SLOT_END]];
-      let html="",any=false;
-      groups.forEach(([name,ic,a,b])=>{
-        let btns="";
-        for(let m=a;m<b;m+=SLOT_STEP){
-          const dis=isToday&&m<=nowMin+30;
-          if(!dis)any=true;
-          btns+=`<input type="radio" class="btn-check" name="slot" id="sl${m}" value="${m}" ${dis?"disabled":""} autocomplete="off"><label class="btn" for="sl${m}">${fmtTime(m)}</label>`;
-        }
-        html+=`<div class="slot-group"><h3><i class="bi ${ic}"></i>${name}</h3><div class="slots">${btns}</div></div>`;
-      });
-      box.innerHTML=any?html:'<div class="slot-hint"><i class="bi bi-info-circle me-1"></i>No slots left for today. Please choose another date.</div>';
-      box.querySelectorAll("input[name=slot]").forEach(r=>r.addEventListener("change",()=>{$("slotErr").style.display="none";update();}));
-    }
-    
-    /* Summary + amounts */
-    const fee=()=>SPECS[specSel.value]?SPECS[specSel.value].fee:0;
-    const payType=()=>document.querySelector("input[name=payType]:checked").value;
-    const payNow=()=>payType()==="full"?fee():Math.round(fee()*PARTIAL_PCT/100);
-    const slotVal=()=>{const r=document.querySelector("input[name=slot]:checked");return r?+r.value:null;};
-    function update(){
-      const f=fee(),pn=payNow(),sl=slotVal();
-      $("amtFull").textContent=inr(f);$("amtPart").textContent=inr(Math.round(f*PARTIAL_PCT/100));
-      $("sName").textContent=$("pName").value.trim()||"-";
-      $("sSpec").textContent=specSel.value||"-";
-      $("sDoc").textContent=docSel.value||(specSel.value?"Any available doctor":"-");
-      $("sDate").textContent=fmtDate(dateIn.value);
-      $("sTime").textContent=sl!==null?fmtTime(sl):"-";
-      $("sFee").textContent=inr(f);$("sPay").textContent=inr(pn);
-      $("sBal").textContent=f&&payType()==="partial"?`Balance ${inr(f-pn)} to be paid at the hospital.`:"";
-      $("payBtn").innerHTML=`<i class="bi bi-lock-fill me-2"></i>Pay ${f?inr(pn)+" &amp; ":""}confirm appointment`;
-    }
-    ["pName"].forEach(id=>$(id).addEventListener("input",update));
-    document.querySelectorAll("input[name=payType]").forEach(r=>r.addEventListener("change",update));
-    $("pMobile").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,10);});
-    update();
-    
-    /* Submit */
-    const form=$("bookForm"),payModal=new bootstrap.Modal($("payModal"));
-    form.addEventListener("submit",e=>{
-      e.preventDefault();
-      const slotOk=slotVal()!==null;
-      $("slotErr").style.display=slotOk?"none":"block";
-      form.classList.add("was-validated");
-      if(!form.checkValidity()||!slotOk){
-        const bad=form.querySelector(":invalid")||$("slotBox");
-        bad.scrollIntoView({behavior:"smooth",block:"center"});if(bad.focus)bad.focus({preventScroll:true});
-        return;
-      }
-      const order={
-        name:$("pName").value.trim(),mobile:$("pMobile").value,email:$("pEmail").value.trim(),
-        gender:$("pGender").value,age:$("pAge").value,
-        speciality:specSel.value,doctor:docSel.value||"Any available doctor",
-        date:dateIn.value,slot:slotVal(),
-        payType:payType(),fee:fee(),paid:payNow()
-      };
-      order.balance=order.fee-order.paid;
-      startPayment(order).then(res=>{
-        payModal.hide();
-        const booking={...order,token:res.token,bookingId:res.bookingId,paymentId:res.paymentId,paidAt:res.paidAt};
-        try{sessionStorage.setItem("arshBooking",JSON.stringify(booking));}catch(_){}
-        showThanks(booking);
-      }).catch(()=>{
-        payModal.hide();
-        alert("Payment was not completed. No appointment has been booked. Please try again.");
-      });
-    });
-    
-    /* ------------------------------------------------------------
-       PAYMENT HOOK (dev: replace this function)
-       Real flow:
-       1. POST the order to your server -> server creates the payment order
-          (Razorpay / PayU / etc.) and returns the order id.
-       2. Open the gateway checkout with that order id.
-       3. After payment, VERIFY the payment on the server, then save the booking
-          and let the SERVER generate the token number and booking id.
-       4. Resolve with { token, bookingId, paymentId, paidAt }.
-       Never trust a client-side success message or a client-side token.
-       The demo below only simulates this so the screens can be reviewed.
-       ------------------------------------------------------------ */
-    function startPayment(order){
-      payModal.show();
-      return new Promise(resolve=>{
-        setTimeout(()=>{
-          const key="arshToken_"+order.date;let n=1;
-          try{n=(+localStorage.getItem(key)||0)+1;localStorage.setItem(key,n);}catch(_){n=Math.floor(Math.random()*40)+1;}
-          const d=order.date.replace(/-/g,"").slice(2);
-          resolve({token:"T-"+pad(n),bookingId:"ARSH-"+d+"-"+String(Math.floor(Math.random()*9000)+1000),paymentId:DEMO_MODE?"TEST-"+Date.now().toString(36).toUpperCase():"",paidAt:new Date().toISOString()});
-        },1800);
-      });
-    }
-    
-    /* Thank-you view */
-    function row(k,v){return `<div class="r"><span>${k}</span><span>${esc(v)}</span></div>`;}
-    function showThanks(b){
-      $("tyToken").textContent=b.token;
-      $("tyMsg").textContent=`Booking ID: ${b.bookingId}`+(b.email?` \u00B7 A copy will be sent to ${b.email}`:"");
-      $("dlPatient").innerHTML=row("Patient name",b.name)+row("Mobile","+91 "+b.mobile)+row("Email",b.email||"Not provided")+row("Gender",b.gender)+row("Age",b.age+" years");
-      $("dlAppt").innerHTML=row("Speciality",b.speciality)+row("Doctor",b.doctor)+row("Date",fmtDate(b.date))+row("Time slot",fmtTime(b.slot))+row("Token number",b.token)+row("Booking ID",b.bookingId);
-      $("dlPay").innerHTML=row("Payment type",b.payType==="full"?"Full payment":`Partial payment (${PARTIAL_PCT}%)`)+row("Consultation fee",inr(b.fee))+row("Amount paid",inr(b.paid))+row("Balance at hospital",inr(b.balance))+row("Payment ID",b.paymentId||"-")+row("Paid on",new Date(b.paidAt).toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"}));
-      $("bookView").classList.add("d-none");$("thanksView").classList.remove("d-none");
-      window.scrollTo({top:0,behavior:"smooth"});
-    }
-    $("newBooking").addEventListener("click",()=>{
-      try{sessionStorage.removeItem("arshBooking");}catch(_){}
-      form.reset();form.classList.remove("was-validated");docSel.disabled=true;docSel.innerHTML='<option value="">Any available doctor</option>';
-      renderSlots();update();
-      $("thanksView").classList.add("d-none");$("bookView").classList.remove("d-none");
-      window.scrollTo({top:0,behavior:"smooth"});
-    });
-    /* Keep the thank-you page after refresh */
-    try{const saved=sessionStorage.getItem("arshBooking");if(saved)showThanks(JSON.parse(saved));}catch(_){}
-    
-    /* Mobile drawer */
-    const menuBtn=$("menuBtn");
-    const setDrawer=o=>{document.body.classList.toggle("drawer-open",o);menuBtn.setAttribute("aria-expanded",o)};
-    menuBtn.addEventListener("click",()=>setDrawer(true));
-    $("drawerClose").addEventListener("click",()=>setDrawer(false));
-    $("scrim").addEventListener("click",()=>setDrawer(false));
-    document.querySelectorAll("#drawer a").forEach(a=>a.addEventListener("click",()=>setDrawer(false)));
-    window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape")setDrawer(false)});
-    
-    /* Search modal */
-    (()=>{
-      const b=$("searchBtn"),m=$("searchModal"),i=$("searchInput");
-      const set=o=>{m.classList.toggle("open",o);b.setAttribute("aria-expanded",o);document.body.style.overflow=o?"hidden":"";if(o)setTimeout(()=>i.focus(),30);};
-      b.addEventListener("click",()=>set(true));
-      $("searchClose").addEventListener("click",()=>set(false));
-      m.addEventListener("click",e=>{if(e.target===m)set(false)});
-      window.__arshRegisterEvent(document, "keydown",e=>{if(e.key==="Escape")set(false)});
-      m.querySelectorAll(".sm-chips button").forEach(c=>c.addEventListener("click",()=>{i.value=c.textContent;i.focus();}));
-    })();
-    })();
-  };
-  if (window.bootstrap) {
-    runPage();
-    return;
+const api=window.ArshApi,$=id=>document.getElementById(id),esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const inr=value=>"₹"+Number(value||0).toLocaleString("en-IN"),pad=value=>String(value).padStart(2,"0");
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;};
+const formatDate=value=>value?new Date(value+"T00:00:00").toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",year:"numeric"}):"-";
+const formatTime=value=>{const [hour,minute]=String(value||"").split(":").map(Number),date=new Date();date.setHours(hour||0,minute||0,0,0);return date.toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit"});};
+const specSel=$("pSpec"),docSel=$("pDoc"),dateInput=$("pDate"),form=$("bookForm"),typeSelect=document.createElement("select");
+docSel.required=true;
+const doctorLabel=document.querySelector('label[for="pDoc"]');if(doctorLabel)doctorLabel.innerHTML="Doctor";
+let specialities=[],doctors=[],slots=[],hospitalConfig={payment_method:"pay_at_hospital",max_advance_days:90},selectedSlot="",currentBooking=null;
+
+// The CI4 booking contract accepts a visit type and payment_method=pay_at_hospital.
+const paymentCard=form.querySelector('input[name="payType"]')?.closest(".fcard");
+if(paymentCard){
+  paymentCard.querySelector(".fhead h2").textContent="Consultation option";
+  paymentCard.querySelector(".fhead small").textContent="Consultation charges are paid at the hospital.";
+  typeSelect.id="apptType";typeSelect.className="form-select";typeSelect.required=true;
+  typeSelect.innerHTML='<option value="normal">Standard consultation</option>';
+  const row=paymentCard.querySelector(".row");row.innerHTML='<div class="col-md-8"><label class="form-label" for="apptType">Visit type</label></div><div class="col-md-8"></div>';
+  row.children[0].appendChild(typeSelect);row.children[1].innerHTML='<div class="pay-box"><span class="radio-dot"></span><span><b>Pay at hospital</b><span class="d">Pay the consultation fee at reception.</span><span class="amt" id="amtFull">₹0</span></span></div>';
+}
+const summaryCard=$("payBtn").closest(".sum-card");
+summaryCard.querySelector(".test-note")?.remove();
+summaryCard.querySelector(".sum-total span").textContent="Payment method";
+$("sPay").textContent="Pay at hospital";$("sBal").textContent="";
+$("payBtn").innerHTML='<i class="bi bi-calendar2-check me-2"></i>Request appointment';
+summaryCard.querySelector(".secure").innerHTML='<i class="bi bi-shield-check"></i>Appointment details are sent securely';
+document.querySelector(".page-hero p").textContent="Choose your doctor, check live availability and request an appointment. Pay the consultation fee at the hospital.";
+const processingModal=$("payModal");if(processingModal){processingModal.querySelector("h2").textContent="Submitting appointment";processingModal.querySelector("p").textContent="Please wait while we save your request.";}
+
+function selectedDoctor(){return doctors.find(doctor=>String(doctor.id)===docSel.value);}
+function selectedFee(){const doctor=selectedDoctor(),type=typeSelect.value;return Number(doctor?.fees?.[type]??doctor?.fees?.normal??0);}
+function slotValue(){return selectedSlot;}
+function updateSummary(){
+  const doctor=selectedDoctor(),slot=slotValue();
+  $("sName").textContent=$("pName").value.trim()||"-";
+  $("sSpec").textContent=specialities.find(s=>String(s.id)===specSel.value)?.name||"-";
+  $("sDoc").textContent=doctor?.name||"-";$("sDate").textContent=formatDate(dateInput.value);$("sTime").textContent=slot?formatTime(slot):"-";
+  $("sFee").textContent=inr(selectedFee());$("sPay").textContent="Pay at hospital";$("amtFull").textContent=inr(selectedFee());
+}
+function renderSlots(){
+  const box=$("slotBox");selectedSlot="";updateSummary();
+  if(!dateInput.value){box.innerHTML='<div class="slot-hint"><i class="bi bi-info-circle me-1"></i>Select a doctor and date to see live availability.</div>';return;}
+  if(!docSel.value){box.innerHTML='<div class="slot-hint"><i class="bi bi-info-circle me-1"></i>Select a doctor first to see available times.</div>';return;}
+  box.innerHTML='<div class="slot-hint"><span class="spinner-border spinner-border-sm me-2"></span>Checking available times…</div>';
+  api.get("appointments/availability",{doctor_id:docSel.value,date:dateInput.value}).then(response=>{
+    slots=Array.isArray(response.data?.slots)?response.data.slots:[];
+    if(!slots.length){box.innerHTML='<div class="slot-hint">No appointments are available for this doctor and date. Choose another date.</div>';return;}
+    box.innerHTML=`<div class="slot-group"><h3><i class="bi bi-clock"></i>Available times</h3><div class="slots">${slots.map((slot,index)=>{const value=slot.start||slot.time||"",disabled=Number(slot.remaining??1)<=0,id=`slot-${index}-${value.replace(/\W/g,"")}`;return `<input type="radio" class="btn-check" name="slot" id="${id}" value="${esc(value)}" ${disabled?"disabled":""} autocomplete="off"><label class="btn" for="${id}">${esc(formatTime(value))}</label>`;}).join("")}</div></div>`;
+    box.querySelectorAll('input[name="slot"]').forEach(radio=>radio.addEventListener("change",()=>{selectedSlot=radio.value;$("slotErr").style.display="none";updateSummary();}));
+  }).catch(error=>{box.innerHTML=`<div class="slot-hint text-danger">${esc(error.message||"Could not load availability. Try again.")}</div>`;});
+}
+async function loadDoctors(){
+  docSel.disabled=true;docSel.innerHTML='<option value="">Loading doctors…</option>';doctors=[];
+  const response=await api.get("doctors",{speciality_id:specSel.value,per_page:12,page:1});
+  doctors=Array.isArray(response.data)?response.data:[];
+  const pageSize=Number(response.meta?.per_page)||12,total=Number(response.meta?.total)||doctors.length;
+  for(let nextPage=2;doctors.length<total;nextPage++){
+    const next=await api.get("doctors",{speciality_id:specSel.value,per_page:pageSize,page:nextPage});
+    const items=Array.isArray(next.data)?next.data:[];if(!items.length)break;doctors.push(...items);
   }
-  const bootstrapScript = document.createElement("script");
-  bootstrapScript.src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js";
-  bootstrapScript.onload = runPage;
-  document.head.appendChild(bootstrapScript);
+  const selectedId=new URLSearchParams(location.search).get("doctor");
+  docSel.innerHTML='<option value="">Select a doctor</option>'+doctors.map(doctor=>`<option value="${esc(doctor.id)}">${esc(doctor.name)}${doctor.status?` — ${esc(doctor.status)}`:""}</option>`).join("");
+  if(selectedId&&doctors.some(doctor=>String(doctor.id)===selectedId))docSel.value=selectedId;
+  docSel.disabled=false;
+  const keys=[...new Set(doctors.flatMap(doctor=>Object.keys(doctor.fees||{})))];
+  const options=keys.length?keys:["normal"];
+  typeSelect.innerHTML=options.map(key=>`<option value="${esc(key)}">${esc(key.replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase()))}</option>`).join("");
+  updateSummary();
+}
+
+specSel.addEventListener("change",async()=>{docSel.value="";dateInput.value="";renderSlots();try{await loadDoctors();}catch(error){docSel.innerHTML='<option value="">Doctors could not be loaded</option>';docSel.disabled=true;}});
+docSel.addEventListener("change",()=>{renderSlots();updateSummary();});
+dateInput.addEventListener("change",renderSlots);typeSelect.addEventListener("change",updateSummary);
+["pName","pMobile","pAge","pGender"].forEach(id=>$(id).addEventListener("input",updateSummary));
+$("pMobile").addEventListener("input",event=>{event.target.value=event.target.value.replace(/\D/g,"").slice(0,10);});
+dateInput.min=today();
+
+function messageBox(text,isError){let box=$("bookingMessage");if(!box){box=document.createElement("div");box.id="bookingMessage";box.setAttribute("role","status");form.prepend(box);}box.className=`alert ${isError?"alert-danger":"alert-success"} mb-3`;box.textContent=text;box.scrollIntoView({behavior:"smooth",block:"center"});}
+function row(label,value){return `<div class="r"><span>${esc(label)}</span><span>${esc(value||"-")}</span></div>`;}
+function showThanks(response,request){
+  const data=response.data||response,bookingId=data.booking_id||data.bookingId||data.appointment_id||data.id||"Request received",token=data.token_number||data.token||data.token_no||"Assigned by reception";
+  currentBooking={...request,...data,booking_id:bookingId,token_number:token};
+  $("tyToken").textContent=token;$("tyMsg").textContent=`Appointment reference: ${bookingId}. Our team will contact you to confirm the request.`;
+  $("dlPatient").innerHTML=row("Patient name",request.name)+row("Mobile","+91 "+request.phone)+row("Gender",request.gender)+row("Age",request.age+" years");
+  $("dlAppt").innerHTML=row("Speciality",specialities.find(s=>String(s.id)===String(request.speciality_id))?.name)+row("Doctor",selectedDoctor()?.name)+row("Date",formatDate(request.date))+row("Time slot",formatTime(request.start))+row("Visit type",request.type)+row("Appointment reference",bookingId);
+  $("dlPay").innerHTML=row("Payment method","Pay at hospital")+row("Consultation fee",inr(selectedFee()));
+  $("thanksView").classList.remove("d-none");$("bookView").classList.add("d-none");window.scrollTo({top:0,behavior:"smooth"});
+}
+form.addEventListener("submit",async event=>{
+  event.preventDefault();
+  $("slotErr").style.display=selectedSlot?"none":"block";
+  form.classList.add("was-validated");
+  if(!form.checkValidity()||!selectedSlot){const invalid=form.querySelector(":invalid")||$("slotBox");invalid.scrollIntoView({behavior:"smooth",block:"center"});invalid.focus?.({preventScroll:true});return;}
+  const doctor=selectedDoctor();if(!doctor){messageBox("Choose a doctor before requesting an appointment.",true);return;}
+  const email=$("pEmail").value.trim();
+  const request={doctor_id:Number(doctor.id),date:dateInput.value,start:selectedSlot,name:$("pName").value.trim(),...(email?{email}:{}),phone:$("pMobile").value.trim(),age:Number($("pAge").value),gender:$("pGender").value,type:typeSelect.value||"normal",consent:$("consent").checked,payment_method:hospitalConfig.payment_method||"pay_at_hospital"};
+  const button=$("payBtn"),old=button.innerHTML;button.disabled=true;button.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Sending appointment…';$("bookingMessage")?.remove();
+  try{const response=await api.post("appointments",request);showThanks(response,request);}
+  catch(error){messageBox(error.message||"Appointment could not be saved. Please try again or call the hospital.",true);}
+  finally{button.disabled=false;button.innerHTML=old;}
+});
+$("newBooking").addEventListener("click",()=>{currentBooking=null;form.reset();form.classList.remove("was-validated");$("bookingMessage")?.remove();specSel.value="";docSel.disabled=true;docSel.innerHTML='<option value="">Choose a speciality first</option>';dateInput.min=today();dateInput.value="";renderSlots();updateSummary();$("thanksView").classList.add("d-none");$("bookView").classList.remove("d-none");window.scrollTo({top:0,behavior:"smooth"});});
+
+async function init(){
+  try{
+    const [specResponse,homeResponse]=await Promise.all([api.get("specialities"),api.get("home")]);
+    specialities=Array.isArray(specResponse.data)?specResponse.data:[];hospitalConfig=homeResponse.data?.booking||hospitalConfig;
+    const query=new URLSearchParams(location.search),requestedSpec=query.get("speciality_id");
+    specSel.innerHTML='<option value="">Select speciality</option>'+specialities.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");
+    if(requestedSpec&&specialities.some(s=>String(s.id)===requestedSpec)){specSel.value=requestedSpec;await loadDoctors();}
+    const maxDate=new Date();maxDate.setDate(maxDate.getDate()+Number(hospitalConfig.max_advance_days||90));dateInput.max=`${maxDate.getFullYear()}-${pad(maxDate.getMonth()+1)}-${pad(maxDate.getDate())}`;
+  }catch(error){messageBox(error.message||"Appointment information could not be loaded.",true);}
+  updateSummary();renderSlots();
+}
+init();
+
+const menuBtn=$("menuBtn"),setDrawer=open=>{document.body.classList.toggle("drawer-open",open);menuBtn.setAttribute("aria-expanded",String(open));};
+menuBtn.addEventListener("click",()=>setDrawer(true));$("drawerClose").addEventListener("click",()=>setDrawer(false));$("scrim").addEventListener("click",()=>setDrawer(false));document.querySelectorAll("#drawer a").forEach(anchor=>anchor.addEventListener("click",()=>setDrawer(false)));
+(()=>{const button=$("searchBtn"),modal=$("searchModal"),input=$("searchInput");const set=open=>{modal.classList.toggle("open",open);button.setAttribute("aria-expanded",String(open));document.body.style.overflow=open?"hidden":"";if(open)setTimeout(()=>input.focus(),30);};button.addEventListener("click",()=>set(true));$("searchClose").addEventListener("click",()=>set(false));modal.addEventListener("click",event=>{if(event.target===modal)set(false);});window.__arshRegisterEvent(document,"keydown",event=>{if(event.key==="Escape"){set(false);setDrawer(false);}});})();
 })();
