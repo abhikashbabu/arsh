@@ -7,6 +7,7 @@ type SourcePageData = {
   jsonLd: string[];
   slug: string;
   needsBootstrap: boolean;
+  initialApiData?: unknown;
 };
 
 export function SourcePage({ data }: { data: SourcePageData }) {
@@ -18,6 +19,13 @@ export function SourcePage({ data }: { data: SourcePageData }) {
         <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" as="script" />
       ) : null}
       <div dangerouslySetInnerHTML={{ __html: data.body }} />
+      {data.initialApiData ? (
+        <script
+          id="arshInitialApiData"
+          type="application/json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(data.initialApiData).replace(/</g, "\\u003c") }}
+        />
+      ) : null}
       {data.jsonLd.map((json, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
       ))}

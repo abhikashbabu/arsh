@@ -21,6 +21,17 @@ type Doctor = {
 
 type ApiDetailPageProps = { kind: "doctor" | "speciality"; slug: string };
 
+const SPECIALITY_COPY: Record<string, { title: string; description: string; services: string[] }> = {
+  "3": { title: "Orthopaedics & Spine", description: "Care for bone, joint, muscle and spine conditions, from injuries to planned treatment.", services: ["Joint replacement", "Trauma and fracture care", "Spine and sports injury care"] },
+  "1": { title: "Cardiology", description: "Heart assessment, treatment and follow-up with support from the hospital's cardiac team.", services: ["ECG, Echo and TMT", "Angiography and angioplasty", "Heart emergency care"] },
+  "4": { title: "Neurology & Neurosurgery", description: "Diagnosis and treatment for conditions affecting the brain, spine and nerves.", services: ["Stroke and paralysis care", "Seizure and headache care", "Brain and spine surgery"] },
+  "15": { title: "Gastroenterology", description: "Care for digestive, liver and pancreatic conditions with endoscopy services.", services: ["Endoscopy and colonoscopy", "Liver and gallbladder care", "Digestive disorders"] },
+  "2": { title: "Gynaecology", description: "Women's health services, including pregnancy care and gynaecological treatment.", services: ["Pregnancy consultations", "Menstrual and hormonal care", "Gynaecological procedures"] },
+  "6": { title: "Paediatrics", description: "Medical care for newborns, children and adolescents, with family-focused support.", services: ["Newborn and child care", "Vaccination", "Growth and nutrition"] },
+  "8": { title: "General Medicine", description: "First point of care for common illnesses, long-term conditions and preventive check-ups.", services: ["Fever and infection care", "Diabetes and thyroid care", "Preventive health checks"] },
+  "16": { title: "Critical Care", description: "Round-the-clock hospital care for patients who need urgent treatment and close monitoring.", services: ["ICU and HDU support", "Emergency stabilisation", "Continuous patient monitoring"] },
+};
+
 export function ApiDetailPage({ kind, slug }: ApiDetailPageProps) {
   const [item, setItem] = useState<Doctor | null>(null);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -56,7 +67,8 @@ export function ApiDetailPage({ kind, slug }: ApiDetailPageProps) {
     return () => document.body.classList.remove("drawer-open");
   }, [menuOpen]);
 
-  const title = item?.name || item?.speciality || "ARSH Hospital";
+  const specialityCopy = item ? SPECIALITY_COPY[String(item.id)] : undefined;
+  const title = (kind === "speciality" ? specialityCopy?.title : item?.name) || item?.name || item?.speciality || "ARSH Hospital";
   return (
     <div style={{ minHeight: "100vh", color: "#17324b", background: "#f7fbfe", fontFamily: "'DM Sans', sans-serif" }}>
       <style dangerouslySetInnerHTML={{ __html: homePage.css }} />
@@ -77,7 +89,7 @@ export function ApiDetailPage({ kind, slug }: ApiDetailPageProps) {
               <div className="row align-items-center g-4">
                 {kind === "doctor" && <div className="col-auto"><img src={item.photo_url || "/images/doctor-placeholder.svg"} alt={title} width="150" height="150" style={{ objectFit: "cover", borderRadius: "50%", border: "4px solid #ffffff88", background: "white" }} /></div>}
                 <div className="col"><div className="text-uppercase small fw-bold mb-2">{kind === "doctor" ? item.speciality || "ARSH Specialist" : "ARSH Speciality"}</div><h1 className="display-5 fw-bold">{title}</h1>
-                  {kind === "doctor" ? <><p className="lead mb-2">{item.qualification || "Consultant"}</p><p className="mb-0">{item.experience ? `${item.experience} years of experience` : item.status || "Appointments available"}</p></> : <p className="lead mb-0">{item.description || `Explore ${title} services and meet the doctors available at ARSH Hospital.`}{item.floor ? ` · ${item.floor} floor` : ""}</p>}
+                  {kind === "doctor" ? <><p className="lead mb-2">{item.qualification || "Consultant"}</p><p className="mb-0">{item.experience ? `${item.experience} years of experience` : item.status || "Appointments available"}</p></> : <p className="lead mb-0">{item.description || specialityCopy?.description || `Meet the doctors available for ${title} at ARSH Hospital.`}{item.floor ? ` · ${item.floor} floor` : ""}</p>}
                 </div>
                 <div className="col-12 col-lg-auto"><Link className="btn btn-light btn-lg" href={`/book-appointment?${kind === "doctor" ? `doctor=${encodeURIComponent(String(item.id))}&speciality_id=${encodeURIComponent(String(item.speciality_id || ""))}` : `speciality_id=${encodeURIComponent(String(item.id))}`}`}>Book an appointment</Link></div>
               </div>
@@ -88,7 +100,7 @@ export function ApiDetailPage({ kind, slug }: ApiDetailPageProps) {
                 <section className="col-lg-5"><div className="bg-white rounded-4 p-4 h-100"><h2 className="h4">Consultation fees</h2>{Object.entries(item.fees || {}).map(([name, fee]) => <div className="d-flex justify-content-between border-bottom py-2" key={name}><span className="text-capitalize">{name.replace(/_/g, " ")}</span><strong>₹{Number(fee).toLocaleString("en-IN")}</strong></div>)}{item.fees && Object.keys(item.fees).length === 0 && <p>Contact the hospital for fee information.</p>}</div></section>
               </div>
             ) : (
-              <section className="bg-white rounded-4 p-4"><h2 className="h3 mb-4">Doctors in {title}</h2>{doctors.length ? <div className="row g-3">{doctors.map(doctor => <div className="col-md-6 col-xl-4" key={doctor.id}><article className="border rounded-4 p-3 h-100 d-flex gap-3 align-items-center"><img src={doctor.photo_url || "/images/doctor-placeholder.svg"} alt="" width="64" height="64" style={{ objectFit: "cover", borderRadius: "50%" }} /><div><h3 className="h6 mb-1">{doctor.name}</h3><p className="small text-secondary mb-2">{doctor.qualification || doctor.speciality}</p><Link href={`/doctors/${encodeURIComponent(doctor.slug)}`}>View profile</Link></div></article></div>)}</div> : <p className="text-secondary">No doctors are listed for this speciality yet. Contact our team to find the right care.</p>}</section>
+              <section className="bg-white rounded-4 p-4"><h2 className="h3 mb-3">Care available in {title}</h2>{specialityCopy && <ul className="row list-unstyled g-2 mb-4">{specialityCopy.services.map(service => <li className="col-md-4" key={service}><span className="d-block border rounded-3 p-3"><i className="bi bi-check-circle-fill text-success me-2" />{service}</span></li>)}</ul>}<h2 className="h3 mb-4">Doctors in {title}</h2>{doctors.length ? <div className="row g-3">{doctors.map(doctor => <div className="col-md-6 col-xl-4" key={doctor.id}><article className="border rounded-4 p-3 h-100 d-flex gap-3 align-items-center"><img src={doctor.photo_url || "/images/doctor-placeholder.svg"} alt="" width="64" height="64" style={{ objectFit: "cover", borderRadius: "50%" }} /><div><h3 className="h6 mb-1">{doctor.name}</h3><p className="small text-secondary mb-2">{doctor.qualification || doctor.speciality}</p><Link href={`/doctors/${encodeURIComponent(doctor.slug)}`}>View profile</Link></div></article></div>)}</div> : <p className="text-secondary">No doctors are listed for this speciality yet. Contact our team to find the right care.</p>}</section>
             )}
           </>
         )}

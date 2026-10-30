@@ -2,16 +2,20 @@
 /* Hospital home feed and doctor finder */
 const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const api=window.ArshApi,speciality=document.getElementById("speciality"),doctor=document.getElementById("doctor"),doctorSearch=document.getElementById("doctorSearch");
+const SHOWCASE_SPECIALITY_IDS=["3","1","4","15","2","6","8","16"];
+const SPECIALITY_LABELS={"3":"Orthopaedics & Spine","4":"Neurology & Neurosurgery"};
 let homeData={specialities:[],doctors:[],blogs:[]};
+try{const initial=document.getElementById("arshInitialApiData");if(initial?.textContent)homeData=JSON.parse(initial.textContent);}catch(_){homeData={specialities:[],doctors:[],blogs:[]};}
 function renderDoctorOptions(){
   const filtered=homeData.doctors.filter(d=>!speciality.value||String(d.speciality_id)===speciality.value);
   doctor.innerHTML='<option value="">Select doctor</option>'+filtered.map(d=>`<option value="${esc(d.id)}" data-slug="${esc(d.slug)}">${esc(d.name)}</option>`).join("");
 }
 function renderHomeFeed(){
   const specSnap=document.querySelector("#specialities .snap");
-  if(specSnap&&homeData.specialities.length)specSnap.innerHTML=homeData.specialities.map(s=>`<div class="col"><div class="spec"><a class="spec-hitarea" href="/specialities/${encodeURIComponent(s.slug)}" aria-label="View ${esc(s.name)}"></a><div class="spec-icon"><i class="bi bi-heart-pulse"></i></div><div class="spec-name">${esc(s.name)}</div></div></div>`).join("");
+  const featuredSpecialities=SHOWCASE_SPECIALITY_IDS.map(id=>homeData.specialities.find(s=>String(s.id)===id)).filter(Boolean);
+  if(specSnap&&specSnap.dataset.apiRendered!=="true"&&featuredSpecialities.length)specSnap.innerHTML=featuredSpecialities.map(s=>{const name=SPECIALITY_LABELS[String(s.id)]||s.name;return `<div class="col"><div class="spec"><a class="spec-hitarea" href="/specialities/${encodeURIComponent(s.slug)}" aria-label="View ${esc(name)}"></a><div class="spec-icon"><i class="bi bi-heart-pulse"></i></div><div class="spec-name">${esc(name)}</div></div></div>`;}).join("");
   const doctorSnap=document.querySelector("#doctors .snap");
-  if(doctorSnap&&homeData.doctors.length)doctorSnap.innerHTML=homeData.doctors.slice(0,8).map(d=>`<div class="col-6 col-lg-3"><article class="card-p"><div class="ph"><img src="${esc(d.photo_url||"/images/doctor-placeholder.svg")}" alt="${esc(d.name)}" loading="lazy"></div><div class="body"><h3>${esc(d.name)}</h3><div class="sub">${esc(d.speciality)}</div><div class="meta"><i class="bi bi-award me-1"></i>${d.experience?`${esc(d.experience)}+ years experience`:esc(d.qualification||"Available for appointments")}</div><a class="link-sm" href="/doctors/${encodeURIComponent(d.slug)}">View profile <i class="bi bi-arrow-right"></i></a></div></article></div>`).join("");
+  if(doctorSnap&&doctorSnap.dataset.apiRendered!=="true"&&homeData.doctors.length)doctorSnap.innerHTML=homeData.doctors.slice(0,8).map(d=>`<div class="col-6 col-lg-3"><article class="card-p"><div class="ph"><img src="${esc(d.photo_url||"/images/doctor-placeholder.svg")}" alt="${esc(d.name)}" loading="lazy"></div><div class="body"><h3>${esc(d.name)}</h3><div class="sub">${esc(d.speciality)}</div><div class="meta"><i class="bi bi-award me-1"></i>${d.experience?`${esc(d.experience)}+ years experience`:esc(d.qualification||"Available for appointments")}</div><a class="link-sm" href="/doctors/${encodeURIComponent(d.slug)}">View profile <i class="bi bi-arrow-right"></i></a></div></article></div>`).join("");
 }
 speciality.addEventListener("change",renderDoctorOptions);
 document.getElementById("doctorForm").addEventListener("submit",event=>{
@@ -22,9 +26,12 @@ document.getElementById("doctorForm").addEventListener("submit",event=>{
   if(doctorSearch.value.trim())params.set("q",doctorSearch.value.trim());
   location.assign(`/doctors${params.size?`?${params}`:""}`);
 });
-api.get("home").then(response=>{
+if(Array.isArray(homeData.specialities)&&homeData.specialities.length){
+  if(speciality.dataset.apiRendered!=="true")speciality.innerHTML='<option value="">Select speciality</option>'+homeData.specialities.map(s=>`<option value="${esc(s.id)}">${esc(SPECIALITY_LABELS[String(s.id)]||s.name)}</option>`).join("");
+  renderDoctorOptions();renderHomeFeed();
+}else api.get("home").then(response=>{
   homeData=response.data||homeData;
-  speciality.innerHTML='<option value="">Select speciality</option>'+homeData.specialities.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");
+  speciality.innerHTML='<option value="">Select speciality</option>'+homeData.specialities.map(s=>`<option value="${esc(s.id)}">${esc(SPECIALITY_LABELS[String(s.id)]||s.name)}</option>`).join("");
   renderDoctorOptions();renderHomeFeed();
 }).catch(()=>{ /* Keep the page usable if the hospital API is temporarily down. */ });
 
