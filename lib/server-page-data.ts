@@ -59,6 +59,54 @@ function replaceDivAfter(html: string, marker: string, classTest: (className: st
   return html;
 }
 
+function takeSectionById(html: string, id: string) {
+  const opening = new RegExp(`<section\\b(?=[^>]*\\bid=["']${id}["'])[^>]*>`, "i");
+  const match = opening.exec(html);
+  if (!match) return { html, section: "" };
+  const tags = /<section\b[^>]*>|<\/section\s*>/gi;
+  tags.lastIndex = match.index;
+  let depth = 0;
+  let tag: RegExpExecArray | null;
+  while ((tag = tags.exec(html))) {
+    depth += tag[0].startsWith("</") ? -1 : 1;
+    if (depth === 0) {
+      const section = html.slice(match.index, tags.lastIndex);
+      return { html: html.slice(0, match.index) + html.slice(tags.lastIndex), section };
+    }
+  }
+  return { html, section: "" };
+}
+
+function replaceSectionByClass(html: string, className: string, replacement: string) {
+  const opening = new RegExp(`<section\\b(?=[^>]*\\bclass=["'][^"']*\\b${className}\\b[^"']*["'])[^>]*>`, "i");
+  const match = opening.exec(html);
+  if (!match) return html;
+  const tags = /<section\b[^>]*>|<\/section\s*>/gi;
+  tags.lastIndex = match.index;
+  let depth = 0;
+  let tag: RegExpExecArray | null;
+  while ((tag = tags.exec(html))) {
+    depth += tag[0].startsWith("</") ? -1 : 1;
+    if (depth === 0) return html.slice(0, match.index) + replacement + html.slice(tags.lastIndex);
+  }
+  return html;
+}
+
+function replaceDivByClass(html: string, className: string, replacement: string) {
+  const opening = new RegExp(`<div\\b(?=[^>]*\\bclass=["'][^"']*\\b${className}\\b[^"']*["'])[^>]*>`, "i");
+  const match = opening.exec(html);
+  if (!match) return html;
+  const tags = /<div\b[^>]*>|<\/div\s*>/gi;
+  tags.lastIndex = match.index;
+  let depth = 0;
+  let tag: RegExpExecArray | null;
+  while ((tag = tags.exec(html))) {
+    depth += tag[0].startsWith("</") ? -1 : 1;
+    if (depth === 0) return html.slice(0, match.index) + replacement + html.slice(tags.lastIndex);
+  }
+  return html;
+}
+
 export function featuredSpecialities(items: Ci4Speciality[]) {
   return FEATURED_IDS.map((id) => items.find((item) => String(item.id) === id)).filter((item): item is Ci4Speciality => Boolean(item));
 }
@@ -81,6 +129,18 @@ export function renderSpecialitiesBody(body: string, items: Ci4Speciality[]) {
 
 export function renderHomeBody(body: string, data: { specialities?: Ci4Speciality[]; doctors?: any[] }) {
   let result = body;
+  // Put the doctor finder directly beneath the hero and remove the redundant quick-link strip.
+  const finder = takeSectionById(result, "find-doctor");
+  if (finder.section) {
+    const withoutFinder = takeSectionById(result, "find-doctor").html;
+    result = replaceSectionByClass(withoutFinder, "quick", finder.section);
+  }
+  // The old blue top strip repeated the emergency number; keep the contact in the main header.
+  result = replaceDivByClass(result, "topbar", "");
+  result = result.replace(
+    '<a class="btn btn-arsh header-cta" href="/book-appointment">',
+    '<a class="header-emergency" href="tel:+917321831111" aria-label="Call 24x7 emergency at +91 73218 31111"><i class="bi bi-telephone-fill"></i><span><small>24x7 Emergency</small>+91 73218 31111</span></a>\n    <a class="btn btn-arsh header-cta" href="/book-appointment">',
+  );
   const specs = featuredSpecialities(data.specialities || []).map((speciality) => {
     const title = LABELS[String(speciality.id)] || speciality.name;
     return `<div class="col"><div class="spec"><a class="spec-hitarea" href="/specialities/${encodeURIComponent(speciality.slug)}" aria-label="View ${escapeHtml(title)}"></a><div class="spec-icon"><i class="bi bi-heart-pulse"></i></div><div class="spec-name">${escapeHtml(title)}</div></div></div>`;
