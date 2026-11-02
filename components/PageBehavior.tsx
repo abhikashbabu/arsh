@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 type PageRuntimeWindow = Window & {
   __arshPageEventCleanup?: () => void;
+  __arshPageScriptCleanup?: () => void;
   __arshRegisterEvent?: (...args: any[]) => void;
   ArshApi?: {
     get: (path: string, params?: Record<string, string | number | undefined>) => Promise<any>;
@@ -126,6 +127,8 @@ export function PageBehavior({ slug }: { slug: string }) {
       document.removeEventListener("click", handleClick);
       document.removeEventListener("submit", handleSubmit);
       document.removeEventListener("pointerover", handlePointerOver);
+      runtimeWindow.__arshPageScriptCleanup?.();
+      delete runtimeWindow.__arshPageScriptCleanup;
       pageScript.remove();
       runtimeWindow.__arshPageEventCleanup?.();
       delete runtimeWindow.ArshApi;
