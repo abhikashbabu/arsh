@@ -100,6 +100,66 @@ export function PageBehavior({ slug }: { slug: string }) {
       router.push(value ? `/search?q=${encodeURIComponent(value)}` : "/search");
     };
 
+    const closeMegaMenus = () => {
+      document.querySelectorAll<HTMLElement>("[data-mega-panel]").forEach((panel) => {
+        panel.classList.remove("open");
+        panel.setAttribute("aria-hidden", "true");
+      });
+      document.querySelectorAll<HTMLButtonElement>("[data-mega-trigger]").forEach((button) => {
+        button.setAttribute("aria-expanded", "false");
+        button.classList.remove("on");
+      });
+    };
+
+    const handleNavigationClick = (event: MouseEvent) => {
+      if (!(event.target instanceof Element)) return;
+      const trigger = event.target.closest<HTMLButtonElement>("[data-mega-trigger]");
+      if (trigger) {
+        const name = trigger.dataset.megaTrigger;
+        const panel = name ? document.querySelector<HTMLElement>(`[data-mega-panel="${name}"]`) : null;
+        const shouldOpen = trigger.getAttribute("aria-expanded") !== "true";
+        closeMegaMenus();
+        if (shouldOpen && panel) {
+          trigger.setAttribute("aria-expanded", "true");
+          trigger.classList.add("on");
+          panel.classList.add("open");
+          panel.setAttribute("aria-hidden", "false");
+        }
+        return;
+      }
+      const accordion = event.target.closest<HTMLButtonElement>("[data-drawer-accordion]");
+      if (accordion) {
+        const panelId = accordion.getAttribute("aria-controls");
+        const panel = panelId ? document.getElementById(panelId) : null;
+        const expanded = accordion.getAttribute("aria-expanded") === "true";
+        accordion.setAttribute("aria-expanded", String(!expanded));
+        panel?.classList.toggle("open", !expanded);
+        return;
+      }
+      if (!event.target.closest(".site-header")) closeMegaMenus();
+    };
+
+    const handleNavigationKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeMegaMenus();
+    };
+
+    const header = document.querySelector<HTMLElement>(".site-header");
+    const handleHeaderLeave = () => {
+      if (window.matchMedia("(min-width: 992px)").matches) closeMegaMenus();
+    };
+    const handleHeaderHover = (event: PointerEvent) => {
+      if (!window.matchMedia("(min-width: 992px)").matches || !(event.target instanceof Element)) return;
+      const trigger = event.target.closest<HTMLButtonElement>("[data-mega-trigger]");
+      if (!trigger || trigger.getAttribute("aria-expanded") === "true") return;
+      const name = trigger.dataset.megaTrigger;
+      const panel = name ? document.querySelector<HTMLElement>(`[data-mega-panel="${name}"]`) : null;
+      closeMegaMenus();
+      trigger.setAttribute("aria-expanded", "true");
+      trigger.classList.add("on");
+      panel?.classList.add("open");
+      panel?.setAttribute("aria-hidden", "false");
+    };
+
     const prefetched = new Set<string>();
     const handlePointerOver = (event: PointerEvent) => {
       if (!(event.target instanceof Element)) return;
@@ -114,8 +174,12 @@ export function PageBehavior({ slug }: { slug: string }) {
     };
 
     document.addEventListener("click", handleClick);
+    document.addEventListener("click", handleNavigationClick);
+    document.addEventListener("keydown", handleNavigationKey);
     document.addEventListener("submit", handleSubmit);
     document.addEventListener("pointerover", handlePointerOver, { passive: true });
+    document.addEventListener("pointerover", handleHeaderHover, { passive: true });
+    header?.addEventListener("pointerleave", handleHeaderLeave);
 
     const pageScript = document.createElement("script");
     pageScript.src = `/page-scripts/${slug}.js`;
@@ -125,8 +189,12 @@ export function PageBehavior({ slug }: { slug: string }) {
 
     return () => {
       document.removeEventListener("click", handleClick);
+      document.removeEventListener("click", handleNavigationClick);
+      document.removeEventListener("keydown", handleNavigationKey);
       document.removeEventListener("submit", handleSubmit);
       document.removeEventListener("pointerover", handlePointerOver);
+      document.removeEventListener("pointerover", handleHeaderHover);
+      header?.removeEventListener("pointerleave", handleHeaderLeave);
       runtimeWindow.__arshPageScriptCleanup?.();
       delete runtimeWindow.__arshPageScriptCleanup;
       pageScript.remove();
