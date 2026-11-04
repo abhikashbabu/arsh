@@ -84,7 +84,6 @@ export function SiteHeader() {
 
   const isSpecialities = pathname.startsWith("/specialities") || pathname.startsWith("/orthopedic-doctor");
   const isFacilities = pathname.startsWith("/facilities") || pathname.startsWith("/angiography");
-  const toggleMenu = (kind: "specialities" | "facilities") => setOpenMenu((value) => value === kind ? null : kind);
   const closeMenus = () => setOpenMenu(null);
   const closeDrawer = () => setOpenDrawer(false);
   const toggleAccordion = (kind: "specialities" | "facilities") => setOpenAccordion((value) => value === kind ? null : kind);
@@ -97,9 +96,9 @@ export function SiteHeader() {
           <nav className="main-nav" aria-label="Main navigation">
             <Link className={pathname === "/" ? "active" : ""} href="/">Home</Link>
             <Link className={pathname === "/about" ? "active" : ""} href="/about">About</Link>
-            <button className={`mega-trigger${isSpecialities ? " active" : ""}`} type="button" aria-expanded={openMenu === "specialities"} onClick={() => toggleMenu("specialities")}>Specialities <i className="bi bi-chevron-down" /></button>
+            <button className={`mega-trigger${isSpecialities ? " active" : ""}`} type="button" aria-expanded={openMenu === "specialities"} onMouseEnter={() => setOpenMenu("specialities")} onClick={() => setOpenMenu("specialities")}>Specialities <i className="bi bi-chevron-down" /></button>
             <Link className={pathname.startsWith("/doctors") ? "active" : ""} href="/doctors">Doctors</Link>
-            <button className={`mega-trigger${isFacilities ? " active" : ""}`} type="button" aria-expanded={openMenu === "facilities"} onClick={() => toggleMenu("facilities")}>Facilities <i className="bi bi-chevron-down" /></button>
+            <button className={`mega-trigger${isFacilities ? " active" : ""}`} type="button" aria-expanded={openMenu === "facilities"} onMouseEnter={() => setOpenMenu("facilities")} onClick={() => setOpenMenu("facilities")}>Facilities <i className="bi bi-chevron-down" /></button>
             <Link className={pathname === "/patient-stories" ? "active" : ""} href="/patient-stories">Patient Stories</Link>
             <Link className={pathname === "/contact" ? "active" : ""} href="/contact">Contact</Link>
           </nav>

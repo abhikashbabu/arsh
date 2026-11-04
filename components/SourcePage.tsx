@@ -20,7 +20,7 @@ export function SourcePage({ data }: { data: SourcePageData }) {
       {data.needsBootstrap ? (
         <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" as="script" />
       ) : null}
-      <div dangerouslySetInnerHTML={{ __html: body }} />
+      <div className={`source-page source-page-${data.slug}`} dangerouslySetInnerHTML={{ __html: body }} />
       {data.initialApiData ? (
         <script
           id="arshInitialApiData"
