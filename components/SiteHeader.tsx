@@ -28,7 +28,7 @@ function MenuPanel({ kind, close }: { kind: "specialities" | "facilities"; close
   const isSpeciality = kind === "specialities";
   const entries = isSpeciality ? specialities : facilities;
   return (
-    <div className="mega" onClick={(event) => { if ((event.target as HTMLElement).closest("a")) close(); }}>
+    <div className="mega open" onClick={(event) => { if ((event.target as HTMLElement).closest("a")) close(); }}>
       <div className="wrap mega-in">
         <aside className="mega-side">
           <span className="mega-count">{isSpeciality ? "8 featured departments" : "Care and support"}</span>

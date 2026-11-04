@@ -49,6 +49,7 @@ export const siteNavigationCss = `
 .site-header{position:sticky;top:0;z-index:1030;isolation:isolate}
 .site-header .wrap{gap:.7rem}
 .site-header .mega{position:absolute;left:0;right:0;top:100%;z-index:1031;background:#fff;border-top:1px solid #dce9f4;box-shadow:0 28px 55px rgba(7,61,120,.16);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;max-height:calc(100vh - 76px);overflow:auto}
+.site-header .mega.open{opacity:1;visibility:visible;transform:none}
 .site-header .mega-in{display:grid;grid-template-columns:minmax(210px,260px) 1fr;gap:1.25rem;padding-block:1.25rem}
 .site-header .mega-side{background:linear-gradient(145deg,#073d78,#1267bd);color:#fff;border-radius:18px;padding:1.2rem;display:flex;flex-direction:column;align-items:flex-start}
 .site-header .mega-count{font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#d8ebfb;margin-bottom:.7rem}
