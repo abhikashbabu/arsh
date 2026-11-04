@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import homePage from "@/content/home.json";
+import { SiteHeader } from "@/components/SiteHeader";
+import { siteNavigationCss } from "@/lib/site-navigation";
+
+const pageHeroMarker = homePage.css.indexOf("/* Page hero */");
+const sharedHeaderCss = `${pageHeroMarker >= 0 ? homePage.css.slice(0, pageHeroMarker) : ""}\n${siteNavigationCss}`;
 
 export const metadata: Metadata = {
   title: "ARSH Super Speciality Hospital",
@@ -16,8 +22,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <style dangerouslySetInnerHTML={{ __html: sharedHeaderCss }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <SiteHeader />
+        {children}
+      </body>
     </html>
   );
 }

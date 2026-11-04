@@ -79,6 +79,7 @@ export function PageBehavior({ slug }: { slug: string }) {
       if (!(event.target instanceof Element)) return;
       const anchor = event.target.closest<HTMLAnchorElement>("a[href]");
       if (!anchor) return;
+      if (anchor.closest(".site-header, .drawer")) return;
       const url = toInternalUrl(anchor);
       if (!url) return;
 

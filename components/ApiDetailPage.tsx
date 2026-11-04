@@ -36,7 +36,6 @@ export function ApiDetailPage({ kind, slug }: ApiDetailPageProps) {
   const [item, setItem] = useState<Doctor | null>(null);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [error, setError] = useState("");
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -62,25 +61,11 @@ export function ApiDetailPage({ kind, slug }: ApiDetailPageProps) {
     return () => { active = false; };
   }, [kind, slug]);
 
-  useEffect(() => {
-    document.body.classList.toggle("drawer-open", menuOpen);
-    return () => document.body.classList.remove("drawer-open");
-  }, [menuOpen]);
-
   const specialityCopy = item ? SPECIALITY_COPY[String(item.id)] : undefined;
   const title = (kind === "speciality" ? specialityCopy?.title : item?.name) || item?.name || item?.speciality || "ARSH Hospital";
   return (
     <div style={{ minHeight: "100vh", color: "#17324b", background: "#f7fbfe", fontFamily: "'DM Sans', sans-serif" }}>
       <style dangerouslySetInnerHTML={{ __html: homePage.css }} />
-      <div className="topbar d-none d-lg-block"><div className="wrap d-flex justify-content-between py-2"><span><i className="bi bi-geo-alt me-1" />Gaya, Bihar</span><span><i className="bi bi-clock me-1" />OPD 9 AM - 6 PM &nbsp;|&nbsp; <i className="bi bi-telephone me-1" />Emergency 24x7: <a href="tel:+917321831111">+91 73218 31111</a></span></div></div>
-      <header className="site-header"><div className="wrap">
-        <Link className="logo" href="/"><img src="https://arshhospitals.com/wp-content/uploads/2021/12/Arsh-Logo-png-2-e1639235875839.png" alt="ARSH Super Speciality Hospital" /></Link>
-        <nav className="main-nav" aria-label="Main"><Link href="/">Home</Link><Link href="/about">About</Link><Link href="/specialities">Specialities</Link><Link href="/doctors">Doctors</Link><Link href="/facilities">Facilities</Link><Link href="/patient-stories">Patient Stories</Link><Link href="/contact">Contact</Link></nav>
-        <Link className="search-btn" href="/search" aria-label="Search"><i className="bi bi-search" /></Link>
-        <Link className="btn btn-arsh header-cta" href="/book-appointment"><i className="bi bi-calendar2-check me-1" />Book Appointment</Link>
-        <button className="menu-btn" type="button" aria-label="Open menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(value => !value)}><i className="bi bi-list" /></button>
-      </div></header>
-      {menuOpen && <><button className="scrim" aria-label="Close menu" onClick={() => setMenuOpen(false)} /><aside className="drawer"><nav className="drawer-links"><Link href="/">Home</Link><Link href="/about">About</Link><Link href="/specialities">Specialities</Link><Link href="/doctors">Doctors</Link><Link href="/facilities">Facilities</Link><Link href="/contact">Contact</Link></nav><Link className="btn btn-arsh w-100" href="/book-appointment">Book Appointment</Link></aside></>}
       <main className="container py-5">
         <div className="text-secondary small mb-3"><Link href="/">Home</Link> / {kind === "doctor" ? <Link href="/doctors">Doctors</Link> : <Link href="/specialities">Specialities</Link>} / {title}</div>
         {error ? <div className="alert alert-warning">{error}</div> : !item ? <div className="py-5 text-center"><span className="spinner-border text-primary" aria-label="Loading" /></div> : (

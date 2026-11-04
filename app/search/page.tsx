@@ -14,16 +14,11 @@ export default function SearchPage() {
   const [data, setData] = useState<SearchData>({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const initialQuery = new URLSearchParams(window.location.search).get("q") || "";
     setQuery(initialQuery); setTerm(initialQuery);
   }, []);
-  useEffect(() => {
-    document.body.classList.toggle("drawer-open", menuOpen);
-    return () => document.body.classList.remove("drawer-open");
-  }, [menuOpen]);
 
   useEffect(() => {
     setTerm(query);
@@ -51,9 +46,6 @@ export default function SearchPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#f5f9fc", color: "#17324b", fontFamily: "'DM Sans', sans-serif" }}>
       <style dangerouslySetInnerHTML={{ __html: homePage.css }} />
-      <div className="topbar d-none d-lg-block"><div className="wrap d-flex justify-content-between py-2"><span><i className="bi bi-geo-alt me-1" />Gaya, Bihar</span><span><i className="bi bi-clock me-1" />OPD 9 AM - 6 PM &nbsp;|&nbsp; <i className="bi bi-telephone me-1" />Emergency 24x7: <a href="tel:+917321831111">+91 73218 31111</a></span></div></div>
-      <header className="site-header"><div className="wrap"><Link className="logo" href="/"><img src="https://arshhospitals.com/wp-content/uploads/2021/12/Arsh-Logo-png-2-e1639235875839.png" alt="ARSH Super Speciality Hospital" /></Link><nav className="main-nav" aria-label="Main"><Link href="/">Home</Link><Link href="/about">About</Link><Link href="/specialities">Specialities</Link><Link href="/doctors">Doctors</Link><Link href="/facilities">Facilities</Link><Link href="/patient-stories">Patient Stories</Link><Link href="/contact">Contact</Link></nav><Link className="search-btn" href="/search" aria-label="Search"><i className="bi bi-search" /></Link><Link className="btn btn-arsh header-cta" href="/book-appointment"><i className="bi bi-calendar2-check me-1" />Book Appointment</Link><button className="menu-btn" type="button" aria-label="Open menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(value => !value)}><i className="bi bi-list" /></button></div></header>
-      {menuOpen && <><button className="scrim" aria-label="Close menu" onClick={() => setMenuOpen(false)} /><aside className="drawer"><nav className="drawer-links"><Link href="/">Home</Link><Link href="/about">About</Link><Link href="/specialities">Specialities</Link><Link href="/doctors">Doctors</Link><Link href="/facilities">Facilities</Link><Link href="/contact">Contact</Link></nav><Link className="btn btn-arsh w-100" href="/book-appointment">Book Appointment</Link></aside></>}
       <main className="container py-5">
         <p className="text-secondary small"><Link href="/">Home</Link> / Search</p><h1 className="fw-bold">Search ARSH Hospital</h1>
         <form className="input-group my-4" onSubmit={submit}><input className="form-control" value={term} onChange={event => setTerm(event.target.value)} aria-label="Search doctors, specialities or blogs" placeholder="Search doctors, specialities or services" /><button className="btn btn-primary" type="submit">Search</button></form>
