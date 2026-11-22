@@ -6,12 +6,23 @@ export type Facility = {
   slug?: string;
   top_subheading?: string;
   bottom_subheading?: string;
+  overview_heading?: string;
+  overview_description?: string;
+  overview_points?: string[];
+  recommended_heading?: string;
+  recommended_points?: string[];
   banner_alt?: string;
   banner_button_text?: string;
   banner_button_url?: string;
   banner_url?: string | null;
   banner_points?: Array<{ text?: string; image_url?: string | null }>;
-  recommended_points?: string[];
+  faqs?: Array<{ q?: string; a?: string }>;
+  seo_title?: string;
+  meta_description?: string;
+  canonical_url?: string;
+  robots_index?: string;
+  robots_follow?: string;
+  og_use_banner?: boolean | string;
   is_active?: boolean;
 };
 
@@ -37,7 +48,7 @@ function facilityRow(facility: Facility, index: number) {
   const imageOrder = index % 2 ? " order-lg-2" : "";
   const textOrder = index % 2 ? " order-lg-1" : "";
   const buttonText = facility.banner_button_text?.trim();
-  const buttonUrl = facility.banner_button_url || `#visit`;
+  const buttonUrl = facility.banner_button_url || `/facilities/${slug}`;
 
   return `<div class="row g-4 g-xl-5 align-items-center fx" id="${escapeHtml(slug)}">
     <div class="col-lg-6${imageOrder}"><div class="fx-img"><img src="${escapeHtml(image)}" alt="${escapeHtml(imageAlt)}" loading="lazy" decoding="async">${points ? `<div class="fx-badges">${points}</div>` : ""}</div></div>

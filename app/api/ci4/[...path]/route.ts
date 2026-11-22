@@ -7,6 +7,7 @@ const ALLOWED_PATHS = [
   /^specialities$/,
   /^specialities\/[a-z0-9-]+$/i,
   /^facilities$/,
+  /^facilities\/[a-z0-9-]+$/i,
   /^doctors$/,
   /^doctors\/[a-z0-9-]+$/i,
   /^appointments$/,
