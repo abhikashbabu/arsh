@@ -161,23 +161,42 @@ function sectionByClass(html: string, className: string, replacement: string) {
   return html;
 }
 
-function cardItems(items: any[], className = "col") {
-  return items.map((item) => {
-    const title = field(item, "title", "name", "heading", "label") || text(item);
-    const description = field(item, "subtitle", "description", "content", "text", "details");
-    const icon = field(item, "icon_url", "icon") || "bi-heart-pulse";
-    const image = field(item, "image_url", "image");
-    return `<div class="${className}"><article class="card-p p-4 h-100">${image ? `<img class="api-section-image mb-3" src="${esc(image)}" alt="${esc(title)}" loading="lazy">` : `<span class="ico mb-3">${icon.startsWith("http") ? `<img src="${esc(icon)}" alt="" loading="lazy">` : `<i class="bi ${esc(icon.replace(/^bi\s+/, ""))}"></i>`}</span>`}<h3>${esc(title)}</h3>${description ? `<p>${esc(description)}</p>` : ""}</article></div>`;
-  }).join("");
+function sectionHeading(data: any, kicker: string, kickerWidth = "col-lg-7", descriptionWidth = "col-lg-5") {
+  const heading = field(data, "title", "heading") || kicker;
+  const description = field(data, "description", "content");
+  return `<div class="row g-3 align-items-end mb-4"><div class="${kickerWidth}"><div class="kicker">${esc(kicker)}</div><h2 class="title">${esc(heading)}</h2></div>${description ? `<div class="${descriptionWidth} lead-sm">${paragraphs(description)}</div>` : ""}</div>`;
+}
+
+function iconMarkup(item: any, extraClass = "") {
+  const icon = field(item, "icon_url", "icon") || "bi-heart-pulse";
+  return `<span class="ico ${extraClass}">${icon.startsWith("http") ? `<img src="${esc(icon)}" alt="" loading="lazy">` : `<i class="bi ${esc(icon.replace(/^bi\s+/, ""))}"></i>`}</span>`;
+}
+
+function renderOverview(data: any, item: SpecialityItem) {
+  const name = item.name || titleOf(item);
+  const heading = field(data, "title", "heading") || `${name} care at ARSH Hospital`;
+  const description = field(data, "description", "content");
+  const cards = list(data?.items).map(entry => `<div class="col-sm-6 col-xl-3"><article class="card-p p-3 d-flex gap-3">${iconMarkup(entry)}<div><h3>${esc(field(entry, "title", "name", "heading"))}</h3>${field(entry, "subtitle", "description", "content") ? `<p>${esc(field(entry, "subtitle", "description", "content"))}</p>` : ""}</div></article></div>`).join("");
+  return `<section class="section" id="overview"><div class="wrap"><div class="row g-4 g-xl-5"><div class="col-lg-5"><div class="kicker">${esc(name)} at ARSH, Gaya</div><h2 class="title">${esc(heading)}</h2></div><div class="col-lg-7 text-secondary">${paragraphs(description)}</div></div>${cards ? `<div class="row g-3 mt-3">${cards}</div>` : ""}</div></section>`;
 }
 
 function genericSection(id: string, data: any, kicker: string, classes = "section") {
   const items = list(data?.items);
   if (!field(data, "title", "heading") && !field(data, "description", "content") && !items.length) return "";
-  const heading = field(data, "title", "heading") || kicker;
-  const description = field(data, "description", "content");
-  const paragraphs = description.split(/\n\s*\n/).map((line: string) => `<p>${esc(line)}</p>`).join("");
-  return `<section class="${classes}" id="${id}"><div class="wrap"><div class="row g-3 align-items-end mb-4"><div class="col-lg-7"><div class="kicker">${esc(kicker)}</div><h2 class="title">${esc(heading)}</h2></div>${description ? `<div class="col-lg-5 lead-sm">${paragraphs}</div>` : ""}</div>${items.length ? `<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">${cardItems(items)}</div>` : ""}</div></section>`;
+  if (id === "approach") {
+    const steps = items.map((entry, index) => `<div class="col"><div class="card-p p-4"><div class="step-no">${index + 1}</div><h3>${esc(field(entry, "title", "name", "heading"))}</h3>${field(entry, "subtitle", "description", "content") ? `<p>${esc(field(entry, "subtitle", "description", "content"))}</p>` : ""}</div></div>`).join("");
+    return `<section class="section" id="approach"><div class="wrap">${sectionHeading(data, kicker)}${steps ? `<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">${steps}</div>` : ""}</div></section>`;
+  }
+  if (id === "conditions") {
+    const cards = items.map(entry => `<div class="col"><article class="card-p p-4 d-flex gap-3">${iconMarkup(entry)}<div><h3>${esc(field(entry, "title", "name", "heading"))}</h3>${field(entry, "subtitle", "description", "content") ? `<p>${esc(field(entry, "subtitle", "description", "content"))}</p>` : ""}</div></article></div>`).join("");
+    return `<section class="${classes}" id="${id}"><div class="wrap">${sectionHeading(data, kicker)}${cards ? `<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">${cards}</div>` : ""}</div></section>`;
+  }
+  if (id === "treatments") {
+    const cards = items.map(entry => `<div class="col"><article class="card-p p-3 p-md-4 d-flex flex-column">${iconMarkup(entry, "mb-3")}<h3>${esc(field(entry, "title", "name", "heading"))}</h3>${field(entry, "subtitle", "description", "content") ? `<p>${esc(field(entry, "subtitle", "description", "content"))}</p>` : ""}<a class="link-sm mt-auto pt-2" href="${esc(field(entry, "link") || "#contact")}">${esc(field(entry, "button_label") || "Learn more")} <i class="bi bi-arrow-right"></i></a></article></div>`).join("");
+    return `<section class="${classes}" id="${id}"><div class="wrap">${sectionHeading(data, kicker)}${cards ? `<div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 snap">${cards}</div>` : ""}</div></section>`;
+  }
+  const cards = items.map(entry => `<div class="col"><article class="card-p p-4 h-100">${iconMarkup(entry, "mb-3")}<h3>${esc(field(entry, "title", "name", "heading"))}</h3>${field(entry, "subtitle", "description", "content") ? `<p>${esc(field(entry, "subtitle", "description", "content"))}</p>` : ""}</article></div>`).join("");
+  return `<section class="${classes}" id="${id}"><div class="wrap">${sectionHeading(data, kicker)}${cards ? `<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">${cards}</div>` : ""}</div></section>`;
 }
 
 function renderBanner(banner: any, item: SpecialityItem) {
@@ -199,22 +218,22 @@ function renderHighlights(items: any[]) {
   }).join("")}</div></div></div>`;
 }
 
-function renderFaqs(faqs: any[]) {
+function renderFaqs(faqs: any[], item: SpecialityItem) {
   if (!faqs.length) return "";
-  return `<section class="section pt-0" id="faq"><div class="wrap"><div class="row g-4"><div class="col-lg-4"><div class="kicker">Patient questions</div><h2 class="title mb-3">Frequently Asked Questions</h2></div><div class="col-lg-8"><div class="accordion" id="specialityFaq">${faqs.map((faq, i) => `<div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button ${i ? "collapsed" : ""}" type="button" data-bs-toggle="collapse" data-bs-target="#specialityFaq${i}" aria-expanded="${i ? "false" : "true"}">${esc(field(faq, "q", "question", "title", "name"))}<span class="acc-ic" aria-hidden="true"><i class="bi bi-plus-lg"></i><i class="bi bi-dash-lg"></i></span></button></h3><div id="specialityFaq${i}" class="accordion-collapse collapse ${i ? "" : "show"}" data-bs-parent="#specialityFaq"><div class="accordion-body">${esc(field(faq, "a", "answer", "description", "content"))}</div></div></div>`).join("")}</div></div></div></div></section>`;
+  const name = item.name || titleOf(item);
+  return `<section class="section pt-0" id="faq"><div class="wrap"><div class="row g-4 g-xl-5"><div class="col-lg-4"><div class="kicker">Patient questions</div><h2 class="title mb-3">${esc(name)} FAQs: ARSH Hospital, Gaya</h2><p class="lead-sm">For a diagnosis and personalised advice, please consult a qualified ${esc(name.toLowerCase())} specialist.</p></div><div class="col-lg-8"><div class="accordion" id="specialityFaq">${faqs.map((faq, i) => `<div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button ${i ? "collapsed" : ""}" type="button" data-bs-toggle="collapse" data-bs-target="#specialityFaq${i}" aria-expanded="${i ? "false" : "true"}">${esc(field(faq, "q", "question", "title", "name"))}<span class="acc-ic" aria-hidden="true"><i class="bi bi-plus-lg"></i><i class="bi bi-dash-lg"></i></span></button></h3><div id="specialityFaq${i}" class="accordion-collapse collapse ${i ? "" : "show"}" data-bs-parent="#specialityFaq"><div class="accordion-body">${esc(field(faq, "a", "answer", "description", "content"))}</div></div></div>`).join("")}</div></div></div></div></section>`;
 }
 
 function renderDoctors(doctors: SpecialityDoctor[], item: SpecialityItem) {
   const title = titleOf(item);
-  const doctorCards = doctors.map(doctor => `<div class="col"><article class="card-p h-100"><div class="doc-ph"><img src="${esc(doctor.photo_url || "/images/doctor-placeholder.svg")}" alt="${esc(doctor.name)}" loading="lazy"></div><div class="p-3 p-md-4"><h3>${esc(doctor.name)}</h3><p>${esc(doctor.qualification || doctor.speciality || title)}${doctor.experience ? ` · ${esc(doctor.experience)} years' experience` : ""}</p><a class="link-sm" href="/doctors/${encodeURIComponent(doctor.slug)}">View profile <i class="bi bi-arrow-right"></i></a></div></article></div>`).join("");
-  const body = doctors.length ? `<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-3 g-lg-4">${doctorCards}</div>` : `<div class="card-p p-4"><p class="mb-0">Doctor profiles for ${esc(title)} will appear here when they are published. Call ARSH Hospital to book a consultation.</p></div>`;
-  return `<section class="section" id="doctors"><div class="wrap"><div class="d-flex justify-content-between align-items-end gap-3 mb-4"><div><div class="kicker">Meet the team</div><h2 class="title">Meet Our ${esc(title)} Doctors in Gaya</h2></div><a class="link-sm flex-shrink-0" href="/doctors?speciality_id=${encodeURIComponent(String(item.id))}">All doctors <i class="bi bi-arrow-right"></i></a></div>${body}</div></section>`;
+  const doctorCards = doctors.map(doctor => `<div class="col"><article class="card-p"><div class="doc-ph"><img src="${esc(doctor.photo_url || "/images/doctor-placeholder.svg")}" alt="${esc(doctor.name)}" loading="lazy"></div><div class="p-3 p-md-4"><h3>${esc(doctor.name)}</h3><p>${esc(doctor.qualification || doctor.speciality || title)}${doctor.experience ? ` · ${esc(doctor.experience)} years' experience` : ""}</p><a class="link-sm" href="/doctors/${encodeURIComponent(doctor.slug)}">View profile <i class="bi bi-arrow-right"></i></a></div></article></div>`).join("");
+  const body = doctors.length ? doctorCards : `<div class="col"><article class="card-p"><div class="p-3 p-md-4"><h3>${esc(title)} team</h3><p>Doctor profiles will appear here when published.</p></div></article></div>`;
+  return `<section class="section" id="doctors"><div class="wrap"><div class="d-flex justify-content-between align-items-end mb-4 gap-3"><div><div class="kicker">Meet the team</div><h2 class="title">Meet Our ${esc(title)} Doctors in Gaya</h2></div><a class="fw-semibold small d-none d-sm-inline text-nowrap" href="/doctors?speciality_id=${encodeURIComponent(String(item.id))}">All doctors <i class="bi bi-arrow-right"></i></a></div><div class="cx"><button class="cx-btn prev" aria-label="Previous"><i class="bi bi-chevron-left"></i></button><div class="row row-cols-2 row-cols-lg-4 snap doc-row">${body}</div><button class="cx-btn next" aria-label="Next"><i class="bi bi-chevron-right"></i></button></div></div></section>`;
 }
 
 function renderPatientStories(stories: PatientStory[], item: SpecialityItem) {
-  if (!stories.length) return `<section class="section soft-bg pt-5" id="testimonials"><div class="wrap"><div class="kicker">Patient stories</div><h2 class="title mb-3">Patient Stories</h2><p class="lead-sm mb-0">Patient stories for ${esc(titleOf(item))} will appear here when a matching story is published.</p></div></section>`;
-  const cards = stories.map(story => `<div class="col"><article class="card-p p-4 h-100"><div class="kicker">${esc(titleOf(item))} patient story</div><h3>${esc(story.title)}</h3>${story.video_url ? `<a class="link-sm" href="${esc(story.video_url)}" target="_blank" rel="noopener">Watch story <i class="bi bi-arrow-up-right"></i></a>` : ""}</article></div>`).join("");
-  return `<section class="section soft-bg pt-5" id="testimonials"><div class="wrap"><div class="d-flex justify-content-between align-items-end mb-4"><div><div class="kicker">Patient stories</div><h2 class="title">What Our ${esc(titleOf(item))} Patients Say</h2></div><a class="link-sm" href="/patient-stories">View all stories <i class="bi bi-arrow-right"></i></a></div><div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">${cards}</div></div></section>`;
+  const cards = stories.map(story => `<div class="col"><a class="video" href="${esc(story.video_url || "/patient-stories")}"><img src="${esc((story as any).thumbnail_url || (story as any).image_url || "/images/blog-placeholder.svg")}" alt="${esc(story.title)}" loading="lazy"><span class="play"><i class="bi bi-play-fill"></i></span><span class="cap">${esc(story.title)}<small>${esc((story as any).department || `${titleOf(item)} patient, Gaya`)}</small></span></a></div>`).join("");
+  return `<section class="section soft-bg pt-5" id="testimonials"><div class="wrap"><div class="d-flex justify-content-between align-items-end mb-4"><div><div class="kicker">Patient stories</div><h2 class="title">What Our ${esc(titleOf(item))} Patients in Gaya Say</h2></div><a class="fw-semibold small d-none d-sm-inline text-nowrap" href="/patient-stories">View all videos <i class="bi bi-arrow-right"></i></a></div><div class="cx"><button class="cx-btn prev" aria-label="Previous"><i class="bi bi-chevron-left"></i></button><div class="row row-cols-2 row-cols-lg-4 snap">${cards}</div><button class="cx-btn next" aria-label="Next"><i class="bi bi-chevron-right"></i></button></div></div></section>`;
 }
 
 export function renderSpecialityBody(body: string, item: SpecialityItem, doctors: SpecialityDoctor[] = [], stories: PatientStory[] = []) {
@@ -222,25 +241,26 @@ export function renderSpecialityBody(body: string, item: SpecialityItem, doctors
   const hasContent = Object.values(apiContent).some(value => value && (Array.isArray(value) ? value.length > 0 : typeof value === "object" ? Object.keys(value).length > 0 : Boolean(value)));
   if (!hasContent && titleOf(item).toLowerCase().includes("orthop")) {
     let template = sectionById(body, "doctors", renderDoctors(doctors, item));
-    if (stories.length || !titleOf(item).toLowerCase().includes("orthop")) template = sectionById(template, "testimonials", renderPatientStories(stories, item));
+    if (stories.length) template = sectionById(template, "testimonials", renderPatientStories(stories, item));
     return template;
   }
   const content = mergeApiContent(specialityFallback(item), apiContent);
   let result = sectionByClass(body, "page-hero", renderBanner(content.banner || {}, item));
   const band = /<div class="band">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/i;
   result = result.replace(band, renderHighlights(list(content.highlights)));
-  result = sectionById(result, "overview", genericSection("overview", content.arsh, "About this speciality"));
+  result = sectionById(result, "overview", renderOverview(content.arsh, item));
   result = sectionById(result, "facilities", genericSection("facilities", content.hospital_facilities, "Hospital facilities", "section soft-bg"));
   result = sectionById(result, "conditions", genericSection("conditions", content.what_we_treat, "What we treat"));
   const why = content.why_choose || {};
-  const whyHtml = field(why, "title", "heading") || field(why, "description", "content") ? `<section class="section bg-white pt-4"><div class="wrap"><div class="mx-auto" style="max-width:780px"><div class="kicker">Why choose ARSH</div><h2 class="title mb-3">${esc(field(why, "title", "heading") || "Why choose ARSH Hospital")}</h2>${paragraphs(field(why, "description", "content"))}</div></div></section>` : "";
+  const specialityName = item.name || titleOf(item);
+  const whyHtml = field(why, "title", "heading") || field(why, "description", "content") ? `<section class="section bg-white pt-4"><div class="wrap"><div class="mx-auto" style="max-width:780px"><div class="kicker">${esc(specialityName)} Care in Gaya</div><h2 class="title mb-3">${esc(field(why, "title", "heading") || `Why choose ${specialityName} care at ARSH`)}</h2>${paragraphs(field(why, "description", "content"))}</div></div></section>` : "";
   result = sectionByClass(result, "bg-white pt-4", whyHtml);
   result = sectionById(result, "treatments", genericSection("treatments", content.services, "Specialised services", "section treat"));
   result = sectionById(result, "doctors", renderDoctors(doctors, item));
-  result = sectionById(result, "testimonials", renderPatientStories(stories, item));
+  if (stories.length) result = sectionById(result, "testimonials", renderPatientStories(stories, item));
   // The page template has a single section without an id for the care approach.
   const approachHtml = genericSection("approach", content.approach, "Our approach");
   result = result.replace(/<section class="section">[\s\S]*?<\/section>/i, approachHtml);
-  result = sectionById(result, "faq", renderFaqs(list(content.faqs)));
+  result = sectionById(result, "faq", renderFaqs(list(content.faqs), item));
   return result;
 }
