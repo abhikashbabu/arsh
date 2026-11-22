@@ -102,21 +102,6 @@ const field = (item: any, ...keys: string[]) => {
 const titleOf = (item: SpecialityItem) => item.title || item.name || "Speciality";
 const paragraphs = (value: string) => value.split(/\n\s*\n/).map(line => `<p>${esc(line)}</p>`).join("");
 
-function cardiologyFallback(item: SpecialityItem) {
-  const name = titleOf(item);
-  return {
-    banner: { heading: name, subheading: "Heart health consultation, assessment and care planning at ARSH Hospital, Gaya.", points: ["Heart health assessment", "Clear treatment guidance"] },
-    highlights: ["Cardiology consultation", "Heart health assessment", "Personalised care planning", "Follow-up support"],
-    arsh: { title: "Cardiology care at ARSH Hospital", description: "Our cardiology team helps assess heart-related symptoms and risk factors, explain the findings and discuss suitable next steps with patients and families.", items: [{ title: "Heart health assessment", subtitle: "A clinician reviews your symptoms, history and risk factors." }, { title: "Diagnostic guidance", subtitle: "The team advises investigations based on your individual needs." }, { title: "Care planning", subtitle: "Discuss treatment options and follow-up with your cardiologist." }] },
-    hospital_facilities: { title: "Support for cardiac care", description: "Hospital teams coordinate assessment, treatment and follow-up around each patient's needs.", items: [{ title: "Emergency support", subtitle: "Urgent medical concerns can be assessed by the hospital team." }, { title: "Diagnostic coordination", subtitle: "Investigations are planned as advised by the treating clinician." }, { title: "Inpatient care", subtitle: "Hospital care and monitoring when admission is recommended." }, { title: "Patient support", subtitle: "Help with appointments and care coordination." }] },
-    what_we_treat: { title: "Heart concerns we assess", description: "Seek medical advice for persistent or concerning symptoms. A clinician can assess the cause and recommend next steps.", items: [{ title: "Chest discomfort", subtitle: "Assessment of chest pain or pressure and related symptoms." }, { title: "Breathlessness", subtitle: "Evaluation of shortness of breath or reduced exercise tolerance." }, { title: "Palpitations", subtitle: "Assessment of an unusually fast, slow or irregular heartbeat." }, { title: "Blood pressure", subtitle: "Evaluation and follow-up for high blood pressure and cardiovascular risk." }] },
-    why_choose: { title: "Cardiology care with clear guidance", description: "Patients receive an individual assessment, an explanation of findings and guidance on appropriate treatment and follow-up." },
-    services: { title: "Cardiology services", description: "Care is planned according to each patient's symptoms, medical history and clinical findings.", items: [{ title: "Cardiology consultation", subtitle: "Discuss symptoms, medical history and concerns with a specialist." }, { title: "Heart health evaluation", subtitle: "Review risk factors and investigations recommended by the clinician." }, { title: "Treatment planning", subtitle: "Understand suitable medical and follow-up options." }] },
-    approach: { title: "A clear path to heart care", description: "The care team explains each step and supports informed decisions.", items: [{ title: "Listen and assess", subtitle: "Review symptoms, history and health concerns." }, { title: "Evaluate", subtitle: "Examine findings and arrange tests when needed." }, { title: "Discuss options", subtitle: "Explain suitable treatment choices and next steps." }, { title: "Follow up", subtitle: "Review progress and adjust the care plan as needed." }] },
-    faqs: [{ q: "When should I see a cardiologist?", a: "Seek medical advice for persistent chest discomfort, breathlessness, palpitations, high blood pressure or other heart-related concerns. Call emergency services for severe or sudden symptoms." }, { q: "What should I bring to my consultation?", a: "Bring previous prescriptions, investigation reports, a list of medicines and a brief history of your symptoms." }, { q: "Will I need tests?", a: "Your clinician will decide whether any tests are needed based on your symptoms and examination." }],
-  };
-}
-
 function specialityFallback(item: SpecialityItem) {
   const name = titleOf(item);
   const intro = item.description || `Specialist consultations and care planning for ${name.toLowerCase()} at ARSH Super Speciality Hospital, Gaya.`;
@@ -133,12 +118,21 @@ function specialityFallback(item: SpecialityItem) {
   };
 }
 
-function contentHasWrongSpeciality(item: SpecialityItem, content: Record<string, any>) {
-  const current = titleOf(item).toLowerCase();
-  if (current.includes("orthopaed")) return false;
-  const sample = [item.description, content.banner?.heading, content.banner?.subheading, content.arsh?.title, content.hospital_facilities?.title, content.what_we_treat?.title, content.services?.title, content.why_choose?.title]
-    .filter(Boolean).join(" ").toLowerCase();
-  return /orthopaed|orthopedic|fracture|joint replacement/.test(sample);
+function mergeApiContent(fallback: any, fromApi: any): any {
+  if (Array.isArray(fallback)) return Array.isArray(fromApi) && fromApi.length ? fromApi : fallback;
+  if (fallback && typeof fallback === "object") {
+    const source = fromApi && typeof fromApi === "object" && !Array.isArray(fromApi) ? fromApi : {};
+    const merged: Record<string, any> = { ...fallback };
+    for (const [key, fallbackValue] of Object.entries(fallback)) {
+      merged[key] = mergeApiContent(fallbackValue, source[key]);
+    }
+    for (const [key, apiValue] of Object.entries(source)) {
+      if (!(key in merged) && apiValue != null && apiValue !== "") merged[key] = apiValue;
+    }
+    return merged;
+  }
+  if (fromApi != null && fromApi !== "") return fromApi;
+  return fallback;
 }
 
 function sectionById(html: string, id: string, replacement: string) {
@@ -168,11 +162,7 @@ function sectionByClass(html: string, className: string, replacement: string) {
 }
 
 function cardItems(items: any[], className = "col") {
-  const unique = [...new Map(items.map(item => {
-    const key = `${field(item, "title", "name", "heading", "label")}|${field(item, "subtitle", "description", "text", "details")}`.toLowerCase();
-    return [key, item] as const;
-  })).values()];
-  return unique.map((item) => {
+  return items.map((item) => {
     const title = field(item, "title", "name", "heading", "label") || text(item);
     const description = field(item, "subtitle", "description", "content", "text", "details");
     const icon = field(item, "icon_url", "icon") || "bi-heart-pulse";
@@ -230,31 +220,12 @@ function renderPatientStories(stories: PatientStory[], item: SpecialityItem) {
 export function renderSpecialityBody(body: string, item: SpecialityItem, doctors: SpecialityDoctor[] = [], stories: PatientStory[] = []) {
   const apiContent = item.content || {};
   const hasContent = Object.values(apiContent).some(value => value && (Array.isArray(value) ? value.length > 0 : typeof value === "object" ? Object.keys(value).length > 0 : Boolean(value)));
-  if (!hasContent) {
+  if (!hasContent && titleOf(item).toLowerCase().includes("orthop")) {
     let template = sectionById(body, "doctors", renderDoctors(doctors, item));
     if (stories.length || !titleOf(item).toLowerCase().includes("orthop")) template = sectionById(template, "testimonials", renderPatientStories(stories, item));
     return template;
   }
-  // The live Cardiology record currently contains copied Orthopaedics text. Use neutral speciality copy until CMS data is corrected.
-  const wrongDepartmentData = contentHasWrongSpeciality(item, apiContent);
-  const fallback = wrongDepartmentData && titleOf(item).toLowerCase().includes("cardio") ? cardiologyFallback(item) : specialityFallback(item);
-  const content = wrongDepartmentData ? {
-    ...fallback,
-    // Keep the uploaded hero asset even when the remaining CMS copy belongs to another speciality.
-    banner: {
-      ...fallback.banner,
-      image_url: apiContent.banner?.image_url || item.image_url || undefined,
-      alt: apiContent.banner?.alt || titleOf(item),
-    },
-  } : Object.fromEntries(
-    Object.entries(fallback).map(([key, value]) => {
-      const apiValue = apiContent[key];
-      const populated = Array.isArray(apiValue) ? apiValue.length > 0 : apiValue && typeof apiValue === "object"
-        ? Object.values(apiValue).some(part => Array.isArray(part) ? part.length > 0 : Boolean(part))
-        : Boolean(apiValue);
-      return [key, populated ? apiValue : value];
-    }),
-  );
+  const content = mergeApiContent(specialityFallback(item), apiContent);
   let result = sectionByClass(body, "page-hero", renderBanner(content.banner || {}, item));
   const band = /<div class="band">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/i;
   result = result.replace(band, renderHighlights(list(content.highlights)));
