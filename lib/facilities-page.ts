@@ -9,6 +9,7 @@ export type Facility = {
   overview_heading?: string;
   overview_description?: string;
   overview_points?: string[];
+  at_a_glance?: Array<{ title?: string; subhead?: string }>;
   recommended_heading?: string;
   recommended_points?: string[];
   banner_alt?: string;

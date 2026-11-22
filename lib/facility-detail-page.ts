@@ -31,8 +31,8 @@ function renderBanner(body: string, facility: Facility) {
 function renderOverview(facility: Facility) {
   const title = facility.overview_heading?.trim();
   const description = facility.overview_description?.trim();
-  const points = (facility.overview_points || []).map((point, index) => `<div class="r"><span>Care highlight ${index + 1}</span><span>${escapeHtml(point)}</span></div>`).join("");
-  return `<section class="section" id="overview"><div class="wrap"><div class="row g-4 g-xl-5 align-items-start"><div class="col-lg-7"><div class="kicker">Overview</div>${title ? `<h2 class="title mb-3">${escapeHtml(title)}</h2>` : ""}${description ? `<p class="text-secondary" style="line-height:1.85">${escapeHtml(description)}</p>` : ""}</div><div class="col-lg-5"><div class="glance"><h3>At a glance</h3>${points || `<div class="r"><span>Facility</span><span>${escapeHtml(facility.title || "ARSH Hospital")}</span></div>`}<a class="btn btn-arsh w-100 mt-3" href="#contact"><i class="bi bi-calendar2-check me-2"></i>Book a Consultation</a></div></div></div></div></section>`;
+  const glance = (facility.at_a_glance || []).map(item => `<div class="r"><span>${escapeHtml(item.title || "")}</span><span>${escapeHtml(item.subhead || "")}</span></div>`).join("");
+  return `<section class="section" id="overview"><div class="wrap"><div class="row g-4 g-xl-5 align-items-start"><div class="col-lg-7"><div class="kicker">Overview</div>${title ? `<h2 class="title mb-3">${escapeHtml(title)}</h2>` : ""}${description ? `<p class="text-secondary" style="line-height:1.85">${escapeHtml(description)}</p>` : ""}</div><div class="col-lg-5"><div class="glance"><h3>At a glance</h3>${glance || `<div class="r"><span>Facility</span><span>${escapeHtml(facility.title || "ARSH Hospital")}</span></div>`}<a class="btn btn-arsh w-100 mt-3" href="#contact"><i class="bi bi-calendar2-check me-2"></i>Book a Consultation</a></div></div></div></div></section>`;
 }
 
 function renderRecommended(facility: Facility) {
