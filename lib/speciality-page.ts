@@ -238,7 +238,15 @@ export function renderSpecialityBody(body: string, item: SpecialityItem, doctors
   // The live Cardiology record currently contains copied Orthopaedics text. Use neutral speciality copy until CMS data is corrected.
   const wrongDepartmentData = contentHasWrongSpeciality(item, apiContent);
   const fallback = wrongDepartmentData && titleOf(item).toLowerCase().includes("cardio") ? cardiologyFallback(item) : specialityFallback(item);
-  const content = wrongDepartmentData ? fallback : Object.fromEntries(
+  const content = wrongDepartmentData ? {
+    ...fallback,
+    // Keep the uploaded hero asset even when the remaining CMS copy belongs to another speciality.
+    banner: {
+      ...fallback.banner,
+      image_url: apiContent.banner?.image_url || item.image_url || undefined,
+      alt: apiContent.banner?.alt || titleOf(item),
+    },
+  } : Object.fromEntries(
     Object.entries(fallback).map(([key, value]) => {
       const apiValue = apiContent[key];
       const populated = Array.isArray(apiValue) ? apiValue.length > 0 : apiValue && typeof apiValue === "object"
