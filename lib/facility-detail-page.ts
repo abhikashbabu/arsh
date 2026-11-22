@@ -14,17 +14,10 @@ function replaceSectionById(html: string, id: string, replacement: string) {
   }
   return html;
 }
-
 function renderBanner(body: string, facility: Facility) {
   const title = facility.title || "Hospital facility";
-  const points = (facility.banner_points || []).map(point => `<span class="facility-banner-point">${point.image_url ? `<img src="${escapeHtml(point.image_url)}" alt="" loading="lazy">` : `<i class="bi bi-check-circle-fill"></i>`}<span>${escapeHtml(point.text || "")}</span></span>`).join("");
-  const image = facility.banner_url
-    ? `<img class="banner-art api-banner-art" src="${escapeHtml(facility.banner_url)}" alt="${escapeHtml(facility.banner_alt || title)}">`
-    : `<svg class="banner-art" viewBox="0 0 420 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M210,320 C90,240 55,150 110,105 C145,77 190,95 210,140 C230,95 275,77 310,105 C365,150 330,240 210,320 Z" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="7" stroke-linejoin="round"/><path d="M210,150 C190,178 165,190 148,218 M210,150 C230,178 255,190 272,216 M210,150 L210,255" stroke="#8fd0f5" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="148" cy="218" r="8" fill="#d7192e"/><circle cx="148" cy="218" r="14" fill="none" stroke="#d7192e" stroke-width="2" opacity=".6"/><path d="M20,300 H95 L115,258 L138,332 L160,278 L180,300 H400" stroke="rgba(255,255,255,.55)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const button = facility.banner_button_text?.trim()
-    ? `<a class="btn btn-light facility-banner-cta" href="#overview">${escapeHtml(facility.banner_button_text)} <i class="bi bi-arrow-down-right ms-1"></i></a>`
-    : "";
-  const section = `<section class="banner">${image}<div class="wrap"><span class="tag"><i class="bi bi-heart-pulse-fill"></i>${escapeHtml(facility.top_subheading || "ARSH Hospital, Gaya")}</span><h1>${escapeHtml(title)}</h1><p>${escapeHtml(facility.bottom_subheading || "")}</p>${points ? `<div class="facility-banner-points">${points}</div>` : ""}${button}</div></section>`;
+  const svg = `<svg class="banner-art" viewBox="0 0 420 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M210,320 C90,240 55,150 110,105 C145,77 190,95 210,140 C230,95 275,77 310,105 C365,150 330,240 210,320 Z" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="7" stroke-linejoin="round"/><path d="M210,150 C190,178 165,190 148,218 M210,150 C230,178 255,190 272,216 M210,150 L210,255" stroke="#8fd0f5" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="148" cy="218" r="8" fill="#d7192e"/><circle cx="148" cy="218" r="14" fill="none" stroke="#d7192e" stroke-width="2" opacity=".6"/><path d="M20,300 H95 L115,258 L138,332 L160,278 L180,300 H400" stroke="rgba(255,255,255,.55)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const section = `<section class="banner">${svg}<div class="wrap"><span class="tag"><i class="bi bi-heart-pulse-fill"></i>${escapeHtml(facility.top_subheading || "ARSH Hospital, Gaya")}</span><h1>${escapeHtml(title)}</h1><p>${escapeHtml(facility.bottom_subheading || "")}</p></div></section>`;
   return body.replace(/<section class="banner">[\s\S]*?<\/section>/i, section);
 }
 
@@ -60,8 +53,4 @@ export function renderFacilityDetailBody(body: string, facility: Facility) {
     `Share your details and our patient care team will contact you to confirm your ${escapeHtml(title)} appointment.`,
   );
   return html;
-}
-
-export function facilityDetailCss() {
-  return `.api-banner-art{width:min(34vw,360px);height:88%;right:4%;object-fit:contain;opacity:.48}.facility-banner-points{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1rem;margin-bottom:1rem}.facility-banner-point{display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:#17324b;border:1px solid rgba(255,255,255,.65);border-radius:999px;padding:.3rem .75rem;font-size:.82rem;font-weight:600}.facility-banner-point img,.facility-banner-point i{width:25px;height:25px;object-fit:contain;background:#fff;border-radius:50%;display:grid;place-items:center;flex:none}.facility-banner-cta{color:#073d78;font-weight:700;border:0;border-radius:10px}`;
 }

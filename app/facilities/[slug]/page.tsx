@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { SourcePage } from "@/components/SourcePage";
 import angiographyPage from "@/content/angiography.json";
 import type { Facility } from "@/lib/facilities-page";
-import { facilityDetailCss, renderFacilityDetailBody } from "@/lib/facility-detail-page";
+import { renderFacilityDetailBody } from "@/lib/facility-detail-page";
 import { getCi4 } from "@/lib/server-page-data";
 
 export const revalidate = 60;
@@ -51,7 +51,7 @@ export default async function FacilityDetailPage({ params }: Props) {
         ...angiographyPage,
         title: facility.seo_title || `${facility.title || "Facility"} | ARSH Hospital`,
         body: renderFacilityDetailBody(angiographyPage.body, facility),
-        css: `${angiographyPage.css}\n${facilityDetailCss()}`,
+        css: angiographyPage.css,
         slug: angiographyPage.slug,
       }}
     />
