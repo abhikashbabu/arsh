@@ -5,45 +5,23 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const logo = "https://arshhospitals.com/wp-content/uploads/2021/12/Arsh-Logo-png-2-e1639235875839.png";
-const specialities = [
-  { name: "Orthopaedics & Spine", slug: "3-orthopaedics", note: "Bone, joint and spine care" },
-  { name: "Cardiology", slug: "cardiology", note: "Heart care and treatment" },
-  { name: "Neurology & Neurosurgery", slug: "4-neurology", note: "Brain, spine and nerve care" },
-  { name: "Gastroenterology", slug: "15-gastroenterology", note: "Digestive and liver care" },
-  { name: "Gynaecology", slug: "2-gynaecology", note: "Women’s health and maternity" },
-  { name: "Paediatrics", slug: "6-paediatrics", note: "Newborn and child care" },
-  { name: "General Medicine", slug: "8-general-medicine", note: "Everyday and preventive care" },
-  { name: "Critical Care", slug: "16-critical-care", note: "Round-the-clock critical care" },
-];
-const facilities = [
-  { name: "Cath Lab & Cardiac Care", href: "/angiography", note: "Cardiac procedures and support", icon: "bi-heart-pulse" },
-  { name: "Modular Operation Theatres", href: "/facilities#operation-theatre", note: "Surgical care and recovery", icon: "bi-scissors" },
-  { name: "ICU & HDU", href: "/facilities#icu", note: "24x7 critical care", icon: "bi-activity" },
-  { name: "Advanced Radiology", href: "/facilities#radiology", note: "Imaging and diagnostics", icon: "bi-radioactive" },
-  { name: "Patient Support Services", href: "/facilities#support", note: "Support for patients and families", icon: "bi-people" },
-  { name: "Plan Your Visit", href: "/facilities#visit", note: "Location and visiting details", icon: "bi-geo-alt" },
-];
+type MenuEntry = { id: string | number; name?: string; title?: string; slug: string };
 
-function MenuPanel({ kind, close }: { kind: "specialities" | "facilities"; close: () => void }) {
+function MenuPanel({ kind, close, specialities, facilities }: { kind: "specialities" | "facilities"; close: () => void; specialities: MenuEntry[]; facilities: MenuEntry[] }) {
   const isSpeciality = kind === "specialities";
   const entries = isSpeciality ? specialities : facilities;
   return (
     <div className="mega open" onClick={(event) => { if ((event.target as HTMLElement).closest("a")) close(); }}>
       <div className="wrap mega-in">
         <aside className="mega-side">
-          <span className="mega-count">{isSpeciality ? "8 featured departments" : "Care and support"}</span>
+          <span className="mega-count">{entries.length} {isSpeciality ? "departments" : entries.length === 1 ? "facility" : "facilities"}</span>
           <h3>{isSpeciality ? "Specialities" : "Facilities"}</h3>
           <p>{isSpeciality ? "Explore departments and find the right specialist for your care." : "Explore the hospital’s facilities, services and patient support."}</p>
           <Link className="btn btn-arsh" href={isSpeciality ? "/specialities" : "/facilities"} onClick={close}>Explore all {isSpeciality ? "specialities" : "facilities"}</Link>
           <Link className="mega-link" href="/doctors" onClick={close}>Find a doctor <i className="bi bi-arrow-right" /></Link>
         </aside>
         <div className="mgrid">
-          {entries.map((entry) => {
-            const href = isSpeciality ? `/specialities/${(entry as typeof specialities[number]).slug}` : (entry as typeof facilities[number]).href;
-            const note = isSpeciality ? (entry as typeof specialities[number]).note : (entry as typeof facilities[number]).note;
-            const icon = isSpeciality ? "bi-heart-pulse" : (entry as typeof facilities[number]).icon;
-            return <Link className="mi" href={href} key={entry.name} onClick={close}><span className="mi-ic"><i className={`bi ${icon}`} /></span><span><b>{entry.name}</b><small>{note}</small></span></Link>;
-          })}
+          {entries.map((entry) => <Link className="mi" href={`/${isSpeciality ? "specialities" : "facilities"}/${encodeURIComponent(entry.slug)}`} key={`${entry.id}-${entry.slug}`} onClick={close}><span className="mi-ic"><i className="bi bi-heart-pulse" /></span><span><b>{entry.title || entry.name || entry.slug}</b></span></Link>)}
         </div>
       </div>
     </div>
@@ -56,6 +34,28 @@ export function SiteHeader() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<"specialities" | "facilities" | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [specialities, setSpecialities] = useState<MenuEntry[]>([]);
+  const [facilities, setFacilities] = useState<MenuEntry[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    const loadEntries = async (path: string): Promise<MenuEntry[]> => {
+      try {
+        const response = await fetch(`/api/ci4/${path}`, { cache: "no-store" });
+        const payload = await response.json();
+        return response.ok && Array.isArray(payload?.data) ? payload.data : [];
+      } catch {
+        return [];
+      }
+    };
+    Promise.all([loadEntries("specialities"), loadEntries("facilities")]).then(([specialityItems, facilityItems]) => {
+      if (active) {
+        setSpecialities(specialityItems);
+        setFacilities(facilityItems.filter(item => (item as MenuEntry & { is_active?: boolean }).is_active !== false));
+      }
+    });
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("drawer-open", openDrawer);
@@ -107,7 +107,7 @@ export function SiteHeader() {
           <Link className="btn btn-arsh header-cta" href="/book-appointment"><i className="bi bi-calendar2-check me-1" />Book Appointment</Link>
           <button className="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded={openDrawer} aria-controls="drawer" onClick={() => setOpenDrawer(true)}><i className="bi bi-list" /></button>
         </div>
-        {(openMenu === "specialities" || openMenu === "facilities") && <MenuPanel kind={openMenu} close={closeMenus} />}
+        {(openMenu === "specialities" || openMenu === "facilities") && <MenuPanel kind={openMenu} close={closeMenus} specialities={specialities} facilities={facilities} />}
       </header>
 
       <div className={`sm${searchOpen ? " open" : ""}`} id="searchModal" role="dialog" aria-modal="true" aria-label="Search ARSH" onClick={(event) => { if (event.target === event.currentTarget) setSearchOpen(false); }}>
@@ -124,9 +124,9 @@ export function SiteHeader() {
         <nav className="drawer-links">
           <Link href="/" onClick={closeDrawer}><i className="bi bi-house-door" />Home</Link>
           <Link href="/about" onClick={closeDrawer}><i className="bi bi-info-circle" />About</Link>
-          <div className="ditem"><button className="dacc" type="button" aria-expanded={openAccordion === "specialities"} onClick={() => toggleAccordion("specialities")}><i className="bi bi-heart-pulse" />Specialities</button><div className={`dsub${openAccordion === "specialities" ? " open" : ""}`}><div><Link className="dall" href="/specialities" onClick={closeDrawer}>Explore all specialities</Link>{specialities.map((item) => <Link href={`/specialities/${item.slug}`} key={item.slug} onClick={closeDrawer}><i className="bi bi-heart-pulse" />{item.name}</Link>)}</div></div></div>
+          <div className="ditem"><button className="dacc" type="button" aria-expanded={openAccordion === "specialities"} onClick={() => toggleAccordion("specialities")}><i className="bi bi-heart-pulse" />Specialities ({specialities.length})</button><div className={`dsub${openAccordion === "specialities" ? " open" : ""}`}><div><Link className="dall" href="/specialities" onClick={closeDrawer}>Explore all specialities</Link>{specialities.map((item) => <Link href={`/specialities/${encodeURIComponent(item.slug)}`} key={item.slug} onClick={closeDrawer}><i className="bi bi-heart-pulse" />{item.title || item.name || item.slug}</Link>)}</div></div></div>
           <Link href="/doctors" onClick={closeDrawer}><i className="bi bi-person-badge" />Doctors</Link>
-          <div className="ditem"><button className="dacc" type="button" aria-expanded={openAccordion === "facilities"} onClick={() => toggleAccordion("facilities")}><i className="bi bi-hospital" />Facilities</button><div className={`dsub${openAccordion === "facilities" ? " open" : ""}`}><div><Link className="dall" href="/facilities" onClick={closeDrawer}>Explore all facilities</Link>{facilities.map((item) => <Link href={item.href} key={item.name} onClick={closeDrawer}><i className={`bi ${item.icon}`} />{item.name}</Link>)}</div></div></div>
+          <div className="ditem"><button className="dacc" type="button" aria-expanded={openAccordion === "facilities"} onClick={() => toggleAccordion("facilities")}><i className="bi bi-hospital" />Facilities ({facilities.length})</button><div className={`dsub${openAccordion === "facilities" ? " open" : ""}`}><div><Link className="dall" href="/facilities" onClick={closeDrawer}>Explore all facilities</Link>{facilities.map((item) => <Link href={`/facilities/${encodeURIComponent(item.slug)}`} key={item.slug} onClick={closeDrawer}><i className="bi bi-heart-pulse" />{item.title || item.name || item.slug}</Link>)}</div></div></div>
           <Link href="/patient-stories" onClick={closeDrawer}><i className="bi bi-chat-heart" />Patient Stories</Link>
           <Link href="/contact" onClick={closeDrawer}><i className="bi bi-telephone" />Contact</Link>
         </nav>

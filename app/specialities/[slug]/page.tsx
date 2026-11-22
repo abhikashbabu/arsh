@@ -11,14 +11,14 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const detail = await getSpeciality(slug);
-  const fallback = slug === "3-orthopaedics" ? (await getSpecialityList()).find(item => item.slug === slug) || null : null;
+  const fallback = !detail ? (await getSpecialityList()).find(item => item.slug === slug) || null : null;
   return specialityMetadata(detail || fallback);
 }
 
 export default async function SpecialityDetailRoute({ params }: Props) {
   const { slug } = await params;
   const item = await getSpeciality(slug);
-  const fallback = !item && slug === "3-orthopaedics" ? (await getSpecialityList()).find(speciality => speciality.slug === slug) || null : null;
+  const fallback = !item ? (await getSpecialityList()).find(speciality => speciality.slug === slug) || null : null;
   const speciality = item || fallback;
   if (speciality) {
     const [doctors, stories] = await Promise.all([
