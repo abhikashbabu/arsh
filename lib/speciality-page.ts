@@ -30,9 +30,14 @@ export type PatientStory = {
   id: string | number;
   title: string;
   department_id?: string | number;
+  department?: { id?: string | number; name?: string; slug?: string } | null;
+  department_slug?: string;
+  thumbnail_url?: string | null;
+  poster_url?: string | null;
+  image_url?: string | null;
   video_url?: string;
   video_mime?: string;
-  is_published?: boolean;
+  is_published?: boolean | number | string;
 };
 
 export async function getSpeciality(slug: string): Promise<SpecialityItem | null> {
@@ -62,11 +67,23 @@ export async function getSpecialityDoctors(specialityId: string | number): Promi
   }
 }
 
-export async function getRelevantPatientStories(specialityId: string | number): Promise<PatientStory[]> {
+function slugKey(value: string) {
+  return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").replace(/^\d+-/, "");
+}
+
+export async function getRelevantPatientStories(specialitySlug: string, specialityId: string | number): Promise<PatientStory[]> {
   try {
     const data = await getCi4("patient-stories");
     return Array.isArray(data)
-      ? (data as PatientStory[]).filter(story => story.is_published !== false && String(story.department_id) === String(specialityId))
+      ? (data as PatientStory[]).filter(story => {
+        const departmentId = story.department?.id ?? story.department_id;
+        const departmentSlug = story.department?.slug || story.department_slug || "";
+        const departmentName = story.department?.name || "";
+        const slugMatch = departmentSlug ? slugKey(departmentSlug) === slugKey(specialitySlug) : false;
+        const nameMatch = departmentName ? slugKey(departmentName) === slugKey(specialitySlug) : false;
+        const idMatch = departmentId != null && String(departmentId) === String(specialityId);
+        return story.is_published !== false && story.is_published !== 0 && story.is_published !== "0" && (slugMatch || nameMatch || idMatch);
+      })
       : [];
   } catch {
     return [];
@@ -232,8 +249,14 @@ function renderDoctors(doctors: SpecialityDoctor[], item: SpecialityItem) {
 }
 
 function renderPatientStories(stories: PatientStory[], item: SpecialityItem) {
-  const cards = stories.map(story => `<div class="col"><a class="video" href="${esc(story.video_url || "/patient-stories")}"><img src="${esc((story as any).thumbnail_url || (story as any).image_url || "/images/blog-placeholder.svg")}" alt="${esc(story.title)}" loading="lazy"><span class="play"><i class="bi bi-play-fill"></i></span><span class="cap">${esc(story.title)}<small>${esc((story as any).department || `${titleOf(item)} patient, Gaya`)}</small></span></a></div>`).join("");
-  return `<section class="section soft-bg pt-5" id="testimonials"><div class="wrap"><div class="d-flex justify-content-between align-items-end mb-4"><div><div class="kicker">Patient stories</div><h2 class="title">What Our ${esc(titleOf(item))} Patients in Gaya Say</h2></div><a class="fw-semibold small d-none d-sm-inline text-nowrap" href="/patient-stories">View all videos <i class="bi bi-arrow-right"></i></a></div><div class="cx"><button class="cx-btn prev" aria-label="Previous"><i class="bi bi-chevron-left"></i></button><div class="row row-cols-2 row-cols-lg-4 snap">${cards}</div><button class="cx-btn next" aria-label="Next"><i class="bi bi-chevron-right"></i></button></div></div></section>`;
+  const cards = stories.map(story => {
+    const thumbnail = story.thumbnail_url || story.poster_url || story.image_url;
+    const poster = thumbnail ? `<img src="${esc(thumbnail)}" alt="${esc(story.title)}" loading="lazy">` : story.video_url ? `<video src="${esc(story.video_url)}" poster="/images/blog-placeholder.svg" preload="auto" muted playsinline aria-label="${esc(story.title)}"></video>` : `<img src="/images/blog-placeholder.svg" alt="${esc(story.title)}" loading="lazy">`;
+    const departmentName = story.department?.name || titleOf(item);
+    return `<div class="col"><a class="video" href="/patient-stories" aria-label="View ${esc(story.title)} in patient stories">${poster}<span class="play"><i class="bi bi-play-fill"></i></span><span class="cap">${esc(story.title)}<small>${esc(departmentName)}, Gaya</small></span></a></div>`;
+  }).join("");
+  const body = cards || `<div class="col-12"><div class="card-p p-4"><p class="text-secondary mb-0">No patient stories are published for ${esc(titleOf(item))} yet.</p></div></div>`;
+  return `<section class="section soft-bg pt-5" id="testimonials"><div class="wrap"><div class="d-flex justify-content-between align-items-end mb-4"><div><div class="kicker">Patient stories</div><h2 class="title">What Our ${esc(titleOf(item))} Patients in Gaya Say</h2></div><a class="fw-semibold small d-none d-sm-inline text-nowrap" href="/patient-stories">View all videos <i class="bi bi-arrow-right"></i></a></div><div class="cx"><button class="cx-btn prev" aria-label="Previous"><i class="bi bi-chevron-left"></i></button><div class="row row-cols-2 row-cols-lg-4 snap">${body}</div><button class="cx-btn next" aria-label="Next"><i class="bi bi-chevron-right"></i></button></div></div></section>`;
 }
 
 export function renderSpecialityBody(body: string, item: SpecialityItem, doctors: SpecialityDoctor[] = [], stories: PatientStory[] = []) {
@@ -241,7 +264,7 @@ export function renderSpecialityBody(body: string, item: SpecialityItem, doctors
   const hasContent = Object.values(apiContent).some(value => value && (Array.isArray(value) ? value.length > 0 : typeof value === "object" ? Object.keys(value).length > 0 : Boolean(value)));
   if (!hasContent && titleOf(item).toLowerCase().includes("orthop")) {
     let template = sectionById(body, "doctors", renderDoctors(doctors, item));
-    if (stories.length) template = sectionById(template, "testimonials", renderPatientStories(stories, item));
+    template = sectionById(template, "testimonials", renderPatientStories(stories, item));
     return template;
   }
   const content = mergeApiContent(specialityFallback(item), apiContent);
@@ -257,7 +280,7 @@ export function renderSpecialityBody(body: string, item: SpecialityItem, doctors
   result = sectionByClass(result, "bg-white pt-4", whyHtml);
   result = sectionById(result, "treatments", genericSection("treatments", content.services, "Specialised services", "section treat"));
   result = sectionById(result, "doctors", renderDoctors(doctors, item));
-  if (stories.length) result = sectionById(result, "testimonials", renderPatientStories(stories, item));
+  result = sectionById(result, "testimonials", renderPatientStories(stories, item));
   // The page template has a single section without an id for the care approach.
   const approachHtml = genericSection("approach", content.approach, "Our approach");
   result = result.replace(/<section class="section">[\s\S]*?<\/section>/i, approachHtml);

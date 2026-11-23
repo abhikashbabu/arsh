@@ -23,13 +23,13 @@ export default async function SpecialityDetailRoute({ params }: Props) {
   if (speciality) {
     const [doctors, stories] = await Promise.all([
       getSpecialityDoctors(speciality.id),
-      getRelevantPatientStories(speciality.id),
+      getRelevantPatientStories(speciality.slug, speciality.id),
     ]);
     const data = {
       ...orthopaedicsPage,
       title: speciality.seo?.seo_title || speciality.title || speciality.name || orthopaedicsPage.title,
       body: renderSpecialityBody(orthopaedicsPage.body, speciality, doctors, stories),
-      css: `${orthopaedicsPage.css}\n.api-section-image{width:100%;height:180px;object-fit:cover;border-radius:14px}.ico img{width:28px;height:28px;object-fit:contain}`,
+      css: `${orthopaedicsPage.css}\n.api-section-image{width:100%;height:180px;object-fit:cover;border-radius:14px}.ico img{width:28px;height:28px;object-fit:contain}.video video{width:100%;height:100%;object-fit:cover;background:#071b2c}`,
       slug: orthopaedicsPage.slug,
     };
     return <SourcePage data={data} />;
